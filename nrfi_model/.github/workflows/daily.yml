@@ -1,0 +1,40 @@
+name: Daily NRFI Predictions
+
+on:
+  schedule:
+    # Run at 9:00 AM and 4:00 PM ET (13:00 and 20:00 UTC)
+    # 9 AM catches early lineups, 4 PM catches late afternoon games
+    - cron: '0 13 * * *'
+    - cron: '0 20 * * *'
+  workflow_dispatch:  # manual trigger
+
+jobs:
+  compute:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install numpy pandas scipy requests
+
+      - name: Update player profiles
+        run: python update_profiles.py
+
+      - name: Compute today's predictions
+        run: python compute_daily.py
+
+      - name: Commit and push results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/data/ data/pitchers.csv data/batters.csv data/league_averages.csv
+          git diff --staged --quiet || git commit -m "Update predictions for $(date +%Y-%m-%d)"
+          git push

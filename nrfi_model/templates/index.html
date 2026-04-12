@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NRFI Model</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #242836;
+      --border: #2e3345;
+      --text: #e4e6ed;
+      --text2: #8b8fa3;
+      --accent: #4f8cff;
+      --green: #34d399;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --orange: #fb923c;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .header {
+      padding: 24px 32px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .header h1 span { color: var(--accent); }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    input[type="date"] {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .btn:hover { opacity: 0.85; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text2);
+    }
+
+    .btn-outline:hover { border-color: var(--accent); color: var(--text); }
+    .btn-outline.active { border-color: var(--accent); color: var(--accent); }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      padding: 16px 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .container { padding: 24px 32px; max-width: 1400px; margin: 0 auto; }
+
+    /* Games Grid */
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 16px;
+    }
+
+    .game-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+
+    .game-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .game-card.not-ready { opacity: 0.5; cursor: default; }
+    .game-card.not-ready:hover { border-color: var(--border); transform: none; }
+
+    .game-card .matchup {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .team {
+      text-align: center;
+      flex: 1;
+    }
+
+    .team .abbr {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .team .name {
+      font-size: 12px;
+      color: var(--text2);
+      margin-top: 2px;
+    }
+
+    .at-symbol {
+      font-size: 14px;
+      color: var(--text2);
+      padding: 0 12px;
+    }
+
+    .pitchers {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--text2);
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+
+    .pitchers .hand {
+      font-size: 11px;
+      background: var(--surface2);
+      padding: 1px 5px;
+      border-radius: 4px;
+      margin-left: 4px;
+    }
+
+    .game-card .status-badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: var(--surface2);
+      color: var(--text2);
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+
+    .game-card .status-badge.ready {
+      background: rgba(52, 211, 153, 0.15);
+      color: var(--green);
+    }
+
+    /* Results Panel */
+    .results-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 100;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 20px;
+      overflow-y: auto;
+    }
+
+    .results-overlay.open { display: flex; }
+
+    .results-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 800px;
+      padding: 32px;
+      position: relative;
+    }
+
+    .results-panel .close-btn {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: var(--text2);
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .results-panel .close-btn:hover { color: var(--text); }
+
+    .result-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .result-header .teams {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .result-header .subtitle {
+      color: var(--text2);
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .nrfi-big {
+      text-align: center;
+      margin: 24px 0;
+    }
+
+    .nrfi-big .label {
+      font-size: 13px;
+      color: var(--text2);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .nrfi-big .value {
+      font-size: 64px;
+      font-weight: 800;
+      letter-spacing: -2px;
+    }
+
+    .nrfi-big .pct { font-size: 36px; }
+
+    .nrfi-big .ci {
+      font-size: 14px;
+      color: var(--text2);
+      margin-top: 4px;
+    }
+
+    .halves {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .half-card {
+      background: var(--surface2);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .half-card .half-label {
+      font-size: 12px;
+      color: var(--text2);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .half-card .half-value {
+      font-size: 32px;
+      font-weight: 700;
+      margin: 6px 0;
+    }
+
+    .half-card .half-sub {
+      font-size: 12px;
+      color: var(--text2);
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    .stat-row .stat-label { color: var(--text2); }
+
+    .lineup-section {
+      margin-top: 24px;
+    }
+
+    .lineup-section h3 {
+      font-size: 14px;
+      color: var(--text2);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+
+    .lineup-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .lineup-table th {
+      text-align: left;
+      color: var(--text2);
+      font-weight: 500;
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .lineup-table td {
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .lineup-table .slot { color: var(--text2); width: 30px; }
+
+    .park-info {
+      margin-top: 20px;
+      padding: 12px 16px;
+      background: var(--surface2);
+      border-radius: 8px;
+      font-size: 13px;
+      display: flex;
+      gap: 20px;
+    }
+
+    .park-info span { color: var(--text2); }
+
+    /* Loading */
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(26, 29, 39, 0.85);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 16px;
+      gap: 12px;
+      z-index: 10;
+    }
+
+    .loading-overlay .spinner { width: 32px; height: 32px; border-width: 3px; }
+
+    /* Color coding */
+    .prob-high { color: var(--green); }
+    .prob-mid { color: var(--yellow); }
+    .prob-low { color: var(--orange); }
+    .prob-vlow { color: var(--red); }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text2);
+    }
+
+    .empty-state h2 { font-size: 18px; margin-bottom: 8px; color: var(--text); }
+
+    /* Custom matchup tab */
+    .custom-section {
+      display: none;
+      max-width: 700px;
+    }
+
+    .custom-section.active { display: block; }
+    .games-section.active { display: block; }
+    .games-section { display: none; }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      color: var(--text2);
+      margin-bottom: 6px;
+    }
+
+    .form-group select, .form-group input[type="text"] {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .form-group select:focus, .form-group input[type="text"]:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .batter-slots {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .batter-slots .slot-num {
+      font-size: 13px;
+      color: var(--text2);
+      text-align: center;
+    }
+
+    .search-select {
+      position: relative;
+    }
+
+    .search-select input {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+
+    .search-select .dropdown {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 50;
+    }
+
+    .search-select .dropdown.open { display: block; }
+
+    .search-select .dropdown-item {
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .search-select .dropdown-item:hover { background: var(--surface2); }
+
+    .search-select .dropdown-item .team-tag {
+      font-size: 11px;
+      color: var(--text2);
+      margin-left: 6px;
+    }
+
+    .custom-result {
+      margin-top: 20px;
+      padding: 20px;
+      background: var(--surface2);
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    /* Lineup Editor */
+    .editor-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 100;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 20px;
+      overflow-y: auto;
+    }
+    .editor-overlay.open { display: flex; }
+
+    .editor-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 900px;
+      padding: 32px;
+      position: relative;
+    }
+
+    .editor-panel .close-btn {
+      position: absolute; top: 16px; right: 20px;
+      background: none; border: none; color: var(--text2); font-size: 24px; cursor: pointer;
+    }
+    .editor-panel .close-btn:hover { color: var(--text); }
+
+    .editor-header { text-align: center; margin-bottom: 24px; }
+    .editor-header h2 { font-size: 22px; font-weight: 700; }
+    .editor-header .sub { color: var(--text2); font-size: 13px; margin-top: 4px; }
+
+    .editor-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .editor-col h3 {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text2);
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .editor-col h3 strong { color: var(--text); }
+
+    .editor-slot {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .editor-slot .slot-num {
+      width: 22px;
+      font-size: 12px;
+      color: var(--text2);
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .editor-slot .slot-input {
+      flex: 1;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: text;
+    }
+    .editor-slot .slot-input:focus { outline: none; border-color: var(--accent); }
+
+    .editor-slot .move-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      flex-shrink: 0;
+    }
+
+    .editor-slot .move-btn {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text2);
+      width: 22px;
+      height: 16px;
+      font-size: 10px;
+      cursor: pointer;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      line-height: 1;
+    }
+    .editor-slot .move-btn:hover { border-color: var(--accent); color: var(--text); }
+
+    .editor-actions { text-align: center; }
+
+    .editor-loading {
+      text-align: center;
+      padding: 30px;
+      color: var(--text2);
+    }
+
+    .projected-badge {
+      background: rgba(79, 140, 255, 0.15);
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1><span>NRFI</span> Model</h1>
+  <div class="controls">
+    <input type="date" id="datePicker" />
+    <button class="btn" id="loadBtn" onclick="loadGames()">Load Games</button>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="btn-outline active" id="tabGames" onclick="switchTab('games')">Today's Games</button>
+  <button class="btn-outline" id="tabCustom" onclick="switchTab('custom')">Custom Matchup</button>
+</div>
+
+<div class="container">
+  <!-- Games Tab -->
+  <div class="games-section active" id="gamesSection">
+    <div class="games-grid" id="gamesGrid">
+      <div class="empty-state">
+        <h2>Loading games...</h2>
+        <p>Fetching schedule from MLB</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Matchup Tab -->
+  <div class="custom-section" id="customSection">
+    <h2 style="margin-bottom: 20px;">Build a Custom Half-Inning</h2>
+
+    <div class="form-group">
+      <label>Pitcher</label>
+      <div class="search-select" id="pitcherSearch">
+        <input type="text" placeholder="Search pitchers..." oninput="filterPlayers('pitcher', this.value)" onfocus="showDropdown('pitcher')" />
+        <div class="dropdown" id="pitcherDropdown"></div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Park</label>
+      <select id="parkSelect">
+        <option value="HOU">Neutral (HOU)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Batting Order (9 batters)</label>
+      <div class="batter-slots" id="batterSlots"></div>
+    </div>
+
+    <button class="btn" onclick="runCustom()" id="customRunBtn">Run Model</button>
+
+    <div class="custom-result" id="customResult" style="display:none;"></div>
+  </div>
+</div>
+
+<!-- Lineup Editor Overlay -->
+<div class="editor-overlay" id="editorOverlay" onclick="if(event.target===this)closeEditor()">
+  <div class="editor-panel">
+    <button class="close-btn" onclick="closeEditor()">&times;</button>
+    <div class="editor-header">
+      <h2 id="editorTitle">Edit Projected Lineups</h2>
+      <div class="sub" id="editorSub">Lineups carried over from each team's last game. Reorder or swap batters.</div>
+    </div>
+    <div class="editor-columns">
+      <div class="editor-col">
+        <h3 id="editorAwayLabel">Away</h3>
+        <div class="editor-pitcher" style="margin-bottom:14px;">
+          <label style="font-size:12px;color:var(--text2);margin-bottom:4px;display:block;">Starting Pitcher (vs this lineup)</label>
+          <div class="editor-slot" style="margin-bottom:0;">
+            <div class="slot-num" style="font-size:11px;">SP</div>
+            <input class="slot-input" type="text" id="editorAwayPitcherInput"
+                   placeholder="Search pitchers..."
+                   data-side="away" data-role="pitcher"
+                   onfocus="openEditorPitcherDropdown(this)"
+                   oninput="filterEditorPitcherDropdown(this)" />
+          </div>
+        </div>
+        <div id="editorAwaySlots"></div>
+      </div>
+      <div class="editor-col">
+        <h3 id="editorHomeLabel">Home</h3>
+        <div class="editor-pitcher" style="margin-bottom:14px;">
+          <label style="font-size:12px;color:var(--text2);margin-bottom:4px;display:block;">Starting Pitcher (vs this lineup)</label>
+          <div class="editor-slot" style="margin-bottom:0;">
+            <div class="slot-num" style="font-size:11px;">SP</div>
+            <input class="slot-input" type="text" id="editorHomePitcherInput"
+                   placeholder="Search pitchers..."
+                   data-side="home" data-role="pitcher"
+                   onfocus="openEditorPitcherDropdown(this)"
+                   oninput="filterEditorPitcherDropdown(this)" />
+          </div>
+        </div>
+        <div id="editorHomeSlots"></div>
+      </div>
+    </div>
+    <div class="editor-actions">
+      <button class="btn" id="editorRunBtn" onclick="runFromEditor()">Run Model</button>
+    </div>
+  </div>
+</div>
+
+<!-- Results Overlay -->
+<div class="results-overlay" id="resultsOverlay" onclick="closeIfBg(event)">
+  <div class="results-panel" id="resultsPanel">
+    <button class="close-btn" onclick="closeResults()">&times;</button>
+    <div id="resultsContent"></div>
+  </div>
+</div>
+
+<script>
+const API = '';
+let allPitchers = [];
+let allBatters = [];
+let selectedPitcher = null;
+let selectedBatters = Array(9).fill(null);
+
+// Lineup editor state
+let editorGame = null;
+let editorAwayLineup = [];  // [{id, name}, ...]
+let editorHomeLineup = [];
+let editorAwayPitcher = null;  // {id, name}
+let editorHomePitcher = null;
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  const dp = document.getElementById('datePicker');
+  // Default to yesterday since today's lineups might not be posted
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  dp.value = d.toISOString().split('T')[0];
+  loadGames();
+  loadPlayers();
+});
+
+function switchTab(tab) {
+  document.getElementById('tabGames').classList.toggle('active', tab === 'games');
+  document.getElementById('tabCustom').classList.toggle('active', tab === 'custom');
+  document.getElementById('gamesSection').classList.toggle('active', tab === 'games');
+  document.getElementById('customSection').classList.toggle('active', tab === 'custom');
+}
+
+// ── Games Tab ──
+
+async function loadGames() {
+  const dt = document.getElementById('datePicker').value;
+  const grid = document.getElementById('gamesGrid');
+  grid.innerHTML = '<div class="empty-state"><div class="spinner"></div><p>Fetching games...</p></div>';
+
+  try {
+    const res = await fetch(`${API}/api/games?date=${dt}`);
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    renderGames(data.games, dt);
+  } catch (e) {
+    grid.innerHTML = `<div class="empty-state"><h2>Error</h2><p>${e.message}</p></div>`;
+  }
+}
+
+function renderGames(games, dt) {
+  const grid = document.getElementById('gamesGrid');
+  if (!games.length) {
+    grid.innerHTML = '<div class="empty-state"><h2>No games found</h2><p>Try a different date</p></div>';
+    return;
+  }
+
+  // Store games globally so editor can reference them
+  window._gamesCache = games;
+
+  grid.innerHTML = games.map((g, idx) => {
+    const hasPitchers = g.away_pitcher.id && g.home_pitcher.id;
+    let onclick, badge, cardClass;
+    if (g.ready) {
+      onclick = `runGame('${g.game_id}','${g.home_team}','${g.away_team}','${dt}')`;
+      badge = `<span class="status-badge ready">Ready</span>`;
+      cardClass = '';
+    } else if (hasPitchers) {
+      onclick = `openLineupEditor(${idx}, '${dt}')`;
+      badge = `<span class="status-badge projected-badge">Projected Lineup</span>`;
+      cardClass = '';
+    } else {
+      onclick = '';
+      badge = `<span class="status-badge">${g.status || 'TBD'}</span>`;
+      cardClass = 'not-ready';
+    }
+    return `
+    <div class="game-card ${cardClass}" onclick="${onclick}">
+      ${badge}
+      <div class="matchup">
+        <div class="team">
+          <div class="abbr">${g.away_team}</div>
+          <div class="name">${g.away_name}</div>
+        </div>
+        <div class="at-symbol">@</div>
+        <div class="team">
+          <div class="abbr">${g.home_team}</div>
+          <div class="name">${g.home_name}</div>
+        </div>
+      </div>
+      <div class="pitchers">
+        <div>${g.away_pitcher.name} <span class="hand">SP</span></div>
+        <div>${g.home_pitcher.name} <span class="hand">SP</span></div>
+      </div>
+    </div>
+  `}).join('');
+}
+
+async function runGame(gameId, homeTeam, awayTeam, dt) {
+  const overlay = document.getElementById('resultsOverlay');
+  const content = document.getElementById('resultsContent');
+  overlay.classList.add('open');
+  content.innerHTML = '<div style="text-align:center;padding:60px;"><div class="spinner" style="width:40px;height:40px;border-width:3px;margin:0 auto 16px;"></div><p>Running 50,000 simulations...</p></div>';
+
+  try {
+    const res = await fetch(`${API}/api/run`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        game_id: gameId,
+        home_team: homeTeam,
+        away_team: awayTeam,
+        date: dt,
+        n_simulations: 50000,
+      }),
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    renderResults(data);
+  } catch (e) {
+    content.innerHTML = `<div class="empty-state"><h2>Error</h2><p>${e.message}</p></div>`;
+  }
+}
+
+function probColor(p) {
+  if (p >= 0.55) return 'prob-high';
+  if (p >= 0.48) return 'prob-mid';
+  if (p >= 0.40) return 'prob-low';
+  return 'prob-vlow';
+}
+
+function pctStr(p) {
+  return (p * 100).toFixed(1);
+}
+
+function renderResults(d) {
+  const r = d.results;
+  const content = document.getElementById('resultsContent');
+
+  content.innerHTML = `
+    <div class="result-header">
+      <div class="teams">${d.away_team} @ ${d.home_team}</div>
+      <div class="subtitle">${d.away_name} at ${d.home_name}</div>
+    </div>
+
+    <div class="nrfi-big">
+      <div class="label">P(NRFI) Game</div>
+      <div class="value ${probColor(r.p_nrfi_game)}">${pctStr(r.p_nrfi_game)}<span class="pct">%</span></div>
+      <div class="ci">95% CI: ${pctStr(r.ci_lower)}% &ndash; ${pctStr(r.ci_upper)}%</div>
+    </div>
+
+    <div class="halves">
+      <div class="half-card">
+        <div class="half-label">Top 1st (${d.away_team} batting)</div>
+        <div class="half-value ${probColor(r.p_nrfi_away)}">${pctStr(r.p_nrfi_away)}%</div>
+        <div class="half-sub">vs ${d.pitchers.home.name} (${d.pitchers.home.hand}HP)</div>
+        <div class="half-sub">Analytic: ${pctStr(r.p_nrfi_away_analytic)}% &middot; Avg PA: ${r.avg_pa_away}</div>
+      </div>
+      <div class="half-card">
+        <div class="half-label">Bot 1st (${d.home_team} batting)</div>
+        <div class="half-value ${probColor(r.p_nrfi_home)}">${pctStr(r.p_nrfi_home)}%</div>
+        <div class="half-sub">vs ${d.pitchers.away.name} (${d.pitchers.away.hand}HP)</div>
+        <div class="half-sub">Analytic: ${pctStr(r.p_nrfi_home_analytic)}% &middot; Avg PA: ${r.avg_pa_home}</div>
+      </div>
+    </div>
+
+    <div class="park-info">
+      <div>Park: <strong>${d.park.team}</strong></div>
+      <div><span>HR Factor:</span> <strong>${d.park.hr_factor}</strong></div>
+      <div><span>Run Factor:</span> <strong>${d.park.run_factor}</strong></div>
+      <div><span>Sims:</span> <strong>${r.n_simulations.toLocaleString()}</strong></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+      <div class="lineup-section">
+        <h3>${d.away_team} Lineup (vs ${d.pitchers.home.name})</h3>
+        <table class="lineup-table">
+          <tr><th class="slot">#</th><th>Batter</th><th>B</th><th>K%</th><th>HR%</th><th>BB%</th></tr>
+          ${d.away_lineup.map((b, i) => `
+            <tr>
+              <td class="slot">${i + 1}</td>
+              <td>${b.name}</td>
+              <td>${b.hand}</td>
+              <td>${(b.k_rate * 100).toFixed(1)}</td>
+              <td>${(b.hr_rate * 100).toFixed(1)}</td>
+              <td>${(b.bb_rate * 100).toFixed(1)}</td>
+            </tr>
+          `).join('')}
+        </table>
+      </div>
+      <div class="lineup-section">
+        <h3>${d.home_team} Lineup (vs ${d.pitchers.away.name})</h3>
+        <table class="lineup-table">
+          <tr><th class="slot">#</th><th>Batter</th><th>B</th><th>K%</th><th>HR%</th><th>BB%</th></tr>
+          ${d.home_lineup.map((b, i) => `
+            <tr>
+              <td class="slot">${i + 1}</td>
+              <td>${b.name}</td>
+              <td>${b.hand}</td>
+              <td>${(b.k_rate * 100).toFixed(1)}</td>
+              <td>${(b.hr_rate * 100).toFixed(1)}</td>
+              <td>${(b.bb_rate * 100).toFixed(1)}</td>
+            </tr>
+          `).join('')}
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function closeResults() {
+  document.getElementById('resultsOverlay').classList.remove('open');
+}
+
+function closeIfBg(e) {
+  if (e.target === document.getElementById('resultsOverlay')) closeResults();
+}
+
+// ── Custom Matchup Tab ──
+
+async function loadPlayers() {
+  try {
+    const [pRes, bRes] = await Promise.all([
+      fetch(`${API}/api/pitchers`),
+      fetch(`${API}/api/batters`),
+    ]);
+    allPitchers = await pRes.json();
+    allBatters = await bRes.json();
+    buildCustomUI();
+  } catch (e) {
+    console.error('Failed to load players:', e);
+  }
+}
+
+function buildCustomUI() {
+  // Park selector
+  const parkSel = document.getElementById('parkSelect');
+  const teams = [...new Set(allPitchers.map(p => p.team))].sort();
+  parkSel.innerHTML = teams.map(t => `<option value="${t}" ${t === 'HOU' ? 'selected' : ''}>${t}</option>`).join('');
+
+  // Batter slots
+  const slots = document.getElementById('batterSlots');
+  slots.innerHTML = '';
+  for (let i = 0; i < 9; i++) {
+    const num = document.createElement('div');
+    num.className = 'slot-num';
+    num.textContent = i + 1;
+    slots.appendChild(num);
+
+    const wrap = document.createElement('div');
+    wrap.className = 'search-select';
+    wrap.innerHTML = `
+      <input type="text" placeholder="Search batters..." data-slot="${i}"
+             oninput="filterPlayers('batter', this.value, ${i})"
+             onfocus="showDropdown('batter', ${i})" />
+      <div class="dropdown" id="batterDropdown${i}"></div>
+    `;
+    slots.appendChild(wrap);
+  }
+}
+
+function showDropdown(type, slot) {
+  filterPlayers(type, '', slot);
+  const dd = type === 'pitcher'
+    ? document.getElementById('pitcherDropdown')
+    : document.getElementById(`batterDropdown${slot}`);
+  dd.classList.add('open');
+
+  // Close on outside click
+  setTimeout(() => {
+    const handler = (e) => {
+      if (!dd.parentElement.contains(e.target)) {
+        dd.classList.remove('open');
+        document.removeEventListener('click', handler);
+      }
+    };
+    document.addEventListener('click', handler);
+  }, 0);
+}
+
+function filterPlayers(type, query, slot) {
+  const list = type === 'pitcher' ? allPitchers : allBatters;
+  const q = query.toLowerCase();
+  const filtered = q
+    ? list.filter(p => p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q)).slice(0, 15)
+    : list.slice(0, 20);
+
+  const dd = type === 'pitcher'
+    ? document.getElementById('pitcherDropdown')
+    : document.getElementById(`batterDropdown${slot}`);
+
+  dd.innerHTML = filtered.map(p => {
+    const id = type === 'pitcher' ? p.pitcher_id : p.batter_id;
+    return `<div class="dropdown-item" onclick="selectPlayer('${type}', '${id}', '${p.name.replace(/'/g, "\\'")}', ${slot ?? 'null'})">
+      ${p.name} <span class="team-tag">${p.team} (${p.hand})</span>
+    </div>`;
+  }).join('');
+
+  if (q) dd.classList.add('open');
+}
+
+function selectPlayer(type, id, name, slot) {
+  if (type === 'pitcher') {
+    selectedPitcher = id;
+    const input = document.querySelector('#pitcherSearch input');
+    input.value = name;
+    document.getElementById('pitcherDropdown').classList.remove('open');
+  } else {
+    selectedBatters[slot] = id;
+    const input = document.querySelector(`#batterSlots input[data-slot="${slot}"]`);
+    input.value = name;
+    document.getElementById(`batterDropdown${slot}`).classList.remove('open');
+  }
+}
+
+// ── Lineup Editor ──
+
+async function openLineupEditor(gameIdx, dt) {
+  const g = window._gamesCache[gameIdx];
+  editorGame = { ...g, date: dt };
+  editorAwayLineup = [];
+  editorHomeLineup = [];
+  // Away pitcher faces home lineup, home pitcher faces away lineup
+  editorHomePitcher = g.home_pitcher.id ? { id: g.home_pitcher.id, name: g.home_pitcher.name } : null;
+  editorAwayPitcher = g.away_pitcher.id ? { id: g.away_pitcher.id, name: g.away_pitcher.name } : null;
+
+  document.getElementById('editorOverlay').classList.add('open');
+  document.getElementById('editorTitle').textContent = `${g.away_team} @ ${g.home_team}`;
+  document.getElementById('editorSub').textContent = 'Loading last lineups...';
+  document.getElementById('editorAwayLabel').innerHTML = `<strong>${g.away_team}</strong> ${g.away_name}`;
+  document.getElementById('editorHomeLabel').innerHTML = `<strong>${g.home_team}</strong> ${g.home_name}`;
+
+  // Set pitcher inputs
+  document.getElementById('editorAwayPitcherInput').value = editorHomePitcher ? editorHomePitcher.name : '';
+  document.getElementById('editorHomePitcherInput').value = editorAwayPitcher ? editorAwayPitcher.name : '';
+  document.getElementById('editorAwaySlots').innerHTML = '<div class="editor-loading"><div class="spinner"></div></div>';
+  document.getElementById('editorHomeSlots').innerHTML = '<div class="editor-loading"><div class="spinner"></div></div>';
+
+  // Fetch last lineups in parallel
+  const [awayRes, homeRes] = await Promise.all([
+    fetch(`${API}/api/last-lineup?team=${g.away_team}`).then(r => r.json()).catch(() => ({ lineup: [] })),
+    fetch(`${API}/api/last-lineup?team=${g.home_team}`).then(r => r.json()).catch(() => ({ lineup: [] })),
+  ]);
+
+  editorAwayLineup = awayRes.lineup || [];
+  editorHomeLineup = homeRes.lineup || [];
+
+  // Pad to 9 if short
+  while (editorAwayLineup.length < 9) editorAwayLineup.push({ id: '', name: '' });
+  while (editorHomeLineup.length < 9) editorHomeLineup.push({ id: '', name: '' });
+
+  document.getElementById('editorSub').textContent = 'Lineups carried over from each team\'s last game. Reorder or swap batters below.';
+  renderEditorSlots('away');
+  renderEditorSlots('home');
+}
+
+function renderEditorSlots(side) {
+  const lineup = side === 'away' ? editorAwayLineup : editorHomeLineup;
+  const container = document.getElementById(side === 'away' ? 'editorAwaySlots' : 'editorHomeSlots');
+
+  container.innerHTML = lineup.map((b, i) => `
+    <div class="editor-slot">
+      <div class="slot-num">${i + 1}</div>
+      <input class="slot-input" type="text" value="${b.name}"
+             data-side="${side}" data-idx="${i}"
+             placeholder="Search batter..."
+             onfocus="openEditorDropdown(this)"
+             oninput="filterEditorDropdown(this)" />
+      <div class="move-btns">
+        <button class="move-btn" onclick="moveSlot('${side}',${i},-1)" ${i === 0 ? 'disabled' : ''}>&#9650;</button>
+        <button class="move-btn" onclick="moveSlot('${side}',${i},1)" ${i === 8 ? 'disabled' : ''}>&#9660;</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function moveSlot(side, idx, dir) {
+  const lineup = side === 'away' ? editorAwayLineup : editorHomeLineup;
+  const newIdx = idx + dir;
+  if (newIdx < 0 || newIdx > 8) return;
+  [lineup[idx], lineup[newIdx]] = [lineup[newIdx], lineup[idx]];
+  renderEditorSlots(side);
+}
+
+function openEditorDropdown(input) {
+  // Remove any existing dropdown
+  document.querySelectorAll('.editor-dropdown').forEach(d => d.remove());
+
+  const dd = document.createElement('div');
+  dd.className = 'dropdown editor-dropdown open';
+  dd.style.cssText = 'position:absolute;left:0;right:0;top:100%;z-index:60;';
+  input.parentElement.style.position = 'relative';
+  input.parentElement.appendChild(dd);
+  filterEditorDropdown(input);
+
+  setTimeout(() => {
+    const handler = (e) => {
+      if (!input.parentElement.contains(e.target)) {
+        dd.remove();
+        document.removeEventListener('click', handler);
+      }
+    };
+    document.addEventListener('click', handler);
+  }, 0);
+}
+
+function filterEditorDropdown(input) {
+  const dd = input.parentElement.querySelector('.editor-dropdown');
+  if (!dd) return;
+  const q = input.value.toLowerCase();
+  const side = input.dataset.side;
+  const idx = parseInt(input.dataset.idx);
+  const filtered = q
+    ? allBatters.filter(p => p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q)).slice(0, 12)
+    : allBatters.slice(0, 15);
+
+  dd.innerHTML = filtered.map(p => `
+    <div class="dropdown-item" onclick="pickEditorBatter('${side}', ${idx}, '${p.batter_id}', '${p.name.replace(/'/g, "\\'")}', this)">
+      ${p.name} <span class="team-tag">${p.team} (${p.hand})</span>
+    </div>
+  `).join('');
+}
+
+function pickEditorBatter(side, idx, id, name, el) {
+  const lineup = side === 'away' ? editorAwayLineup : editorHomeLineup;
+  lineup[idx] = { id, name };
+  // Update the input
+  const input = document.querySelector(`.slot-input[data-side="${side}"][data-idx="${idx}"]`);
+  if (input) input.value = name;
+  // Close dropdown
+  const dd = el.closest('.editor-dropdown');
+  if (dd) dd.remove();
+}
+
+async function runFromEditor() {
+  if (editorAwayLineup.some(b => !b.id) || editorHomeLineup.some(b => !b.id)) {
+    alert('Fill all 9 batter slots for both teams');
+    return;
+  }
+  if (!editorHomePitcher || !editorAwayPitcher) {
+    alert('Select a starting pitcher for both sides');
+    return;
+  }
+
+  const btn = document.getElementById('editorRunBtn');
+  btn.disabled = true;
+  btn.textContent = 'Running...';
+
+  closeEditor();
+
+  const g = editorGame;
+  const overlay = document.getElementById('resultsOverlay');
+  const content = document.getElementById('resultsContent');
+  overlay.classList.add('open');
+  content.innerHTML = '<div style="text-align:center;padding:60px;"><div class="spinner" style="width:40px;height:40px;border-width:3px;margin:0 auto 16px;"></div><p>Running 50,000 simulations with projected lineups...</p></div>';
+
+  try {
+    const res = await fetch(`${API}/api/run`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        game_id: g.game_id,
+        home_team: g.home_team,
+        away_team: g.away_team,
+        date: g.date,
+        n_simulations: 50000,
+        away_lineup: editorAwayLineup,
+        home_lineup: editorHomeLineup,
+        home_pitcher_id: editorHomePitcher.id,
+        away_pitcher_id: editorAwayPitcher.id,
+      }),
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    renderResults(data);
+  } catch (e) {
+    content.innerHTML = `<div class="empty-state"><h2>Error</h2><p>${e.message}</p></div>`;
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Run Model';
+}
+
+function closeEditor() {
+  document.getElementById('editorOverlay').classList.remove('open');
+}
+
+function openEditorPitcherDropdown(input) {
+  document.querySelectorAll('.editor-dropdown').forEach(d => d.remove());
+  const dd = document.createElement('div');
+  dd.className = 'dropdown editor-dropdown open';
+  dd.style.cssText = 'position:absolute;left:0;right:0;top:100%;z-index:60;';
+  input.parentElement.style.position = 'relative';
+  input.parentElement.appendChild(dd);
+  filterEditorPitcherDropdown(input);
+  setTimeout(() => {
+    const handler = (e) => {
+      if (!input.parentElement.contains(e.target)) { dd.remove(); document.removeEventListener('click', handler); }
+    };
+    document.addEventListener('click', handler);
+  }, 0);
+}
+
+function filterEditorPitcherDropdown(input) {
+  const dd = input.parentElement.querySelector('.editor-dropdown');
+  if (!dd) return;
+  const q = input.value.toLowerCase();
+  const side = input.dataset.side;  // 'away' or 'home'
+  const filtered = q
+    ? allPitchers.filter(p => p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q)).slice(0, 12)
+    : allPitchers.slice(0, 15);
+  dd.innerHTML = filtered.map(p => `
+    <div class="dropdown-item" onclick="pickEditorPitcher('${side}', '${p.pitcher_id}', '${p.name.replace(/'/g, "\\'")}', this)">
+      ${p.name} <span class="team-tag">${p.team} (${p.hand}HP)</span>
+    </div>
+  `).join('');
+}
+
+function pickEditorPitcher(side, id, name, el) {
+  // 'away' input = pitcher facing away lineup = home pitcher
+  // 'home' input = pitcher facing home lineup = away pitcher
+  if (side === 'away') {
+    editorHomePitcher = { id, name };
+    document.getElementById('editorAwayPitcherInput').value = name;
+  } else {
+    editorAwayPitcher = { id, name };
+    document.getElementById('editorHomePitcherInput').value = name;
+  }
+  const dd = el.closest('.editor-dropdown');
+  if (dd) dd.remove();
+}
+
+// ── Custom Matchup ──
+
+async function runCustom() {
+  if (!selectedPitcher) return alert('Select a pitcher');
+  if (selectedBatters.some(b => !b)) return alert('Fill all 9 batter slots');
+
+  const btn = document.getElementById('customRunBtn');
+  const result = document.getElementById('customResult');
+  btn.disabled = true;
+  btn.textContent = 'Running...';
+  result.style.display = 'block';
+  result.innerHTML = '<div class="spinner" style="margin:0 auto;"></div>';
+
+  try {
+    const res = await fetch(`${API}/api/custom`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        pitcher_id: selectedPitcher,
+        batter_ids: selectedBatters,
+        park: document.getElementById('parkSelect').value,
+        n_simulations: 50000,
+      }),
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+
+    result.innerHTML = `
+      <div style="margin-bottom:12px;">
+        <span style="color:var(--text2)">Pitcher:</span> <strong>${data.pitcher.name}</strong> (${data.pitcher.hand}HP)
+        &nbsp;&middot;&nbsp;
+        <span style="color:var(--text2)">Park:</span> <strong>${data.park}</strong>
+      </div>
+      <div class="label" style="font-size:13px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">P(NRFI) Half-Inning</div>
+      <div class="value ${probColor(data.results.p_nrfi_sim)}" style="font-size:52px;font-weight:800;">
+        ${pctStr(data.results.p_nrfi_sim)}<span style="font-size:28px;">%</span>
+      </div>
+      <div style="color:var(--text2);font-size:13px;margin-top:6px;">
+        Analytic: ${pctStr(data.results.p_nrfi_analytic)}% &middot;
+        Avg PA: ${data.results.avg_pa} &middot;
+        Sims: ${data.results.n_simulations.toLocaleString()}
+      </div>
+      <div style="margin-top:14px;font-size:13px;color:var(--text2);">
+        ${data.lineup.map((b, i) => `${i + 1}. ${b.name} (${b.hand})`).join(' &middot; ')}
+      </div>
+    `;
+  } catch (e) {
+    result.innerHTML = `<p style="color:var(--red);">${e.message}</p>`;
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Run Model';
+}
+</script>
+
+</body>
+</html>
