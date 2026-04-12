@@ -113,6 +113,19 @@
     .state-cell{background:var(--s2);border-radius:4px;padding:6px 4px;text-align:center;font-size:9px;color:var(--t2);line-height:1.3}
     .state-cell .sv{font-size:12px;font-weight:700;color:var(--t1);display:block}
 
+    /* Results tracker */
+    .results-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:20px}
+    .daily-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:20px}
+    .daily-table th{text-align:left;color:var(--t2);font-weight:500;padding:8px 10px;border-bottom:1px solid var(--s3)}
+    .daily-table td{padding:8px 10px;border-bottom:1px solid var(--s3)}
+    .daily-table tr:hover{background:var(--s2)}
+    .correct-tag{color:var(--grn);font-weight:600;font-size:11px}
+    .miss-tag{color:var(--red);font-weight:600;font-size:11px}
+    .nrfi-tag{background:rgba(52,211,153,.12);color:var(--grn);padding:1px 6px;border-radius:3px;font-size:10px;font-weight:600}
+    .rfi-tag{background:rgba(248,113,113,.12);color:var(--red);padding:1px 6px;border-radius:3px;font-size:10px;font-weight:600}
+    .tracker-section{margin-bottom:24px}
+    .tracker-section h3{font-size:14px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;border-bottom:1px solid var(--s3);padding-bottom:6px}
+
     .prob-high{color:var(--grn)}.prob-mid{color:var(--yel)}.prob-low{color:var(--org)}.prob-vlow{color:var(--red)}
     .empty{text-align:center;padding:50px 20px;color:var(--t2)}
     .empty h2{font-size:16px;margin-bottom:6px;color:var(--t1)}
@@ -130,7 +143,8 @@
 
 <div class="tabs">
   <button class="tab-btn active" onclick="switchTab(0)">Predictions</button>
-  <button class="tab-btn" onclick="switchTab(1)">Methodology</button>
+  <button class="tab-btn" onclick="switchTab(1)">Results Tracker</button>
+  <button class="tab-btn" onclick="switchTab(2)">Methodology</button>
 </div>
 
 <!-- TAB 0: Predictions -->
@@ -140,8 +154,13 @@
   <div class="games-grid" id="grid"><div class="empty"><div class="spinner"></div><p style="margin-top:10px">Loading predictions...</p></div></div>
 </div>
 
-<!-- TAB 1: Methodology -->
+<!-- TAB 1: Results Tracker -->
 <div class="tab-content" id="tab1">
+  <div id="resultsTracker"><div class="empty"><div class="spinner"></div><p style="margin-top:10px">Loading results...</p></div></div>
+</div>
+
+<!-- TAB 2: Methodology -->
+<div class="tab-content" id="tab2">
   <div class="method-section" id="methodContent"></div>
 </div>
 
@@ -161,6 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
     D = d;
     document.getElementById('meta').textContent = `${d.date} — ${d.summary?.n_games_modeled||0} games modeled — ${(d.n_simulations||0).toLocaleString()} sims/game`;
     renderSummary();
+    loadResultsTracker();
     renderSlate();
     renderCards();
     renderMethodology();
@@ -393,7 +413,125 @@ function renderMethodology() {
   } catch(e) { formulaEl.textContent='logit(p_blend) = logit(p_pitcher) + logit(p_batter) - logit(p_league)'; }
 }
 
-// ── Performance Tab ──
+// ── Results Tracker ──
+
+let RL = {};
+
+function loadResultsTracker() {
+  fetch('data/results_log.json').then(r=>r.json()).then(d => {
+    RL = d;
+    renderResultsTracker();
+  }).catch(() => {
+    document.getElementById('resultsTracker').innerHTML = '<div class="empty"><h2>No results data yet</h2><p>Results will appear after games complete.</p></div>';
+  });
+}
+
+function renderResultsTracker() {
+  const el = document.getElementById('resultsTracker');
+  const c = RL.cumulative || {};
+  const entries = RL.entries || [];
+  const daily = RL.daily || [];
+
+  if (!entries.length) {
+    el.innerHTML = '<div class="empty"><h2>No results tracked yet</h2><p>Results will appear after games complete their first inning.</p></div>';
+    return;
+  }
+
+  el.innerHTML = `
+    <div class="tracker-section">
+      <h3>Cumulative Performance — ${c.n_games} Games Tracked</h3>
+      <div class="results-grid">
+        <div class="stat-card"><div class="sc-label">Accuracy</div><div class="sc-val ${c.accuracy>=.55?'prob-high':c.accuracy>=.48?'prob-mid':'prob-low'}">${(c.accuracy*100).toFixed(1)}%</div><div class="sc-sub">${Math.round(c.accuracy*c.n_games)}/${c.n_games} correct</div></div>
+        <div class="stat-card"><div class="sc-label">Brier Score</div><div class="sc-val">${c.brier_score?.toFixed(4)||'—'}</div><div class="sc-sub">lower is better</div></div>
+        <div class="stat-card"><div class="sc-label">Brier Skill</div><div class="sc-val ${(c.brier_skill_score||0)>0?'prob-high':'prob-low'}">${((c.brier_skill_score||0)*100).toFixed(1)}%</div><div class="sc-sub">vs always-predict-mean</div></div>
+        <div class="stat-card"><div class="sc-label">Log Loss</div><div class="sc-val">${c.log_loss?.toFixed(4)||'—'}</div><div class="sc-sub">cross-entropy</div></div>
+        <div class="stat-card"><div class="sc-label">Actual NRFI Rate</div><div class="sc-val">${pS(c.actual_nrfi_rate||0)}%</div><div class="sc-sub">observed</div></div>
+        <div class="stat-card"><div class="sc-label">Mean Predicted</div><div class="sc-val">${pS(c.mean_predicted||0)}%</div><div class="sc-sub">model average</div></div>
+      </div>
+    </div>
+
+    <div class="tracker-section">
+      <h3>Daily Breakdown</h3>
+      <div style="margin-bottom:16px"><canvas id="dailyChart" height="180"></canvas></div>
+      <table class="daily-table">
+        <tr><th>Date</th><th>Games</th><th>Correct</th><th>Accuracy</th><th>NRFI Count</th><th>NRFI Rate</th></tr>
+        ${daily.slice().reverse().map(d => `
+          <tr>
+            <td>${d.date}</td>
+            <td>${d.n_games}</td>
+            <td>${d.correct}/${d.n_games}</td>
+            <td class="${d.accuracy>=.55?'prob-high':d.accuracy>=.45?'prob-mid':'prob-low'}" style="font-weight:600">${(d.accuracy*100).toFixed(0)}%</td>
+            <td>${d.nrfi_count}/${d.n_games}</td>
+            <td>${(d.nrfi_count/d.n_games*100).toFixed(0)}%</td>
+          </tr>
+        `).join('')}
+      </table>
+    </div>
+
+    <div class="tracker-section">
+      <h3>All Predictions vs Results</h3>
+      <table class="daily-table">
+        <tr><th>Date</th><th>Matchup</th><th>Predicted</th><th>Result</th><th>1st Inning</th><th>Verdict</th></tr>
+        ${entries.slice().reverse().map(e => `
+          <tr>
+            <td style="color:var(--t2)">${e.date}</td>
+            <td>${e.away_team}@${e.home_team}</td>
+            <td class="${pC(e.p_nrfi_predicted)}" style="font-weight:600">${pS(e.p_nrfi_predicted)}%</td>
+            <td>${e.nrfi_actual ? '<span class="nrfi-tag">NRFI</span>' : '<span class="rfi-tag">RFI</span>'}</td>
+            <td style="color:var(--t2)">${e.nrfi_actual ? '0-0' : e.away_runs_1st+'-'+e.home_runs_1st}</td>
+            <td>${e.correct ? '<span class="correct-tag">Correct</span>' : '<span class="miss-tag">Miss</span>'}</td>
+          </tr>
+        `).join('')}
+      </table>
+    </div>
+  `;
+
+  // Daily accuracy chart
+  setTimeout(() => {
+    if (!daily.length) return;
+    const ctx = document.getElementById('dailyChart');
+    if (!ctx) return;
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: daily.map(d => d.date),
+        datasets: [
+          {
+            label: 'Accuracy',
+            data: daily.map(d => d.accuracy * 100),
+            backgroundColor: daily.map(d => d.accuracy >= .55 ? 'rgba(52,211,153,.6)' : d.accuracy >= .45 ? 'rgba(251,191,36,.6)' : 'rgba(248,113,113,.6)'),
+            borderRadius: 3,
+            yAxisID: 'y',
+          },
+          {
+            label: 'NRFI Rate',
+            data: daily.map(d => (d.nrfi_count / d.n_games) * 100),
+            type: 'line',
+            borderColor: 'rgba(79,140,255,.8)',
+            backgroundColor: 'rgba(79,140,255,.15)',
+            pointRadius: 4,
+            pointBackgroundColor: 'rgba(79,140,255,.8)',
+            borderWidth: 2,
+            tension: 0.3,
+            yAxisID: 'y',
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { labels: { color: '#8b8fa3', font: { size: 11 } } },
+          tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw.toFixed(1)}%` } }
+        },
+        scales: {
+          y: { min: 0, max: 100, grid: { color: 'rgba(46,51,69,.5)' }, ticks: { color: '#8b8fa3', callback: v => v + '%' } },
+          x: { grid: { display: false }, ticks: { color: '#8b8fa3', font: { size: 10 }, maxRotation: 45 } }
+        }
+      }
+    });
+  }, 50);
+}
 </script>
 </body>
 </html>
