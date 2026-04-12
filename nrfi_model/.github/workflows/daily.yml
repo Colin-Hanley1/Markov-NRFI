@@ -1,12 +1,9 @@
-name: Daily NRFI Predictions
+name: NRFI Predictions
 
 on:
   schedule:
-    # Run at 9:00 AM and 4:00 PM ET (13:00 and 20:00 UTC)
-    # 9 AM catches early lineups, 4 PM catches late afternoon games
-    - cron: '0 13 * * *'
-    - cron: '0 20 * * *'
-  workflow_dispatch:  # manual trigger
+    - cron: '0 * * * *'  # every hour
+  workflow_dispatch:
 
 jobs:
   compute:
@@ -25,16 +22,22 @@ jobs:
       - name: Install dependencies
         run: pip install numpy pandas scipy requests
 
+      # Only update profiles twice a day (13:00 and 20:00 UTC)
       - name: Update player profiles
+        if: contains(fromJSON('["13","20"]'), github.event.schedule && format('{0}', github.event.schedule) || '13')
         run: python update_profiles.py
+        continue-on-error: true
 
       - name: Compute today's predictions
         run: python compute_daily.py
 
-      - name: Commit and push results
+      - name: Check resolved game results
+        run: python check_results.py
+
+      - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add docs/data/ data/pitchers.csv data/batters.csv data/league_averages.csv
-          git diff --staged --quiet || git commit -m "Update predictions for $(date +%Y-%m-%d)"
+          git diff --staged --quiet || git commit -m "Update $(date +%Y-%m-%d\ %H:%M\ UTC)"
           git push
