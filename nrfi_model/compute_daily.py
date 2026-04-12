@@ -22,7 +22,10 @@ from pathlib import Path
 
 from model.outcomes import PAOutcomeRates
 from model.blend import build_blended_rates
-from model.chain import simulate_nrfi, compute_nrfi_analytic, compute_half_inning_detail
+from model.chain import (
+    simulate_nrfi, compute_nrfi_analytic, compute_half_inning_detail,
+    simulate_with_details, simulate_full_inning_traced,
+)
 
 DATA_DIR = "data/"
 OUT_DIR = Path("docs/data")
@@ -204,10 +207,22 @@ def run_game_model(away_lineup, home_lineup, away_sp_id, home_sp_id, home_team, 
     away_sensitivity = compute_sensitivity(away_rates)
     home_sensitivity = compute_sensitivity(home_rates)
 
-    # Compact transition matrix: only include non-trivial rows (probs > 0.001)
-    # Full matrix is too large; include state visits and key metrics instead
+    # Compact transition matrix
     away_detail.pop("transition_matrix", None)
     home_detail.pop("transition_matrix", None)
+
+    # Simulation details: PA distribution, convergence (per-half)
+    away_sim_detail = simulate_with_details(away_rates, n_simulations=N_SIMS, seed=42, n_sample_traces=0)
+    home_sim_detail = simulate_with_details(home_rates, n_simulations=N_SIMS, seed=43, n_sample_traces=0)
+    # Remove per-half sample traces (we use full-inning traces instead)
+    away_sim_detail.pop("sample_traces", None)
+    home_sim_detail.pop("sample_traces", None)
+
+    # Full first-inning traces (top + bottom combined)
+    trace_rng = np.random.default_rng(44)
+    full_inning_traces = []
+    for _ in range(20):
+        full_inning_traces.append(simulate_full_inning_traced(away_rates, home_rates, trace_rng))
 
     return {
         "results": {
@@ -224,8 +239,9 @@ def run_game_model(away_lineup, home_lineup, away_sp_id, home_sp_id, home_team, 
             "n_simulations": N_SIMS,
         },
         "model_detail": {
-            "away_half": {**away_detail, "sensitivity": away_sensitivity},
-            "home_half": {**home_detail, "sensitivity": home_sensitivity},
+            "away_half": {**away_detail, "sensitivity": away_sensitivity, "simulation": away_sim_detail},
+            "home_half": {**home_detail, "sensitivity": home_sensitivity, "simulation": home_sim_detail},
+            "full_inning_traces": full_inning_traces,
         },
         "pitchers": {
             "away": {

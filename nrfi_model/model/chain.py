@@ -173,6 +173,120 @@ def simulate_half_inning(
     )
 
 
+def simulate_half_inning_traced(
+    lineup_rates: List[PAOutcomeRates],
+    batter_start: int,
+    rng: np.random.Generator,
+) -> dict:
+    """
+    Simulate a single half-inning and return the full state trace.
+    """
+    from .state import describe_state
+    state = STARTING_STATE
+    batter_slot = batter_start % 9
+    trace = [{"state": state, "label": describe_state(state)}]
+
+    for _ in range(27):
+        rates = lineup_rates[batter_slot]
+        row, _ = build_transition_row(state, rates)
+        next_state = int(rng.choice(len(row), p=row))
+        batter_slot = (batter_slot + 1) % 9
+
+        if next_state == NRFI_ABSORBED:
+            trace.append({"state": NRFI_ABSORBED, "label": "3 outs (NRFI)"})
+            return {"nrfi": True, "pa": len(trace) - 1, "trace": trace}
+        if next_state == RUN_ABSORBED:
+            trace.append({"state": RUN_ABSORBED, "label": "Run scored"})
+            return {"nrfi": False, "pa": len(trace) - 1, "trace": trace}
+
+        trace.append({"state": next_state, "label": describe_state(next_state)})
+        state = next_state
+
+    trace.append({"state": -1, "label": "Max PA reached"})
+    return {"nrfi": False, "pa": 27, "trace": trace}
+
+
+def simulate_full_inning_traced(
+    away_lineup: List[PAOutcomeRates],
+    home_lineup: List[PAOutcomeRates],
+    rng: np.random.Generator,
+) -> dict:
+    """
+    Simulate a full first inning (top + bottom) and return traces for both halves.
+    """
+    top = simulate_half_inning_traced(away_lineup, 0, rng)
+    # If a run scored in the top half, it's already RFI — but we still
+    # play out the bottom half for visualization purposes
+    bot = simulate_half_inning_traced(home_lineup, 0, rng)
+
+    nrfi = top["nrfi"] and bot["nrfi"]
+    return {
+        "nrfi": nrfi,
+        "top": {"nrfi": top["nrfi"], "pa": top["pa"], "trace": top["trace"]},
+        "bottom": {"nrfi": bot["nrfi"], "pa": bot["pa"], "trace": bot["trace"]},
+    }
+
+
+def simulate_with_details(
+    lineup_rates: List[PAOutcomeRates],
+    n_simulations: int = 50_000,
+    seed: int = 42,
+    n_sample_traces: int = 20,
+) -> dict:
+    """
+    Run simulations and collect rich detail: PA distribution,
+    convergence curve, and sample inning traces for visualization.
+    """
+    rng = np.random.default_rng(seed)
+
+    nrfi_count = 0
+    pa_counts = []
+    convergence = []  # running P(NRFI) at checkpoints
+
+    # Collect sample traces from first N innings
+    sample_traces = []
+
+    for i in range(n_simulations):
+        if i < n_sample_traces:
+            result = simulate_half_inning_traced(lineup_rates, 0, rng)
+            sample_traces.append(result)
+            nrfi = result["nrfi"]
+            pa = result["pa"]
+        else:
+            nrfi, pa = simulate_half_inning(lineup_rates, 0, rng)
+
+        if nrfi:
+            nrfi_count += 1
+        pa_counts.append(pa)
+
+        # Log convergence at checkpoints
+        if (i + 1) in (100, 500, 1000, 2000, 5000, 10000, 20000, 50000) and (i + 1) <= n_simulations:
+            convergence.append({
+                "n": i + 1,
+                "p_nrfi": round(nrfi_count / (i + 1), 4),
+            })
+
+    # PA distribution
+    pa_arr = np.array(pa_counts)
+    max_pa = int(pa_arr.max())
+    pa_dist = [0] * (max_pa + 1)
+    for p in pa_counts:
+        pa_dist[p] += 1
+    pa_dist = [round(c / n_simulations, 5) for c in pa_dist]
+
+    return {
+        "p_nrfi": round(nrfi_count / n_simulations, 4),
+        "pa_distribution": pa_dist,
+        "pa_mean": round(float(pa_arr.mean()), 2),
+        "pa_median": int(np.median(pa_arr)),
+        "convergence": convergence,
+        "sample_traces": [
+            {"nrfi": t["nrfi"], "pa": t["pa"], "trace": t["trace"]}
+            for t in sample_traces
+        ],
+    }
+
+
 def simulate_nrfi(
     home_lineup: List[PAOutcomeRates],
     away_lineup: List[PAOutcomeRates],

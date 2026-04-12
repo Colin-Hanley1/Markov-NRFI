@@ -113,6 +113,25 @@
     .state-cell{background:var(--s2);border-radius:4px;padding:6px 4px;text-align:center;font-size:9px;color:var(--t2);line-height:1.3}
     .state-cell .sv{font-size:12px;font-weight:700;color:var(--t1);display:block}
 
+    /* Trace replay */
+    .trace-btn{padding:4px 10px;border-radius:4px;font-size:10px;cursor:pointer;border:1px solid var(--s3);background:var(--s2);color:var(--t2);font-weight:600}
+    .trace-btn:hover{border-color:var(--acc);color:var(--t1)}
+    .trace-btn.nrfi-trace{border-color:rgba(52,211,153,.3)}.trace-btn.rfi-trace{border-color:rgba(248,113,113,.3)}
+    .trace-btn.active{border-color:var(--acc);color:var(--acc);background:rgba(79,140,255,.1)}
+
+    .diamond-wrap{display:flex;align-items:center;gap:24px;justify-content:center;flex-wrap:wrap}
+    .diamond-svg{width:200px;height:200px;flex-shrink:0}
+    .diamond-info{display:flex;flex-direction:column;gap:8px;min-width:180px}
+    .diamond-outs{display:flex;gap:6px;align-items:center}
+    .out-dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--s3);transition:all .4s}
+    .out-dot.filled{background:var(--yel);border-color:var(--yel)}
+    .diamond-pa{font-size:12px;color:var(--t2)}
+    .diamond-pa strong{color:var(--t1)}
+    .diamond-result{font-size:16px;font-weight:700;opacity:0;transition:opacity .5s}
+    .diamond-result.show{opacity:1}
+    .diamond-event{font-size:12px;color:var(--t2);min-height:18px;transition:all .3s}
+    .diamond-event.active{color:var(--t1);font-weight:600}
+
     /* Results tracker */
     .results-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:20px}
     .daily-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:20px}
@@ -274,6 +293,26 @@ function openDetail(idx) {
       </div>
     </div>
 
+    <div class="detail-section"><h3>Monte Carlo Simulation</h3>
+      <div class="chart-row">
+        <div class="chart-box"><h4>Convergence — P(NRFI) vs simulation count</h4><canvas id="convChartAway"></canvas></div>
+        <div class="chart-box"><h4>Convergence — P(NRFI) vs simulation count</h4><canvas id="convChartHome"></canvas></div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-box"><h4>PA Distribution — Top 1st</h4><canvas id="paChartAway"></canvas></div>
+        <div class="chart-box"><h4>PA Distribution — Bot 1st</h4><canvas id="paChartHome"></canvas></div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-box" style="grid-column:1/-1">
+          <h4>Sample Inning Simulation — click to replay</h4>
+          <div id="traceContainer" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px"></div>
+          <div id="traceReplay" style="min-height:220px;display:flex;align-items:center;justify-content:center">
+            <span style="color:var(--t2);font-size:12px">Select a simulation above to watch it play out</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="detail-section"><h3>Sensitivity Analysis</h3>
       <div class="chart-row">
         <div class="chart-box"><h4>Top 1st — +1pp change in rate</h4><canvas id="sensChartAway"></canvas></div>
@@ -290,12 +329,28 @@ function openDetail(idx) {
     <div class="park-bar"><div>Park: <strong>${pk.team}</strong></div><div><span>HR Factor:</span> <strong>${pk.hr_factor}</strong></div><div><span>Run Factor:</span> <strong>${pk.run_factor}</strong></div><div><span>Sims:</span> <strong>${r.n_simulations.toLocaleString()}</strong></div></div>
   `;
 
+  // Store full-inning traces for replay
+  window._currentTraces = (md.full_inning_traces || []).map(t => ({
+    ...t,
+    away_team: g.away_team,
+    home_team: g.home_team,
+  }));
+
   // Render charts after DOM is ready
   setTimeout(()=>{
     if(md.away_half) renderStateChart('stateChartAway', md.away_half);
     if(md.home_half) renderStateChart('stateChartHome', md.home_half);
     if(md.away_half?.sensitivity) renderSensChart('sensChartAway', md.away_half.sensitivity);
     if(md.home_half?.sensitivity) renderSensChart('sensChartHome', md.home_half.sensitivity);
+    if(md.away_half?.simulation) {
+      renderConvergenceChart('convChartAway', md.away_half.simulation, r.p_nrfi_away_analytic);
+      renderPAChart('paChartAway', md.away_half.simulation);
+    }
+    if(md.home_half?.simulation) {
+      renderConvergenceChart('convChartHome', md.home_half.simulation, r.p_nrfi_home_analytic);
+      renderPAChart('paChartHome', md.home_half.simulation);
+    }
+    renderTraceButtons();
   },50);
 }
 
@@ -360,7 +415,319 @@ function renderSensChart(canvasId, sens) {
   });
 }
 
-function closeDetail(){document.getElementById('overlay').classList.remove('open')}
+function renderConvergenceChart(canvasId, sim, analyticP) {
+  const ctx = document.getElementById(canvasId);
+  if (!ctx || !sim.convergence?.length) return;
+  const pts = sim.convergence;
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: pts.map(p => p.n >= 1000 ? (p.n/1000)+'K' : p.n),
+      datasets: [
+        {
+          label: 'Simulation',
+          data: pts.map(p => p.p_nrfi * 100),
+          borderColor: 'rgba(79,140,255,.9)',
+          backgroundColor: 'rgba(79,140,255,.1)',
+          pointRadius: 4,
+          pointBackgroundColor: 'rgba(79,140,255,.9)',
+          borderWidth: 2,
+          tension: 0.3,
+          fill: false,
+        },
+        {
+          label: 'Analytic',
+          data: pts.map(() => analyticP * 100),
+          borderColor: 'rgba(142,142,142,.4)',
+          borderDash: [6, 4],
+          pointRadius: 0,
+          borderWidth: 1,
+          fill: false,
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: '#8b8fa3', font: { size: 10 } } },
+        tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw.toFixed(1)}%` } }
+      },
+      scales: {
+        y: { grid: { color: 'rgba(46,51,69,.5)' }, ticks: { color: '#8b8fa3', callback: v => v + '%' } },
+        x: { title: { display: true, text: 'Simulations', color: '#8b8fa3', font: { size: 10 } }, grid: { display: false }, ticks: { color: '#8b8fa3', font: { size: 9 } } }
+      }
+    }
+  });
+}
+
+function renderPAChart(canvasId, sim) {
+  const ctx = document.getElementById(canvasId);
+  if (!ctx || !sim.pa_distribution) return;
+  const dist = sim.pa_distribution;
+  // Only show PA counts that have non-zero probability (skip 0)
+  const labels = []; const vals = [];
+  for (let i = 1; i < dist.length; i++) {
+    if (dist[i] > 0.001 || (i >= 2 && i <= 7)) {
+      labels.push(i + ' PA');
+      vals.push(dist[i] * 100);
+    }
+  }
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        data: vals,
+        backgroundColor: vals.map((_, i) => {
+          const pa = parseInt(labels[i]);
+          return pa <= 3 ? 'rgba(52,211,153,.6)' : pa <= 5 ? 'rgba(251,191,36,.6)' : 'rgba(248,113,113,.6)';
+        }),
+        borderRadius: 3,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => `${ctx.raw.toFixed(1)}% of innings` } },
+        subtitle: { display: true, text: `Mean: ${sim.pa_mean} PA · Median: ${sim.pa_median} PA`, color: '#8b8fa3', font: { size: 10 }, padding: { bottom: 4 } }
+      },
+      scales: {
+        y: { grid: { color: 'rgba(46,51,69,.5)' }, ticks: { color: '#8b8fa3', callback: v => v + '%' } },
+        x: { grid: { display: false }, ticks: { color: '#8b8fa3', font: { size: 10 } } }
+      }
+    }
+  });
+}
+
+function renderTraceButtons() {
+  const container = document.getElementById('traceContainer');
+  const traces = window._currentTraces || [];
+  if (!traces.length) { container.innerHTML = '<span style="color:var(--t2);font-size:12px">No trace data</span>'; return; }
+  container.innerHTML = traces.map((t, i) => {
+    const cls = t.nrfi ? 'nrfi-trace' : 'rfi-trace';
+    const label = t.nrfi ? 'NRFI' : 'RFI';
+    const totalPA = t.top.pa + t.bottom.pa;
+    return `<button class="trace-btn ${cls}" onclick="playTrace(${i})">#${i+1} ${label} (${totalPA} PA)</button>`;
+  }).join('');
+}
+
+let _traceTimer = null;
+
+function parseBaseOuts(stateIdx) {
+  if (stateIdx === 24) return { bases: 0, outs: 3 };
+  if (stateIdx === 25) return { bases: 0, outs: 0, run: true };
+  if (stateIdx < 0 || stateIdx > 23) return { bases: 0, outs: 0 };
+  return { bases: Math.floor(stateIdx / 3), outs: stateIdx % 3 };
+}
+
+function buildDiamondSVG() {
+  // Diamond with home, 1B, 2B, 3B as rotated squares
+  return `<svg class="diamond-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <!-- Field -->
+    <polygon points="100,20 180,100 100,180 20,100" fill="none" stroke="#2e3345" stroke-width="1.5"/>
+    <!-- Base paths -->
+    <line x1="100" y1="180" x2="180" y2="100" stroke="#3a3f52" stroke-width="1" stroke-dasharray="4,4"/>
+    <line x1="180" y1="100" x2="100" y2="20" stroke="#3a3f52" stroke-width="1" stroke-dasharray="4,4"/>
+    <line x1="100" y1="20" x2="20" y2="100" stroke="#3a3f52" stroke-width="1" stroke-dasharray="4,4"/>
+    <line x1="20" y1="100" x2="100" y2="180" stroke="#3a3f52" stroke-width="1" stroke-dasharray="4,4"/>
+    <!-- Infield arc -->
+    <path d="M 55,145 Q 100,100 145,145" fill="none" stroke="#2e3345" stroke-width="1"/>
+    <!-- Home plate -->
+    <polygon id="dHome" points="100,176 94,182 100,190 106,182" fill="#3a3f52" stroke="#555" stroke-width="1"/>
+    <!-- 1st base -->
+    <rect id="d1B" x="172" y="92" width="16" height="16" rx="2" transform="rotate(45,180,100)" fill="#2e3345" stroke="#555" stroke-width="1"/>
+    <!-- 2nd base -->
+    <rect id="d2B" x="92" y="12" width="16" height="16" rx="2" transform="rotate(45,100,20)" fill="#2e3345" stroke="#555" stroke-width="1"/>
+    <!-- 3rd base -->
+    <rect id="d3B" x="12" y="92" width="16" height="16" rx="2" transform="rotate(45,20,100)" fill="#2e3345" stroke="#555" stroke-width="1"/>
+    <!-- Runner dots (hidden initially) -->
+    <circle id="r1B" cx="180" cy="100" r="8" fill="var(--acc)" opacity="0">
+      <animate attributeName="opacity" dur="0.3s" fill="freeze"/>
+    </circle>
+    <circle id="r2B" cx="100" cy="20" r="8" fill="var(--acc)" opacity="0"/>
+    <circle id="r3B" cx="20" cy="100" r="8" fill="var(--acc)" opacity="0"/>
+    <circle id="rHome" cx="100" cy="180" r="8" fill="var(--acc)" opacity="0"/>
+    <!-- Labels -->
+    <text x="100" y="204" text-anchor="middle" fill="#8b8fa3" font-size="9">HOME</text>
+    <text x="198" y="104" text-anchor="start" fill="#8b8fa3" font-size="9">1B</text>
+    <text x="100" y="8" text-anchor="middle" fill="#8b8fa3" font-size="9">2B</text>
+    <text x="-2" y="104" text-anchor="end" fill="#8b8fa3" font-size="9">3B</text>
+    <!-- Run scored indicator -->
+    <text id="dRunText" x="100" y="110" text-anchor="middle" fill="var(--red)" font-size="16" font-weight="800" opacity="0">RUN SCORED</text>
+    <text id="dNrfiText" x="100" y="110" text-anchor="middle" fill="var(--grn)" font-size="14" font-weight="800" opacity="0">INNING OVER</text>
+  </svg>`;
+}
+
+function updateDiamond(bases, outs, isRun, isNrfi) {
+  const r1 = document.getElementById('r1B');
+  const r2 = document.getElementById('r2B');
+  const r3 = document.getElementById('r3B');
+  const rH = document.getElementById('rHome');
+  const b1 = document.getElementById('d1B');
+  const b2 = document.getElementById('d2B');
+  const b3 = document.getElementById('d3B');
+
+  if (r1) r1.setAttribute('opacity', (bases & 1) ? '1' : '0');
+  if (r2) r2.setAttribute('opacity', (bases & 2) ? '1' : '0');
+  if (r3) r3.setAttribute('opacity', (bases & 4) ? '1' : '0');
+
+  // Color bases with runners
+  if (b1) b1.setAttribute('fill', (bases & 1) ? 'var(--acc)' : '#2e3345');
+  if (b2) b2.setAttribute('fill', (bases & 2) ? 'var(--acc)' : '#2e3345');
+  if (b3) b3.setAttribute('fill', (bases & 4) ? 'var(--acc)' : '#2e3345');
+
+  // Outs
+  for (let i = 0; i < 3; i++) {
+    const dot = document.getElementById(`out${i}`);
+    if (dot) dot.classList.toggle('filled', i < outs);
+  }
+
+  // PA counter
+  const paEl = document.getElementById('dPaCount');
+  if (paEl) {
+    const current = parseInt(paEl.dataset.pa || '0');
+    paEl.dataset.pa = current;
+  }
+
+  // Result text
+  const runText = document.getElementById('dRunText');
+  const nrfiText = document.getElementById('dNrfiText');
+  if (runText) runText.setAttribute('opacity', isRun ? '1' : '0');
+  if (nrfiText) nrfiText.setAttribute('opacity', isNrfi ? '1' : '0');
+
+  // Flash batter at home
+  if (rH && !isRun && !isNrfi) {
+    rH.setAttribute('opacity', '0.6');
+    setTimeout(() => rH.setAttribute('opacity', '0'), 300);
+  }
+}
+
+function playTrace(idx) {
+  const traces = window._currentTraces || [];
+  const t = traces[idx];
+  if (!t) return;
+
+  document.querySelectorAll('.trace-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+  if (_traceTimer) { clearInterval(_traceTimer); _traceTimer = null; }
+
+  const totalPA = t.top.pa + t.bottom.pa;
+  const replay = document.getElementById('traceReplay');
+  replay.innerHTML = `
+    <div class="diamond-wrap">
+      ${buildDiamondSVG()}
+      <div class="diamond-info">
+        <div id="dHalfLabel" style="font-size:14px;font-weight:700;margin-bottom:6px">Top 1st — ${t.away_team} batting</div>
+        <div class="diamond-outs">
+          <span style="font-size:11px;color:var(--t2)">Outs:</span>
+          <div class="out-dot" id="out0"></div>
+          <div class="out-dot" id="out1"></div>
+          <div class="out-dot" id="out2"></div>
+        </div>
+        <div class="diamond-pa" id="dPaLabel">PA: <strong>0</strong> / ${totalPA}</div>
+        <div class="diamond-event" id="dEvent">Starting top of 1st...</div>
+        <div class="diamond-result" id="dResult"></div>
+        <div style="margin-top:8px">
+          <div style="font-size:10px;color:var(--t2);margin-bottom:4px">Play-by-play:</div>
+          <div id="dLog" style="font-size:10px;color:var(--t2);max-height:120px;overflow-y:auto;line-height:1.6"></div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Build combined timeline: top half states, then transition, then bottom half states
+  const timeline = [];
+
+  // Top half
+  t.top.trace.forEach((s, i) => {
+    timeline.push({ ...s, half: 'top', paNum: i });
+  });
+
+  // Transition marker
+  timeline.push({ state: -99, label: 'TRANSITION', half: 'transition' });
+
+  // Bottom half
+  t.bottom.trace.forEach((s, i) => {
+    timeline.push({ ...s, half: 'bottom', paNum: i });
+  });
+
+  // Final game result
+  timeline.push({ state: -100, label: t.nrfi ? 'GAME NRFI' : 'GAME RFI', half: 'final', nrfi: t.nrfi });
+
+  let step = 0;
+  let logLines = [];
+  let cumulativePA = 0;
+
+  _traceTimer = setInterval(() => {
+    if (step >= timeline.length) {
+      clearInterval(_traceTimer);
+      _traceTimer = null;
+      return;
+    }
+
+    const s = timeline[step];
+    const halfLabel = document.getElementById('dHalfLabel');
+    const eventEl = document.getElementById('dEvent');
+    const paLabel = document.getElementById('dPaLabel');
+    const resultEl = document.getElementById('dResult');
+    const logEl = document.getElementById('dLog');
+    const runText = document.getElementById('dRunText');
+    const nrfiText = document.getElementById('dNrfiText');
+
+    if (s.half === 'transition') {
+      // Clear diamond for bottom half
+      updateDiamond(0, 0, false, false);
+      if (halfLabel) halfLabel.textContent = `Bot 1st — ${t.home_team} batting`;
+      if (eventEl) eventEl.textContent = 'Starting bottom of 1st...';
+      logLines.push('<span style="color:var(--acc);font-weight:600">— Bottom of 1st —</span>');
+      // Clear any half-inning result text
+      if (runText) runText.setAttribute('opacity', '0');
+      if (nrfiText) nrfiText.setAttribute('opacity', '0');
+      if (resultEl) { resultEl.classList.remove('show'); resultEl.textContent = ''; }
+    } else if (s.half === 'final') {
+      // Final game verdict
+      if (resultEl) {
+        resultEl.textContent = s.nrfi ? 'NRFI' : 'RUN SCORED IN 1ST';
+        resultEl.style.color = s.nrfi ? 'var(--grn)' : 'var(--red)';
+        resultEl.classList.add('show');
+      }
+      logLines.push(`<span style="color:${s.nrfi?'var(--grn)':'var(--red)'};font-weight:700;font-size:11px">${s.nrfi ? 'NRFI — No runs in the 1st inning' : 'RFI — Run(s) scored in the 1st inning'}</span>`);
+    } else {
+      const isRun = s.state === 25;
+      const isNrfi = s.state === 24;
+      const parsed = parseBaseOuts(s.state);
+
+      if (isRun || isNrfi) {
+        updateDiamond(0, isNrfi ? 3 : 0, isRun, isNrfi);
+        const halfName = s.half === 'top' ? 'Top' : 'Bottom';
+        const verdict = isNrfi ? '3 outs — side retired' : 'Run scored!';
+        logLines.push(`<span style="color:${isNrfi?'var(--grn)':'var(--red)'};font-weight:600">${verdict}</span>`);
+        if (eventEl) eventEl.textContent = verdict;
+      } else {
+        updateDiamond(parsed.bases, parsed.outs, false, false);
+        if (s.paNum > 0) {
+          cumulativePA++;
+          logLines.push(s.label);
+        }
+        if (eventEl) eventEl.textContent = s.label;
+      }
+
+      if (paLabel) paLabel.innerHTML = `PA: <strong>${cumulativePA}</strong> / ${totalPA}`;
+    }
+
+    if (logEl) {
+      logEl.innerHTML = logLines.join('<br>');
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    step++;
+  }, 600);
+}
+
+function closeDetail(){
+  if(_traceTimer){clearInterval(_traceTimer);_traceTimer=null}
+  document.getElementById('overlay').classList.remove('open');
+}
 
 // ── Methodology Tab ──
 function renderMethodology() {
