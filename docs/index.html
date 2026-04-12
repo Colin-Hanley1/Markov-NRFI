@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NRFI Model — Markov Chain Baseball Predictions</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.js"></script>
+  <style>
+    :root { --bg:#0f1117;--s1:#1a1d27;--s2:#242836;--s3:#2e3345;--t1:#e4e6ed;--t2:#8b8fa3;--acc:#4f8cff;--grn:#34d399;--yel:#fbbf24;--red:#f87171;--org:#fb923c; }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;font-size:14px}
+    a{color:var(--acc);text-decoration:none}
+    .header{padding:20px 28px;border-bottom:1px solid var(--s3);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .header h1{font-size:20px;font-weight:700;letter-spacing:-.5px}
+    .header h1 span{color:var(--acc)}
+    .header .meta{font-size:12px;color:var(--t2)}
+    .tabs{display:flex;gap:6px;padding:12px 28px;border-bottom:1px solid var(--s3);overflow-x:auto}
+    .tab-btn{background:transparent;border:1px solid var(--s3);color:var(--t2);padding:6px 16px;border-radius:6px;font-size:13px;cursor:pointer;white-space:nowrap}
+    .tab-btn:hover{border-color:var(--acc);color:var(--t1)}
+    .tab-btn.active{border-color:var(--acc);color:var(--acc);background:rgba(79,140,255,.08)}
+    .tab-content{display:none;padding:20px 28px;max-width:1400px;margin:0 auto}
+    .tab-content.active{display:block}
+
+    /* Summary cards */
+    .summary-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+    .stat-card{background:var(--s1);border:1px solid var(--s3);border-radius:10px;padding:14px 16px;text-align:center}
+    .stat-card .sc-label{font-size:11px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px}
+    .stat-card .sc-val{font-size:26px;font-weight:800;margin:4px 0;letter-spacing:-1px}
+    .stat-card .sc-sub{font-size:11px;color:var(--t2)}
+
+    /* Slate chart */
+    .slate-chart{background:var(--s1);border:1px solid var(--s3);border-radius:10px;padding:16px;margin-bottom:20px}
+    .slate-chart h3{font-size:13px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+    .slate-bar{display:flex;align-items:center;margin-bottom:6px;gap:8px;font-size:12px;cursor:pointer}
+    .slate-bar:hover .bar-fill{filter:brightness(1.2)}
+    .slate-label{width:90px;text-align:right;color:var(--t2);flex-shrink:0}
+    .bar-track{flex:1;height:22px;background:var(--s2);border-radius:4px;position:relative;overflow:hidden}
+    .bar-fill{height:100%;border-radius:4px;transition:width .6s ease}
+    .bar-pct{width:50px;font-weight:700;text-align:right;flex-shrink:0}
+
+    /* Game cards */
+    .games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+    .game-card{background:var(--s1);border:1px solid var(--s3);border-radius:10px;padding:16px;cursor:pointer;transition:border-color .15s,transform .1s}
+    .game-card:hover{border-color:var(--acc);transform:translateY(-1px)}
+    .game-card.no-model{opacity:.4;cursor:default}.game-card.no-model:hover{border-color:var(--s3);transform:none}
+    .card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .badge{font-size:10px;padding:2px 7px;border-radius:4px}
+    .badge-ok{background:rgba(52,211,153,.12);color:var(--grn)}.badge-proj{background:rgba(79,140,255,.12);color:var(--acc)}.badge-no{background:var(--s2);color:var(--t2)}
+    .nrfi-pill{font-size:20px;font-weight:800}
+    .matchup{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+    .team{text-align:center;flex:1}.team .abbr{font-size:20px;font-weight:800}.team .name{font-size:10px;color:var(--t2);margin-top:1px}
+    .at-sym{font-size:12px;color:var(--t2);padding:0 8px}
+    .pitchers{display:flex;justify-content:space-between;font-size:11px;color:var(--t2);padding-top:8px;border-top:1px solid var(--s3)}
+    .halves{display:flex;justify-content:space-around;margin-top:8px;font-size:11px;color:var(--t2)}
+    .halves .hv{font-size:15px;font-weight:700;color:var(--t1)}
+
+    /* Overlay */
+    .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:100;justify-content:center;align-items:flex-start;padding:30px 16px;overflow-y:auto}
+    .overlay.open{display:flex}
+    .panel{background:var(--s1);border:1px solid var(--s3);border-radius:14px;width:100%;max-width:900px;padding:28px;position:relative}
+    .panel .close{position:absolute;top:14px;right:18px;background:none;border:none;color:var(--t2);font-size:22px;cursor:pointer}.panel .close:hover{color:var(--t1)}
+    .detail-hdr{text-align:center;margin-bottom:20px}
+    .detail-hdr .teams{font-size:26px;font-weight:800;letter-spacing:-1px}
+    .detail-hdr .sub{color:var(--t2);font-size:12px;margin-top:3px}
+
+    .nrfi-big{text-align:center;margin:16px 0}
+    .nrfi-big .label{font-size:12px;color:var(--t2);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+    .nrfi-big .value{font-size:56px;font-weight:800;letter-spacing:-2px}
+    .nrfi-big .pct{font-size:30px}
+    .nrfi-big .ci{font-size:12px;color:var(--t2);margin-top:3px}
+
+    .half-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+    .half-card{background:var(--s2);border-radius:8px;padding:14px;text-align:center}
+    .half-card .hl{font-size:11px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px}
+    .half-card .hval{font-size:28px;font-weight:700;margin:4px 0}
+    .half-card .hs{font-size:11px;color:var(--t2)}
+
+    .detail-section{margin-top:20px}
+    .detail-section h3{font-size:13px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;border-bottom:1px solid var(--s3);padding-bottom:6px}
+
+    .chart-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+    .chart-box{background:var(--s2);border-radius:8px;padding:14px}
+    .chart-box h4{font-size:12px;color:var(--t2);margin-bottom:8px}
+    .chart-box canvas{width:100%!important;max-height:220px}
+
+    .impact-bar{display:flex;align-items:center;margin-bottom:5px;font-size:11px;gap:6px;height:20px}
+    .impact-name{width:110px;text-align:right;color:var(--t2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:0;font-size:10px}
+    .impact-track{flex:1;height:14px;position:relative;background:var(--s1);border-radius:3px;overflow:visible}
+    .impact-center{position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--s3)}
+    .impact-fill{height:100%;position:absolute;top:0;border-radius:3px}
+    .impact-val{width:52px;text-align:right;font-size:11px;font-weight:600;flex-shrink:0}
+
+    .park-bar{margin-top:12px;padding:8px 12px;background:var(--s2);border-radius:6px;font-size:12px;display:flex;gap:16px;flex-wrap:wrap}
+    .park-bar span{color:var(--t2)}
+
+    .lineup-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .lineup-col h4{font-size:12px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+    table.lt{width:100%;border-collapse:collapse;font-size:11px}
+    table.lt th{text-align:left;color:var(--t2);font-weight:500;padding:4px 5px;border-bottom:1px solid var(--s3)}
+    table.lt td{padding:4px 5px;border-bottom:1px solid var(--s3)}
+    table.lt .sl{color:var(--t2);width:20px}
+
+    /* Methodology */
+    .method-section{max-width:800px}
+    .method-section h2{font-size:18px;margin:24px 0 12px;font-weight:700}
+    .method-section h2:first-child{margin-top:0}
+    .method-section p{color:var(--t2);line-height:1.65;margin-bottom:12px}
+    .method-section .formula{background:var(--s2);border-radius:8px;padding:16px;margin:12px 0;text-align:center;overflow-x:auto}
+    .method-section .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .state-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin:12px 0}
+    .state-cell{background:var(--s2);border-radius:4px;padding:6px 4px;text-align:center;font-size:9px;color:var(--t2);line-height:1.3}
+    .state-cell .sv{font-size:12px;font-weight:700;color:var(--t1);display:block}
+
+    .prob-high{color:var(--grn)}.prob-mid{color:var(--yel)}.prob-low{color:var(--org)}.prob-vlow{color:var(--red)}
+    .empty{text-align:center;padding:50px 20px;color:var(--t2)}
+    .empty h2{font-size:16px;margin-bottom:6px;color:var(--t1)}
+    .spinner{display:inline-block;width:22px;height:22px;border:3px solid var(--s3);border-top-color:var(--acc);border-radius:50%;animation:spin .7s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @media(max-width:700px){.chart-row,.half-cards,.lineup-cols{grid-template-columns:1fr}.games-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1><span>NRFI</span> Markov Model</h1>
+  <div class="meta" id="meta">Loading...</div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab(0)">Predictions</button>
+  <button class="tab-btn" onclick="switchTab(1)">Methodology</button>
+</div>
+
+<!-- TAB 0: Predictions -->
+<div class="tab-content active" id="tab0">
+  <div id="summaryArea"></div>
+  <div id="slateArea"></div>
+  <div class="games-grid" id="grid"><div class="empty"><div class="spinner"></div><p style="margin-top:10px">Loading predictions...</p></div></div>
+</div>
+
+<!-- TAB 1: Methodology -->
+<div class="tab-content" id="tab1">
+  <div class="method-section" id="methodContent"></div>
+</div>
+
+<!-- Detail Overlay -->
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeDetail()">
+  <div class="panel"><button class="close" onclick="closeDetail()">&times;</button><div id="detailContent"></div></div>
+</div>
+
+<script>
+let D = {};  // full data
+const pC = p => p>=.55?'prob-high':p>=.48?'prob-mid':p>=.40?'prob-low':'prob-vlow';
+const pS = p => (p*100).toFixed(1);
+const rnd = (n,d=1) => Number(n).toFixed(d);
+
+document.addEventListener('DOMContentLoaded', () => {
+  fetch('data/latest.json').then(r=>r.json()).then(d => {
+    D = d;
+    document.getElementById('meta').textContent = `${d.date} — ${d.summary?.n_games_modeled||0} games modeled — ${(d.n_simulations||0).toLocaleString()} sims/game`;
+    renderSummary();
+    renderSlate();
+    renderCards();
+    renderMethodology();
+  }).catch(() => {
+    document.getElementById('grid').innerHTML = '<div class="empty"><h2>No data available</h2><p>Run compute_daily.py to generate predictions.</p></div>';
+  });
+});
+
+function switchTab(n) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===n));
+  document.querySelectorAll('.tab-content').forEach((c,i) => c.classList.toggle('active', i===n));
+}
+
+// ── Summary ──
+function renderSummary() {
+  const s = D.summary;
+  if (!s || !s.n_games_modeled) return;
+  document.getElementById('summaryArea').innerHTML = `
+    <div class="summary-row">
+      <div class="stat-card"><div class="sc-label">Games</div><div class="sc-val">${s.n_games_modeled}</div><div class="sc-sub">of ${s.n_games_total} scheduled</div></div>
+      <div class="stat-card"><div class="sc-label">Mean P(NRFI)</div><div class="sc-val ${pC(s.mean_p_nrfi)}">${pS(s.mean_p_nrfi)}%</div><div class="sc-sub">&sigma; = ${pS(s.std_p_nrfi)}%</div></div>
+      <div class="stat-card"><div class="sc-label">Best NRFI</div><div class="sc-val prob-high">${pS(s.best_nrfi.value)}%</div><div class="sc-sub">${s.best_nrfi.matchup}</div></div>
+      <div class="stat-card"><div class="sc-label">Worst NRFI</div><div class="sc-val prob-vlow">${pS(s.worst_nrfi.value)}%</div><div class="sc-sub">${s.worst_nrfi.matchup}</div></div>
+      <div class="stat-card"><div class="sc-label">Avg CI Width</div><div class="sc-val">${pS(s.mean_ci_width)}%</div><div class="sc-sub">95% confidence</div></div>
+      <div class="stat-card"><div class="sc-label">Sim-Analytic Gap</div><div class="sc-val">${pS(s.mean_sim_analytic_gap)}%</div><div class="sc-sub">lineup order effect</div></div>
+    </div>`;
+}
+
+// ── Slate Bar Chart ──
+function renderSlate() {
+  const games = (D.games||[]).filter(g=>g.modeled).sort((a,b)=>b.results.p_nrfi_game-a.results.p_nrfi_game);
+  if (!games.length) return;
+  const maxP = Math.max(...games.map(g=>g.results.p_nrfi_game));
+  document.getElementById('slateArea').innerHTML = `
+    <div class="slate-chart"><h3>Full Slate — Ranked by P(NRFI)</h3>
+    ${games.map((g,i)=>{
+      const p=g.results.p_nrfi_game;
+      const w=Math.max(5, p/Math.max(maxP,.01)*100);
+      const c=p>=.55?'var(--grn)':p>=.48?'var(--yel)':p>=.40?'var(--org)':'var(--red)';
+      const idx=D.games.indexOf(g);
+      return `<div class="slate-bar" onclick="openDetail(${idx})">
+        <div class="slate-label">${g.away_team}@${g.home_team}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${w}%;background:${c}"></div></div>
+        <div class="bar-pct ${pC(p)}">${pS(p)}%</div>
+      </div>`;
+    }).join('')}</div>`;
+}
+
+// ── Game Cards ──
+function renderCards() {
+  const games = D.games||[];
+  if (!games.length) { document.getElementById('grid').innerHTML='<div class="empty"><h2>No games</h2></div>'; return; }
+  document.getElementById('grid').innerHTML = games.map((g,idx)=>{
+    const m=g.modeled, r=g.results;
+    const badge = m ? (g.lineup_source==='projected'?'<span class="badge badge-proj">Projected</span>':'<span class="badge badge-ok">Official</span>') : '<span class="badge badge-no">No data</span>';
+    const pill = m ? `<div class="nrfi-pill ${pC(r.p_nrfi_game)}">${pS(r.p_nrfi_game)}%</div>` : '<div class="nrfi-pill" style="color:var(--t2)">--</div>';
+    return `<div class="game-card ${m?'':'no-model'}" onclick="${m?`openDetail(${idx})`:''}">${
+      `<div class="card-top">${badge}${pill}</div>
+      <div class="matchup"><div class="team"><div class="abbr">${g.away_team}</div><div class="name">${g.away_name}</div></div><div class="at-sym">@</div><div class="team"><div class="abbr">${g.home_team}</div><div class="name">${g.home_name}</div></div></div>
+      <div class="pitchers"><div>${g.away_pitcher.name}</div><div>${g.home_pitcher.name}</div></div>
+      ${m?`<div class="halves"><div><div class="hv ${pC(r.p_nrfi_away)}">${pS(r.p_nrfi_away)}%</div>Top 1st</div><div><div class="hv ${pC(r.p_nrfi_home)}">${pS(r.p_nrfi_home)}%</div>Bot 1st</div></div>`:''}`
+    }</div>`;
+  }).join('');
+}
+
+// ── Game Detail ──
+function openDetail(idx) {
+  const g=D.games[idx]; if(!g||!g.modeled) return;
+  const r=g.results, p=g.pitchers, pk=g.park, md=g.model_detail||{};
+  document.getElementById('overlay').classList.add('open');
+  const el=document.getElementById('detailContent');
+  el.innerHTML=`
+    <div class="detail-hdr"><div class="teams">${g.away_team} @ ${g.home_team}</div><div class="sub">${g.away_name} at ${g.home_name} ${g.lineup_source==='projected'?'(projected)':''}</div></div>
+    <div class="nrfi-big"><div class="label">P(NRFI) Full Game</div><div class="value ${pC(r.p_nrfi_game)}">${pS(r.p_nrfi_game)}<span class="pct">%</span></div><div class="ci">95% CI: ${pS(r.ci_lower)}% – ${pS(r.ci_upper)}% · Analytic: ${pS(r.p_nrfi_game_analytic)}%</div></div>
+    <div class="half-cards">
+      <div class="half-card"><div class="hl">Top 1st — ${g.away_team} batting</div><div class="hval ${pC(r.p_nrfi_away)}">${pS(r.p_nrfi_away)}%</div><div class="hs">vs ${p.home.name} (${p.home.hand}HP) · K: ${pS(p.home.k_rate)}% HR: ${pS(p.home.hr_rate)}% BB: ${pS(p.home.bb_rate)}%</div><div class="hs">Analytic: ${pS(r.p_nrfi_away_analytic)}% · E[PA]: ${md.away_half?.expected_pa||r.avg_pa_away}</div></div>
+      <div class="half-card"><div class="hl">Bot 1st — ${g.home_team} batting</div><div class="hval ${pC(r.p_nrfi_home)}">${pS(r.p_nrfi_home)}%</div><div class="hs">vs ${p.away.name} (${p.away.hand}HP) · K: ${pS(p.away.k_rate)}% HR: ${pS(p.away.hr_rate)}% BB: ${pS(p.away.bb_rate)}%</div><div class="hs">Analytic: ${pS(r.p_nrfi_home_analytic)}% · E[PA]: ${md.home_half?.expected_pa||r.avg_pa_home}</div></div>
+    </div>
+
+    <div class="detail-section"><h3>Batter NRFI Impact</h3>
+      <div class="chart-row">
+        <div class="chart-box"><h4>${g.away_team} Lineup (vs ${p.home.name})</h4>${renderImpactBars(g.away_lineup)}</div>
+        <div class="chart-box"><h4>${g.home_team} Lineup (vs ${p.away.name})</h4>${renderImpactBars(g.home_lineup)}</div>
+      </div>
+    </div>
+
+    <div class="detail-section"><h3>Markov Chain — State Visit Probabilities</h3>
+      <div class="chart-row">
+        <div class="chart-box"><h4>Top 1st — Expected visits per state</h4><canvas id="stateChartAway"></canvas></div>
+        <div class="chart-box"><h4>Bot 1st — Expected visits per state</h4><canvas id="stateChartHome"></canvas></div>
+      </div>
+    </div>
+
+    <div class="detail-section"><h3>Sensitivity Analysis</h3>
+      <div class="chart-row">
+        <div class="chart-box"><h4>Top 1st — +1pp change in rate</h4><canvas id="sensChartAway"></canvas></div>
+        <div class="chart-box"><h4>Bot 1st — +1pp change in rate</h4><canvas id="sensChartHome"></canvas></div>
+      </div>
+    </div>
+
+    <div class="detail-section"><h3>Lineups</h3>
+    <div class="lineup-cols">
+      <div class="lineup-col"><h4>${g.away_team} (vs ${p.home.name})</h4>${renderLineupTable(g.away_lineup)}</div>
+      <div class="lineup-col"><h4>${g.home_team} (vs ${p.away.name})</h4>${renderLineupTable(g.home_lineup)}</div>
+    </div></div>
+
+    <div class="park-bar"><div>Park: <strong>${pk.team}</strong></div><div><span>HR Factor:</span> <strong>${pk.hr_factor}</strong></div><div><span>Run Factor:</span> <strong>${pk.run_factor}</strong></div><div><span>Sims:</span> <strong>${r.n_simulations.toLocaleString()}</strong></div></div>
+  `;
+
+  // Render charts after DOM is ready
+  setTimeout(()=>{
+    if(md.away_half) renderStateChart('stateChartAway', md.away_half);
+    if(md.home_half) renderStateChart('stateChartHome', md.home_half);
+    if(md.away_half?.sensitivity) renderSensChart('sensChartAway', md.away_half.sensitivity);
+    if(md.home_half?.sensitivity) renderSensChart('sensChartHome', md.home_half.sensitivity);
+  },50);
+}
+
+function renderImpactBars(lineup) {
+  if(!lineup||!lineup.length) return '';
+  const maxAbs = Math.max(0.01, ...lineup.map(b=>Math.abs(b.nrfi_impact||0)));
+  return lineup.map((b,i)=>{
+    const v = b.nrfi_impact||0;
+    const pct = Math.abs(v)/maxAbs*45;
+    const col = v>=0?'var(--grn)':'var(--red)';
+    const dir = v>=0?`left:50%;width:${pct}%`:`right:50%;width:${pct}%`;
+    const left = v>=0 ? 50 : 50 - pct;
+    return `<div class="impact-bar"><div class="impact-name">${i+1}. ${b.name}</div><div class="impact-track"><div class="impact-center"></div><div class="impact-fill" style="left:${left}%;width:${pct}%;background:${col}"></div></div><div class="impact-val" style="color:${col}">${v>=0?'+':''}${(v*100).toFixed(2)}%</div></div>`;
+  }).join('');
+}
+
+function renderLineupTable(lineup) {
+  if(!lineup) return '';
+  return `<table class="lt"><tr><th class="sl">#</th><th>Batter</th><th>B</th><th>K%</th><th>HR%</th><th>BB%</th></tr>${lineup.map((b,i)=>`<tr><td class="sl">${i+1}</td><td>${b.name}</td><td>${b.hand}</td><td>${pS(b.k_rate)}</td><td>${pS(b.hr_rate)}</td><td>${pS(b.bb_rate)}</td></tr>`).join('')}</table>`;
+}
+
+function renderStateChart(canvasId, half) {
+  const ctx = document.getElementById(canvasId);
+  if(!ctx || !half.state_visit_probs) return;
+  // Group states: show top 12 most visited
+  const labels = half.state_labels||[];
+  const vals = half.state_visit_probs||[];
+  const indexed = vals.map((v,i)=>({v,i,label:labels[i]||`S${i}`})).sort((a,b)=>b.v-a.v).slice(0,12);
+  new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels: indexed.map(d=>d.label),
+      datasets:[{data:indexed.map(d=>d.v), backgroundColor:indexed.map(d=>{
+        const outs = d.i%3;
+        return outs===0?'rgba(79,140,255,.7)':outs===1?'rgba(251,191,36,.7)':'rgba(248,113,113,.7)';
+      }), borderRadius:3}]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`E[visits] = ${ctx.raw.toFixed(3)}`}}},
+      scales:{y:{beginAtZero:true,grid:{color:'rgba(46,51,69,.5)'},ticks:{color:'#8b8fa3',font:{size:10}}},x:{ticks:{color:'#8b8fa3',font:{size:9},maxRotation:45},grid:{display:false}}}
+    }
+  });
+}
+
+function renderSensChart(canvasId, sens) {
+  const ctx = document.getElementById(canvasId);
+  if(!ctx) return;
+  const labels = ['K%','BB%','HR%'];
+  const vals = [sens.k_rate||0, sens.bb_rate||0, sens.hr_rate||0].map(v=>v*100);
+  new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels,
+      datasets:[{data:vals, backgroundColor:vals.map(v=>v>=0?'rgba(52,211,153,.7)':'rgba(248,113,113,.7)'), borderRadius:3}]
+    },
+    options:{
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.raw>=0?'+':''}${ctx.raw.toFixed(2)}pp NRFI per +1pp`}}},
+      scales:{x:{grid:{color:'rgba(46,51,69,.5)'},ticks:{color:'#8b8fa3',callback:v=>(v>=0?'+':'')+v.toFixed(1)+'pp'}},y:{ticks:{color:'#8b8fa3'},grid:{display:false}}}
+    }
+  });
+}
+
+function closeDetail(){document.getElementById('overlay').classList.remove('open')}
+
+// ── Methodology Tab ──
+function renderMethodology() {
+  const el=document.getElementById('methodContent');
+  el.innerHTML=`
+    <h2>Markov Chain State Space</h2>
+    <p>The first inning is modeled as an absorbing Markov chain over <strong>24 transient states</strong> defined by the base-out configuration: 8 possible base occupancy patterns &times; 3 out counts (0, 1, 2). Two absorbing states capture the outcomes we care about: <strong>3 outs with 0 runs (NRFI)</strong> and <strong>any run scoring (RFI)</strong>.</p>
+    <div class="state-grid" id="stateGrid"></div>
+    <p>Each state is indexed as <code>state = bases &times; 3 + outs</code>, where <code>bases</code> is a 3-bit mask (bit 0 = 1B, bit 1 = 2B, bit 2 = 3B).</p>
+
+    <h2>Transition Probabilities</h2>
+    <p>For each plate appearance, the outcome distribution is a blend of pitcher and batter statistics using the <strong>log-odds (odds-ratio) method</strong>:</p>
+    <div class="formula" id="blendFormula"></div>
+    <p>This produces a probability for each of 11 mutually exclusive PA outcomes: K, BB, HBP, HR, 1B, 2B, 3B, ground ball out, fly ball out, line drive out, and fielder's choice. Each outcome maps deterministically to a next state via baseball advancement rules, with conditional branching for GIDP and sacrifice flies.</p>
+
+    <h2>Park &amp; Platoon Adjustments</h2>
+    <p>After blending, HR rates are scaled by a park-specific home run factor (0.82 for Miami to 1.25 for Coors Field). Hit rates receive a smaller run-environment adjustment. Platoon multipliers adjust K%, BB%, and HR% based on the pitcher-hand/batter-hand matchup.</p>
+
+    <h2>Two Computation Paths</h2>
+    <div class="grid-2">
+      <div>
+        <h3 style="font-size:14px;margin-bottom:6px">Analytic (Fundamental Matrix)</h3>
+        <p>Extract the 24&times;24 transient sub-matrix <strong>Q</strong> and compute the fundamental matrix <strong>N = (I - Q)<sup>-1</sup></strong>. The absorption probability vector <strong>B = N &middot; R</strong> gives P(NRFI) directly. Uses a lineup-averaged approximation.</p>
+      </div>
+      <div>
+        <h3 style="font-size:14px;margin-bottom:6px">Monte Carlo Simulation</h3>
+        <p>Simulate 50,000 first innings with proper batting-order sequencing. Each PA draws from the current batter's outcome distribution and transitions the chain. The gap between methods quantifies the <em>batting order effect</em>.</p>
+      </div>
+    </div>
+
+    <h2>Player Profiles</h2>
+    <p>Each player's rates are built from <strong>3 years of MLB data (2024–2026)</strong> aggregated from counting stats via the MLB Stats API. The weighted merge uses PA counts: a player with 800 PA from prior seasons and 50 PA this year gets proportional blending, preventing early-season noise from overwhelming established priors.</p>
+  `;
+
+  // Render state grid
+  const grid=document.getElementById('stateGrid');
+  const bases=['Empty','1B','2B','1B+2B','3B','1B+3B','2B+3B','Loaded'];
+  grid.innerHTML=`<div class="state-cell" style="background:transparent"></div>`+
+    [0,1,2].map(o=>`<div class="state-cell" style="background:transparent;font-weight:600">${o} Out${o!==1?'s':''}</div>`).join('')+
+    `<div class="state-cell" style="background:transparent"></div>`.repeat(4)+
+    bases.map((b,bi)=>
+      `<div class="state-cell" style="background:transparent;font-weight:500;text-align:right;font-size:10px">${b}</div>`+
+      [0,1,2].map(o=>{const idx=bi*3+o;return`<div class="state-cell"><span class="sv">${idx}</span>${b}, ${o}o</div>`}).join('')
+    ).join('');
+
+  // Render formula with KaTeX
+  const formulaEl=document.getElementById('blendFormula');
+  try {
+    katex.render('\\text{logit}(p_{\\text{blend}}) = \\text{logit}(p_{\\text{pitcher}}) + \\text{logit}(p_{\\text{batter}}) - \\text{logit}(p_{\\text{league}})', formulaEl, {displayMode:true});
+  } catch(e) { formulaEl.textContent='logit(p_blend) = logit(p_pitcher) + logit(p_batter) - logit(p_league)'; }
+}
+
+// ── Performance Tab ──
+</script>
+</body>
+</html>
