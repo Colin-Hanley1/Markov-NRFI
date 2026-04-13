@@ -167,25 +167,37 @@
       "home_runs_1st": 1,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824938",
+      "date": "2026-04-12",
+      "away_team": "CLE",
+      "home_team": "ATL",
+      "p_nrfi_predicted": 0.4846,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 14,
-    "accuracy": 0.5,
-    "brier_score": 0.26117,
-    "brier_skill_score": -0.2797,
-    "log_loss": 0.71605,
-    "actual_nrfi_rate": 0.2857,
-    "mean_predicted": 0.5126,
+    "n_games": 15,
+    "accuracy": 0.4667,
+    "brier_score": 0.26147,
+    "brier_skill_score": -0.1766,
+    "log_loss": 0.71661,
+    "actual_nrfi_rate": 0.3333,
+    "mean_predicted": 0.5107,
     "last_updated": "2026-04-12"
   },
   "daily": [
     {
       "date": "2026-04-12",
-      "n_games": 14,
+      "n_games": 15,
       "correct": 7,
-      "accuracy": 0.5,
-      "nrfi_count": 4
+      "accuracy": 0.4667,
+      "nrfi_count": 5
     }
   ]
 }
