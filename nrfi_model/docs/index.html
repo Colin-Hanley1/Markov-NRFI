@@ -1171,6 +1171,30 @@
     /* ═══ RESULTS TRACKER ═══ */
     .tracker-section { margin-bottom: 40px; }
 
+    .ledger-details summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 6px 0;
+      border-bottom: 2px solid var(--ink);
+      transition: opacity 0.15s;
+    }
+    .ledger-details summary::-webkit-details-marker { display: none; }
+    .ledger-details summary:hover { opacity: 0.7; }
+    .ledger-details summary h3 {
+      margin: 0;
+      border: none;
+      padding: 0;
+    }
+    .ledger-details summary::before {
+      content: '\25B8';
+      display: inline-block;
+      color: var(--accent);
+      margin-right: 10px;
+      transition: transform 0.2s;
+      font-size: 12px;
+    }
+    .ledger-details[open] summary::before { transform: rotate(90deg); }
+
     .tracker-section h3 {
       font-family: var(--mono);
       font-size: 10px;
@@ -2616,22 +2640,24 @@ function renderResultsTracker() {
     </div>
 
     <div class="tracker-section">
-      <h3>Ledger of Predictions</h3>
-      <table class="daily-table">
-        <thead><tr><th>Date</th><th>Matchup</th><th>Predicted</th><th>Outcome</th><th>1st Inning</th><th>Verdict</th></tr></thead>
-        <tbody>
-        ${entries.slice().reverse().map(e => `
-          <tr>
-            <td style="color:var(--muted)">${e.date}</td>
-            <td class="matchup">${e.away_team} <span style="color:var(--muted);font-style:italic;font-weight:300">at</span> ${e.home_team}</td>
-            <td class="pct-val ${pC(e.p_nrfi_predicted)}">${pS(e.p_nrfi_predicted)}%</td>
-            <td>${e.nrfi_actual ? '<span class="nrfi-tag">NRFI</span>' : '<span class="rfi-tag">RFI</span>'}</td>
-            <td class="tabular" style="color:var(--muted)">${e.nrfi_actual ? '0–0' : e.away_runs_1st+'–'+e.home_runs_1st}</td>
-            <td>${e.correct ? '<span class="correct-tag">correct</span>' : '<span class="miss-tag">miss</span>'}</td>
-          </tr>
-        `).join('')}
-        </tbody>
-      </table>
+      <details class="ledger-details">
+        <summary><h3 style="display:inline">Ledger of Predictions <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-family:var(--serif);font-style:italic;font-size:13px"> \u2014 ${entries.length} games (click to expand)</span></h3></summary>
+        <table class="daily-table" style="margin-top:14px">
+          <thead><tr><th>Date</th><th>Matchup</th><th>Predicted</th><th>Outcome</th><th>1st Inning</th><th>Verdict</th></tr></thead>
+          <tbody>
+          ${entries.slice().reverse().map(e => `
+            <tr>
+              <td style="color:var(--muted)">${e.date}</td>
+              <td class="matchup">${e.away_team} <span style="color:var(--muted);font-style:italic;font-weight:300">at</span> ${e.home_team}</td>
+              <td class="pct-val ${pC(e.p_nrfi_predicted)}">${pS(e.p_nrfi_predicted)}%</td>
+              <td>${e.nrfi_actual ? '<span class="nrfi-tag">NRFI</span>' : '<span class="rfi-tag">RFI</span>'}</td>
+              <td class="tabular" style="color:var(--muted)">${e.nrfi_actual ? '0–0' : e.away_runs_1st+'–'+e.home_runs_1st}</td>
+              <td>${e.correct ? '<span class="correct-tag">correct</span>' : '<span class="miss-tag">miss</span>'}</td>
+            </tr>
+          `).join('')}
+          </tbody>
+        </table>
+      </details>
     </div>
 
     ${renderHistoricalSection()}
