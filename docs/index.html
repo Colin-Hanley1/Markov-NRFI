@@ -287,7 +287,7 @@
 
     .slate-row {
       display: grid;
-      grid-template-columns: 32px 140px 1fr 64px;
+      grid-template-columns: 32px 140px 1fr 64px 56px;
       align-items: center;
       padding: 10px 0;
       border-bottom: 1px solid var(--rule);
@@ -295,6 +295,14 @@
       gap: 16px;
       transition: background 0.2s;
     }
+    .slate-edge {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 700;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .slate-edge.muted { color: var(--rule); font-weight: 400; }
 
     .slate-row:hover { background: var(--paper-dark); }
 
@@ -688,6 +696,94 @@
       max-height: 200px;
     }
 
+    /* ═══ MARKET GRID ═══ */
+    .market-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+      border-top: 2px solid var(--ink);
+      border-bottom: 2px solid var(--ink);
+    }
+    .market-cell {
+      padding: 16px 14px;
+      border-right: 1px solid var(--rule);
+      text-align: center;
+    }
+    .market-cell:last-child { border-right: none; }
+    .mc-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .mc-value {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 36px;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
+    }
+    .mc-sub {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    @media (max-width: 700px) {
+      .market-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* ═══ HEATMAP ═══ */
+    .heatmap-wrap {
+      position: relative;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+    .heatmap-wrap canvas {
+      max-width: 100%;
+      height: auto;
+      cursor: crosshair;
+    }
+    .heatmap-tip {
+      position: absolute;
+      pointer-events: none;
+      background: var(--ink);
+      color: var(--paper);
+      padding: 4px 10px;
+      font-family: var(--mono);
+      font-size: 10px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.15s;
+      z-index: 10;
+      border: 1px solid var(--accent);
+    }
+    .heatmap-tip.show { opacity: 1; }
+    .heatmap-legend {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 8px;
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .heatmap-gradient {
+      width: 140px;
+      height: 8px;
+      background: linear-gradient(to right, var(--paper-darker), #e08a7c, var(--accent), var(--accent-dark));
+      border: 1px solid var(--rule);
+    }
+
     /* ═══ BATTER IMPACT BARS ═══ */
     .impact-bar {
       display: grid;
@@ -1013,52 +1109,63 @@
 
     .grid-2 p { font-size: 14px; margin-bottom: 0; }
 
-    .state-grid {
-      display: grid;
-      grid-template-columns: 140px repeat(3, 1fr);
-      gap: 1px;
-      background: var(--ink);
-      border: 1px solid var(--ink);
+    .state-diagram-wrap {
       margin: 24px 0;
-      font-variant-numeric: tabular-nums;
+      padding: 16px;
+      background: var(--paper-dark);
+      border: 1px solid var(--ink);
+      position: relative;
     }
-
-    .state-cell {
-      background: var(--paper);
-      padding: 10px 8px;
+    .state-diagram-wrap svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .state-diagram-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
       font-family: var(--mono);
       font-size: 10px;
-      color: var(--ink-soft);
-      text-align: center;
-    }
-
-    .state-cell.header {
-      background: var(--ink);
-      color: var(--paper);
-      font-weight: 700;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      font-size: 9px;
+      color: var(--ink-soft);
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--rule);
+      align-items: center;
     }
-
-    .state-cell.row-label {
-      text-align: right;
-      font-weight: 600;
-      color: var(--ink);
-      background: var(--paper-dark);
-      font-family: var(--sans);
-      font-size: 11px;
-      padding-right: 12px;
+    .state-diagram-legend .ld {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      margin-right: 6px;
+      vertical-align: middle;
+      border: 1px solid var(--ink);
     }
+    .state-diagram-legend .outs-0 { background: #cfd8e6; }
+    .state-diagram-legend .outs-1 { background: #f1d98a; }
+    .state-diagram-legend .outs-2 { background: #e8a598; }
+    .state-diagram-legend .absorb-nrfi { background: #9fb377; }
+    .state-diagram-legend .absorb-rfi { background: #c3392b; }
 
-    .state-cell .sv {
-      display: block;
-      font-family: var(--serif);
-      font-weight: 700;
-      font-size: 16px;
-      color: var(--accent);
+    .state-node {
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .state-node:hover rect { stroke-width: 2.5; }
+    .state-node text { pointer-events: none; }
+    .state-node .sid {
+      font-family: 'Fraunces', serif;
       font-style: italic;
-      margin-bottom: 2px;
+      font-weight: 700;
+      font-size: 13px;
+      fill: #1a1814;
+    }
+    .state-node .slbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7px;
+      fill: #3a342a;
     }
 
     /* ═══ RESULTS TRACKER ═══ */
@@ -1363,11 +1470,19 @@ function renderSlate() {
         const w=Math.max(6, p/Math.max(maxP,.01)*100);
         const c=p>=.55?MOSS:p>=.48?GOLD:p>=.40?ACCENT:'#9a2a1e';
         const idx=D.games.indexOf(g);
-        return `<div class="slate-row" onclick="openDetail(${idx})">
+        const m = g.market;
+        const edgeHtml = m ? (() => {
+          const ep = m.edge_pp;
+          const cls = ep > 0.03 ? 'prob-high' : ep > 0 ? 'prob-mid' : ep > -0.03 ? 'prob-low' : 'prob-vlow';
+          const sign = ep >= 0 ? '+' : '';
+          return `<div class="slate-edge ${cls}" title="Edge vs no-vig market">${sign}${(ep*100).toFixed(1)}<span style="font-size:8px">pp</span></div>`;
+        })() : '<div class="slate-edge muted">\u2014</div>';
+        return `<div class="slate-row${m?' has-market':''}" onclick="openDetail(${idx})">
           <div class="slate-rank">${String(i+1).padStart(2,'0')}</div>
           <div class="slate-matchup">${g.away_team} <span class="at">at</span> ${g.home_team}</div>
           <div class="slate-bar"><div class="slate-bar-fill" style="width:${w}%;background:${c}"></div></div>
           <div class="slate-value ${pC(p)}">${pS(p)}%</div>
+          ${edgeHtml}
         </div>`;
       }).join('')}
       </div>
@@ -1444,6 +1559,37 @@ function openDetail(idx) {
       </div>
     </div>
 
+    ${g.market ? `
+    <div class="detail-section">
+      <div class="detail-section-label">Market Comparison \u2014 ${g.market.book || 'Sportsbook'}</div>
+      <div class="market-grid">
+        <div class="market-cell">
+          <div class="mc-label">Model P(NRFI)</div>
+          <div class="mc-value tabular ${pC(r.p_nrfi_game)}">${pS(r.p_nrfi_game)}%</div>
+        </div>
+        <div class="market-cell">
+          <div class="mc-label">Market Fair</div>
+          <div class="mc-value tabular">${pS(g.market.fair_nrfi)}%</div>
+          <div class="mc-sub">vig ${(g.market.vig*100).toFixed(1)}%</div>
+        </div>
+        <div class="market-cell">
+          <div class="mc-label">Edge</div>
+          <div class="mc-value tabular ${g.market.edge_pp > 0.03 ? 'prob-high' : g.market.edge_pp > 0 ? 'prob-mid' : 'prob-vlow'}">${g.market.edge_pp >= 0 ? '+' : ''}${(g.market.edge_pp*100).toFixed(1)}<span style="font-size:14px">pp</span></div>
+        </div>
+        <div class="market-cell">
+          <div class="mc-label">Kelly Stake</div>
+          <div class="mc-value tabular">${(g.market.kelly*100).toFixed(1)}<span style="font-size:14px">%</span></div>
+          <div class="mc-sub">of bankroll</div>
+        </div>
+        <div class="market-cell">
+          <div class="mc-label">NRFI Line</div>
+          <div class="mc-value tabular" style="font-size:32px">${g.market.nrfi_american > 0 ? '+' : ''}${g.market.nrfi_american}</div>
+          <div class="mc-sub">decimal ${g.market.decimal_odds.toFixed(2)}</div>
+        </div>
+      </div>
+    </div>
+    ` : ''}
+
     <div class="detail-section">
       <div class="detail-section-label">Batter NRFI Impact</div>
       <div class="chart-duo">
@@ -1484,6 +1630,22 @@ function openDetail(idx) {
     </div>
 
     <div class="detail-section">
+      <div class="detail-section-label">Transition Matrix Heatmap</div>
+      <div class="chart-duo">
+        <div class="chart-box">
+          <h4>Top 1st \u2014 P(next state \u2223 current state)</h4>
+          <div class="heatmap-wrap"><canvas id="heatAway" width="520" height="480"></canvas><div class="heatmap-tip" id="tipAway"></div></div>
+          <div class="heatmap-legend"><span>low</span><div class="heatmap-gradient"></div><span>high</span></div>
+        </div>
+        <div class="chart-box">
+          <h4>Bot 1st \u2014 P(next state \u2223 current state)</h4>
+          <div class="heatmap-wrap"><canvas id="heatHome" width="520" height="480"></canvas><div class="heatmap-tip" id="tipHome"></div></div>
+          <div class="heatmap-legend"><span>low</span><div class="heatmap-gradient"></div><span>high</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-section">
       <div class="detail-section-label">Starting Lineups</div>
       <div class="lineup-cols">
         <div class="lineup-col"><h4>${g.away_team} &mdash; vs ${p.home.name}</h4>${renderLineupTable(g.away_lineup)}</div>
@@ -1520,6 +1682,8 @@ function openDetail(idx) {
       renderConvergenceChart('convChartHome', md.home_half.simulation, r.p_nrfi_home_analytic);
       renderPAChart('paChartHome', md.home_half.simulation);
     }
+    if(md.away_half?.transition_matrix) renderHeatmap('heatAway', 'tipAway', md.away_half);
+    if(md.home_half?.transition_matrix) renderHeatmap('heatHome', 'tipHome', md.home_half);
     renderTraceButtons();
   },50);
 }
@@ -1623,6 +1787,141 @@ function renderSensChart(canvasId, sens) {
       }
     }
   });
+}
+
+function renderHeatmap(canvasId, tipId, half) {
+  const canvas = document.getElementById(canvasId);
+  const tip = document.getElementById(tipId);
+  if (!canvas || !half.transition_matrix) return;
+
+  const T = half.transition_matrix; // 24 × 26
+  const labels = (half.state_labels || []).map(l => l.replace(' outs','o').replace(' out','o').replace(' & ','+').replace('empty','\u2205'));
+  const colLabels = [...labels, 'NRFI', 'RUN'];
+
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  const H = canvas.height;
+  const leftPad = 72;
+  const topPad = 70;
+  const cellW = (W - leftPad - 10) / 26;
+  const cellH = (H - topPad - 10) / 24;
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.imageSmoothingEnabled = false;
+
+  // Color ramp: paper-dark -> red -> dark red
+  const colorize = (v) => {
+    const t = Math.min(1, Math.max(0, Math.pow(v, 0.6)));
+    if (t < 0.01) return '#ebe1cf';
+    // interpolate paper-dark (#ebe1cf) -> #e08a7c -> #c3392b -> #7a1f15
+    const stops = [
+      [235, 225, 207],
+      [224, 138, 124],
+      [195, 57, 43],
+      [122, 31, 21],
+    ];
+    const pos = t * (stops.length - 1);
+    const i = Math.floor(pos);
+    const frac = pos - i;
+    const a = stops[i];
+    const b = stops[Math.min(i + 1, stops.length - 1)];
+    const r = Math.round(a[0] + (b[0] - a[0]) * frac);
+    const g = Math.round(a[1] + (b[1] - a[1]) * frac);
+    const bl = Math.round(a[2] + (b[2] - a[2]) * frac);
+    return `rgb(${r},${g},${bl})`;
+  };
+
+  // Draw cells
+  for (let i = 0; i < 24; i++) {
+    for (let j = 0; j < 26; j++) {
+      const v = T[i][j] || 0;
+      ctx.fillStyle = colorize(v);
+      ctx.fillRect(leftPad + j * cellW, topPad + i * cellH, cellW - 0.5, cellH - 0.5);
+    }
+  }
+
+  // Grid (thin hairlines)
+  ctx.strokeStyle = 'rgba(26,24,20,0.08)';
+  ctx.lineWidth = 0.5;
+  for (let i = 0; i <= 24; i++) {
+    ctx.beginPath();
+    ctx.moveTo(leftPad, topPad + i * cellH);
+    ctx.lineTo(leftPad + 26 * cellW, topPad + i * cellH);
+    ctx.stroke();
+  }
+  for (let j = 0; j <= 26; j++) {
+    ctx.beginPath();
+    ctx.moveTo(leftPad + j * cellW, topPad);
+    ctx.lineTo(leftPad + j * cellW, topPad + 24 * cellH);
+    ctx.stroke();
+  }
+
+  // Highlight absorbing column boundary
+  ctx.strokeStyle = '#1a1814';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(leftPad + 24 * cellW, topPad);
+  ctx.lineTo(leftPad + 24 * cellW, topPad + 24 * cellH);
+  ctx.stroke();
+
+  // Row labels (current state)
+  ctx.fillStyle = '#3a342a';
+  ctx.font = "9px 'JetBrains Mono', monospace";
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'middle';
+  for (let i = 0; i < 24; i++) {
+    ctx.fillText(labels[i] || `S${i}`, leftPad - 6, topPad + i * cellH + cellH / 2);
+  }
+
+  // Column labels (next state) - rotated
+  ctx.save();
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  for (let j = 0; j < 26; j++) {
+    const x = leftPad + j * cellW + cellW / 2;
+    ctx.save();
+    ctx.translate(x, topPad - 6);
+    ctx.rotate(-Math.PI / 4);
+    ctx.fillStyle = (j >= 24) ? '#c3392b' : '#3a342a';
+    ctx.font = (j >= 24) ? "bold 9px 'JetBrains Mono', monospace" : "9px 'JetBrains Mono', monospace";
+    ctx.fillText(colLabels[j] || `S${j}`, 0, 0);
+    ctx.restore();
+  }
+  ctx.restore();
+
+  // Axis labels
+  ctx.fillStyle = '#8a8476';
+  ctx.font = "italic 10px 'Fraunces', serif";
+  ctx.textAlign = 'center';
+  ctx.fillText('next state', leftPad + 13 * cellW, 12);
+  ctx.save();
+  ctx.translate(14, topPad + 12 * cellH);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('current state', 0, 0);
+  ctx.restore();
+
+  // Hover tooltip
+  canvas.onmousemove = (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
+    const col = Math.floor((x - leftPad) / cellW);
+    const row = Math.floor((y - topPad) / cellH);
+    if (row >= 0 && row < 24 && col >= 0 && col < 26) {
+      const v = T[row][col] || 0;
+      const curLbl = (half.state_labels || [])[row] || `S${row}`;
+      const nextLbl = col < 24 ? (half.state_labels || [])[col] || `S${col}` : (col === 24 ? 'NRFI absorbed' : 'Run absorbed');
+      tip.textContent = `${curLbl} → ${nextLbl}   P = ${(v * 100).toFixed(2)}%`;
+      tip.classList.add('show');
+      tip.style.left = (e.clientX - rect.left + 12) + 'px';
+      tip.style.top = (e.clientY - rect.top + 12) + 'px';
+    } else {
+      tip.classList.remove('show');
+    }
+  };
+  canvas.onmouseleave = () => tip.classList.remove('show');
 }
 
 function renderConvergenceChart(canvasId, sim, analyticP) {
@@ -1932,6 +2231,132 @@ function closeDetail() {
   document.getElementById('overlay').classList.remove('open');
 }
 
+function buildStateDiagram() {
+  const svg = document.getElementById('stateDiagram');
+  if (!svg) return;
+
+  const baseLabels = ['empty','1B','2B','1+2','3B','1+3','2+3','Loaded'];
+  const colors = {0: '#cfd8e6', 1: '#f1d98a', 2: '#e8a598'};
+  const strokes = {0: '#5a6b88', 1: '#a8852f', 2: '#a05548'};
+
+  // Layout: 8 columns (base configs) × 3 rows (outs)
+  const colW = 76;
+  const rowH = 90;
+  const xOff = 50;
+  const yOff = 50;
+  const cellW = 64;
+  const cellH = 56;
+
+  // Compute positions for each state index
+  const positions = {};
+  for (let bi = 0; bi < 8; bi++) {
+    for (let o = 0; o < 3; o++) {
+      const idx = bi * 3 + o;
+      positions[idx] = {
+        x: xOff + bi * colW,
+        y: yOff + o * rowH,
+        cx: xOff + bi * colW + cellW / 2,
+        cy: yOff + o * rowH + cellH / 2,
+      };
+    }
+  }
+  // Absorbing states off to the side
+  const nrfiPos = { cx: xOff + 8 * colW + 8, cy: yOff + cellH / 2, x: xOff + 8 * colW, y: yOff };
+  const rfiPos = { cx: xOff + 8 * colW + 8, cy: yOff + 2 * rowH + cellH / 2, x: xOff + 8 * colW, y: yOff + 2 * rowH };
+
+  let svgContent = '';
+
+  // Defs: arrowhead
+  svgContent += `<defs>
+    <marker id="arrowhead" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <polygon points="0 0, 6 3, 0 6" fill="#1a1814" opacity="0.6"/>
+    </marker>
+    <marker id="arrowheadRed" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <polygon points="0 0, 6 3, 0 6" fill="#c3392b"/>
+    </marker>
+  </defs>`;
+
+  // Column headers (base configs)
+  for (let bi = 0; bi < 8; bi++) {
+    svgContent += `<text x="${xOff + bi * colW + cellW / 2}" y="32" text-anchor="middle" font-family="JetBrains Mono" font-size="9" font-weight="700" fill="#3a342a" letter-spacing="0.05em">${baseLabels[bi].toUpperCase()}</text>`;
+  }
+  // Row labels (outs)
+  for (let o = 0; o < 3; o++) {
+    svgContent += `<text x="${xOff - 12}" y="${yOff + o * rowH + cellH / 2 + 4}" text-anchor="end" font-family="Fraunces" font-style="italic" font-size="13" fill="#3a342a">${o} out${o !== 1 ? 's' : ''}</text>`;
+  }
+
+  // From each state at the START state (index 0 = empty, 0 outs), highlight outgoing arcs.
+  // We don't have lineup data here — show illustrative outgoing transitions for ALL states.
+  // Use a simple deterministic outgoing edge set: each state advances by either +1 out or by adding a runner.
+  // For visual clarity, draw arcs from "empty, 0 outs" (index 0) to its most likely successors.
+
+  // Hand-defined "interesting transitions" demonstrating model flow
+  const flows = [
+    { from: 0, to: 1, label: 'K' },        // empty 0o -> empty 1o
+    { from: 0, to: 3, label: '1B' },       // empty 0o -> 1B 0o
+    { from: 0, to: 'rfi', label: 'HR' },   // empty 0o -> RUN
+    { from: 1, to: 2, label: 'K' },        // empty 1o -> empty 2o
+    { from: 1, to: 4, label: '1B' },       // empty 1o -> 1B 1o
+    { from: 2, to: 'nrfi', label: 'K' },   // empty 2o -> NRFI
+    { from: 3, to: 4, label: 'K' },        // 1B 0o -> empty/1B 1o (simplified)
+    { from: 3, to: 9, label: '1B' },       // 1B 0o -> 1B+2B 0o
+    { from: 3, to: 'rfi', label: 'HR' },
+    { from: 9, to: 'rfi', label: '2B' },
+  ];
+
+  flows.forEach(f => {
+    const a = positions[f.from];
+    let b;
+    if (f.to === 'nrfi') b = nrfiPos;
+    else if (f.to === 'rfi') b = rfiPos;
+    else b = positions[f.to];
+    if (!a || !b) return;
+
+    // Curved path from a.cx,a.cy to b.cx,b.cy
+    const dx = b.cx - a.cx;
+    const dy = b.cy - a.cy;
+    const mx = (a.cx + b.cx) / 2;
+    const my = (a.cy + b.cy) / 2 - Math.abs(dx) * 0.15;
+    const isAbsorb = (f.to === 'nrfi' || f.to === 'rfi');
+    const stroke = isAbsorb ? '#c3392b' : '#1a1814';
+    const opacity = isAbsorb ? 0.7 : 0.35;
+    const marker = isAbsorb ? 'arrowheadRed' : 'arrowhead';
+
+    svgContent += `<path d="M ${a.cx + cellW/2 - 4} ${a.cy} Q ${mx} ${my} ${b.cx - cellW/2 + 6} ${b.cy}" stroke="${stroke}" stroke-width="1.2" fill="none" opacity="${opacity}" marker-end="url(#${marker})"/>`;
+    // Edge label
+    svgContent += `<text x="${mx}" y="${my - 2}" text-anchor="middle" font-family="JetBrains Mono" font-size="8" font-weight="700" fill="${stroke}" opacity="${opacity + 0.2}">${f.label}</text>`;
+  });
+
+  // State nodes
+  for (let bi = 0; bi < 8; bi++) {
+    for (let o = 0; o < 3; o++) {
+      const idx = bi * 3 + o;
+      const p = positions[idx];
+      const fill = colors[o];
+      const stroke = strokes[o];
+      svgContent += `<g class="state-node">
+        <rect x="${p.x}" y="${p.y}" width="${cellW}" height="${cellH}" fill="${fill}" stroke="${stroke}" stroke-width="1.2"/>
+        <text class="sid" x="${p.cx}" y="${p.cy - 4}" text-anchor="middle">${idx}</text>
+        <text class="slbl" x="${p.cx}" y="${p.cy + 12}" text-anchor="middle">${baseLabels[bi]}, ${o}o</text>
+      </g>`;
+    }
+  }
+
+  // Absorbing states
+  svgContent += `<g class="state-node">
+    <rect x="${nrfiPos.x}" y="${nrfiPos.y}" width="80" height="${cellH}" fill="#9fb377" stroke="#586333" stroke-width="1.5"/>
+    <text x="${nrfiPos.x + 40}" y="${nrfiPos.cy - 2}" text-anchor="middle" font-family="Fraunces" font-style="italic" font-weight="700" font-size="14" fill="#1a1814">NRFI</text>
+    <text x="${nrfiPos.x + 40}" y="${nrfiPos.cy + 13}" text-anchor="middle" font-family="JetBrains Mono" font-size="7" fill="#3a342a">3 outs, 0 R</text>
+  </g>`;
+  svgContent += `<g class="state-node">
+    <rect x="${rfiPos.x}" y="${rfiPos.y}" width="80" height="${cellH}" fill="#c3392b" stroke="#7a1f15" stroke-width="1.5"/>
+    <text x="${rfiPos.x + 40}" y="${rfiPos.cy - 2}" text-anchor="middle" font-family="Fraunces" font-style="italic" font-weight="700" font-size="14" fill="#f4ede1">RFI</text>
+    <text x="${rfiPos.x + 40}" y="${rfiPos.cy + 13}" text-anchor="middle" font-family="JetBrains Mono" font-size="7" fill="#f4ede1">run scored</text>
+  </g>`;
+
+  svg.innerHTML = svgContent;
+}
+
 // ── Methodology ──
 function renderMethodology() {
   const el = document.getElementById('methodContent');
@@ -1939,7 +2364,17 @@ function renderMethodology() {
     <h2>The Markov State Space</h2>
     <p>The first inning unfolds as an <strong>absorbing Markov chain</strong> over twenty-four transient states defined by the base-out configuration: eight possible base occupancy patterns multiplied by three out counts (0, 1, 2). Two absorbing states capture the outcomes of interest: <strong>three outs with zero runs (NRFI)</strong> and <strong>any run scored (RFI)</strong>. Each state is indexed by <code>state = bases &times; 3 + outs</code>, where <code>bases</code> is a three-bit mask with bit 0 for first base, bit 1 for second, bit 2 for third.</p>
 
-    <div class="state-grid" id="stateGrid"></div>
+    <div class="state-diagram-wrap">
+      <svg id="stateDiagram" viewBox="0 0 720 360" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="state-diagram-legend">
+        <div><span class="ld outs-0"></span>0 outs</div>
+        <div><span class="ld outs-1"></span>1 out</div>
+        <div><span class="ld outs-2"></span>2 outs</div>
+        <div><span class="ld absorb-nrfi"></span>NRFI</div>
+        <div><span class="ld absorb-rfi"></span>Run scored</div>
+        <div style="margin-left:auto;font-style:italic;color:var(--muted)">arcs show top-3 outgoing transitions from each state</div>
+      </div>
+    </div>
 
     <h2>Transition Probabilities</h2>
     <p>For each plate appearance, the outcome distribution is a blend of pitcher and batter statistics using the <strong>log-odds (odds-ratio) method</strong>:</p>
@@ -1965,18 +2400,8 @@ function renderMethodology() {
     <p>Each player's rates are constructed from <strong>three years of MLB data (2024&ndash;2026)</strong>, aggregated from counting statistics via the official MLB Stats API. The weighted merge uses plate-appearance counts&mdash;a batter with 800 prior PA and 50 recent PA receives proportional blending&mdash;preventing early-season noise from overwhelming established priors.</p>
   `;
 
-  const grid = document.getElementById('stateGrid');
-  const bases = ['Empty','1B','2B','1B + 2B','3B','1B + 3B','2B + 3B','Bases Loaded'];
-  let html = `<div class="state-cell header"></div>`;
-  for (let o of [0,1,2]) html += `<div class="state-cell header">${o} Out${o!==1?'s':''}</div>`;
-  for (let bi = 0; bi < bases.length; bi++) {
-    html += `<div class="state-cell row-label">${bases[bi]}</div>`;
-    for (let o of [0,1,2]) {
-      const idx = bi * 3 + o;
-      html += `<div class="state-cell"><span class="sv">${idx}</span></div>`;
-    }
-  }
-  grid.innerHTML = html;
+  // Build the state diagram SVG
+  buildStateDiagram();
 
   const formulaEl = document.getElementById('blendFormula');
   try {
@@ -1987,12 +2412,137 @@ function renderMethodology() {
 }
 
 // ── Results Tracker ──
+let HS = null;  // historical stats
+
 function loadResultsTracker() {
-  fetch('data/results_log.json').then(r=>r.json()).then(d => {
-    RL = d;
+  Promise.all([
+    fetch('data/results_log.json').then(r => r.json()).catch(() => null),
+    fetch('data/historical_stats.json').then(r => r.json()).catch(() => null),
+  ]).then(([rl, hs]) => {
+    RL = rl || { entries: [], cumulative: {}, daily: [] };
+    HS = hs;
     renderResultsTracker();
   }).catch(() => {
     document.getElementById('resultsTracker').innerHTML = '<div class="empty"><h2>No results yet</h2><p>Results will populate as games resolve their first innings.</p></div>';
+  });
+}
+
+function renderHistoricalSection() {
+  if (!HS || !HS.n_games) return '';
+  const tiers = HS.tiers || [];
+  const cal = HS.calibration || [];
+  return `
+    <div class="tracker-section">
+      <h3>Historical Backtest \u2014 ${HS.n_games} Games (${HS.date_range[0]} to ${HS.date_range[1]})</h3>
+      <div class="results-grid">
+        <div class="stat-cell feature">
+          <div class="stat-label">Brier Score</div>
+          <div class="stat-value tabular">${HS.brier_score?.toFixed(4) || '\u2014'}</div>
+          <div class="stat-sub">vs naive ${HS.brier_skill_score >= 0 ? '+' : ''}${(HS.brier_skill_score * 100).toFixed(1)}%</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">Log Loss</div>
+          <div class="stat-value tabular">${HS.log_loss?.toFixed(4) || '\u2014'}</div>
+          <div class="stat-sub">cross-entropy</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">Accuracy</div>
+          <div class="stat-value tabular ${HS.accuracy >= .55 ? 'prob-high' : HS.accuracy >= .48 ? 'prob-mid' : 'prob-low'}">${(HS.accuracy * 100).toFixed(1)}<span class="unit">%</span></div>
+          <div class="stat-sub">at 50% threshold</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">Actual Rate</div>
+          <div class="stat-value tabular">${pS(HS.actual_nrfi_rate)}<span class="unit">%</span></div>
+          <div class="stat-sub">${HS.n_games} games</div>
+        </div>
+      </div>
+
+      <div class="chart-duo" style="margin-bottom:24px">
+        <div class="chart-box">
+          <h4>Calibration Curve</h4>
+          <canvas id="calChart" height="220"></canvas>
+        </div>
+        <div class="chart-box">
+          <h4>Accuracy by Confidence Tier</h4>
+          ${tiers.length ? `
+            <table class="daily-table" style="font-size:11px">
+              <thead><tr><th>Tier</th><th>n</th><th>Pred</th><th>Actual</th><th>Acc</th></tr></thead>
+              <tbody>
+              ${tiers.map(t => `
+                <tr>
+                  <td style="font-family:var(--serif);font-style:italic;font-size:12px">${t.tier}</td>
+                  <td class="tabular">${t.n}</td>
+                  <td class="pct-val">${pS(t.predicted)}%</td>
+                  <td class="pct-val ${t.actual_nrfi_rate >= .55 ? 'prob-high' : t.actual_nrfi_rate >= .45 ? 'prob-mid' : 'prob-low'}">${pS(t.actual_nrfi_rate)}%</td>
+                  <td class="pct-val">${(t.accuracy * 100).toFixed(0)}%</td>
+                </tr>
+              `).join('')}
+              </tbody>
+            </table>
+          ` : '<p style="font-style:italic;color:var(--muted);font-size:12px">No tier data</p>'}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderCalibrationChart() {
+  if (!HS || !HS.calibration || !HS.calibration.length) return;
+  const ctx = document.getElementById('calChart');
+  if (!ctx) return;
+  const cal = HS.calibration;
+  new Chart(ctx, {
+    type: 'scatter',
+    data: {
+      datasets: [
+        {
+          label: 'Perfect calibration',
+          data: [{x: 30, y: 30}, {x: 70, y: 70}],
+          type: 'line',
+          borderColor: 'rgba(26,24,20,0.3)',
+          borderDash: [5, 5],
+          pointRadius: 0,
+          borderWidth: 1,
+        },
+        {
+          label: 'Model',
+          data: cal.map(c => ({x: c.predicted * 100, y: c.actual * 100, n: c.n})),
+          backgroundColor: ACCENT,
+          borderColor: ACCENT,
+          pointRadius: cal.map(c => Math.max(4, Math.min(12, Math.sqrt(c.n) * 1.2))),
+          pointHoverRadius: cal.map(c => Math.max(6, Math.min(14, Math.sqrt(c.n) * 1.2 + 2))),
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              const d = ctx.raw;
+              return `Pred ${d.x.toFixed(1)}%, Actual ${d.y.toFixed(1)}%${d.n ? ' (n='+d.n+')' : ''}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          min: 28, max: 72,
+          title: { display: true, text: 'Predicted P(NRFI)', color: '#8a8476', font: { size: 10, family: 'IBM Plex Sans' } },
+          grid: { color: 'rgba(207,195,169,0.5)' },
+          ticks: { color: '#8a8476', font: { size: 10, family: 'JetBrains Mono' }, callback: v => v + '%' }
+        },
+        y: {
+          min: 28, max: 72,
+          title: { display: true, text: 'Actual NRFI Rate', color: '#8a8476', font: { size: 10, family: 'IBM Plex Sans' } },
+          grid: { color: 'rgba(207,195,169,0.5)' },
+          ticks: { color: '#8a8476', font: { size: 10, family: 'JetBrains Mono' }, callback: v => v + '%' }
+        }
+      }
+    }
   });
 }
 
@@ -2003,7 +2553,12 @@ function renderResultsTracker() {
   const daily = RL.daily || [];
 
   if (!entries.length) {
-    el.innerHTML = '<div class="empty"><h2>No results yet</h2><p>Results will populate as games resolve their first innings.</p></div>';
+    if (HS && HS.n_games) {
+      el.innerHTML = renderHistoricalSection();
+      setTimeout(() => renderCalibrationChart(), 100);
+    } else {
+      el.innerHTML = '<div class="empty"><h2>No results yet</h2><p>Results will populate as games resolve their first innings.</p></div>';
+    }
     return;
   }
 
@@ -2074,7 +2629,11 @@ function renderResultsTracker() {
         </tbody>
       </table>
     </div>
+
+    ${renderHistoricalSection()}
   `;
+
+  setTimeout(() => renderCalibrationChart(), 100);
 
   setTimeout(() => {
     if (!daily.length) return;

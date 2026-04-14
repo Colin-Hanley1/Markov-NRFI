@@ -1,0 +1,109 @@
+{
+  "date_range": [
+    "2026-03-27",
+    "2026-04-12"
+  ],
+  "n_games": 224,
+  "computed_at": "2026-04-13T20:36:18.670716",
+  "actual_nrfi_rate": 0.5357,
+  "mean_predicted": 0.515,
+  "brier_score": 0.24251,
+  "brier_skill_score": 0.025,
+  "log_loss": 0.67785,
+  "accuracy": 0.558,
+  "calibration": [
+    {
+      "bin": "35%-40%",
+      "lo": 0.35,
+      "hi": 0.39999999999999997,
+      "n": 11,
+      "predicted": 0.3793,
+      "actual": 0.0909
+    },
+    {
+      "bin": "40%-45%",
+      "lo": 0.39999999999999997,
+      "hi": 0.44999999999999996,
+      "n": 23,
+      "predicted": 0.4267,
+      "actual": 0.5652
+    },
+    {
+      "bin": "45%-50%",
+      "lo": 0.44999999999999996,
+      "hi": 0.5,
+      "n": 41,
+      "predicted": 0.4741,
+      "actual": 0.5366
+    },
+    {
+      "bin": "50%-55%",
+      "lo": 0.5,
+      "hi": 0.5499999999999999,
+      "n": 77,
+      "predicted": 0.5241,
+      "actual": 0.5455
+    },
+    {
+      "bin": "55%-60%",
+      "lo": 0.5499999999999999,
+      "hi": 0.6,
+      "n": 44,
+      "predicted": 0.5742,
+      "actual": 0.6136
+    },
+    {
+      "bin": "60%-65%",
+      "lo": 0.6,
+      "hi": 0.6499999999999999,
+      "n": 18,
+      "predicted": 0.619,
+      "actual": 0.6667
+    },
+    {
+      "bin": "65%-70%",
+      "lo": 0.6499999999999999,
+      "hi": 0.7,
+      "n": 6,
+      "predicted": 0.6606,
+      "actual": 0.3333
+    }
+  ],
+  "tiers": [
+    {
+      "tier": "Strong NRFI (>58%)",
+      "n": 39,
+      "predicted": 0.6145,
+      "actual_nrfi_rate": 0.641,
+      "accuracy": 0.641
+    },
+    {
+      "tier": "Lean NRFI (52-58%)",
+      "n": 75,
+      "predicted": 0.5455,
+      "actual_nrfi_rate": 0.56,
+      "accuracy": 0.56
+    },
+    {
+      "tier": "Coin Flip (48-52%)",
+      "n": 47,
+      "predicted": 0.5039,
+      "actual_nrfi_rate": 0.5319,
+      "accuracy": 0.4894
+    },
+    {
+      "tier": "Lean RFI (42-48%)",
+      "n": 39,
+      "predicted": 0.4545,
+      "actual_nrfi_rate": 0.5641,
+      "accuracy": 0.4359
+    },
+    {
+      "tier": "Strong RFI (<42%)",
+      "n": 24,
+      "predicted": 0.3781,
+      "actual_nrfi_rate": 0.25,
+      "accuracy": 0.75
+    }
+  ]
+}

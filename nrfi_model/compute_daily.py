@@ -26,6 +26,7 @@ from model.chain import (
     simulate_nrfi, compute_nrfi_analytic, compute_half_inning_detail,
     simulate_with_details, simulate_full_inning_traced,
 )
+from market_odds import load_market_data, attach_to_game
 
 DATA_DIR = "data/"
 OUT_DIR = Path("docs/data")
@@ -207,9 +208,14 @@ def run_game_model(away_lineup, home_lineup, away_sp_id, home_sp_id, home_team, 
     away_sensitivity = compute_sensitivity(away_rates)
     home_sensitivity = compute_sensitivity(home_rates)
 
-    # Compact transition matrix
-    away_detail.pop("transition_matrix", None)
-    home_detail.pop("transition_matrix", None)
+    # Keep transition matrix for frontend heatmap visualization
+    # (~6KB per half, rounded to 4 decimals)
+    def _round_matrix(m):
+        return [[round(v, 4) for v in row] for row in m] if m else None
+    if "transition_matrix" in away_detail:
+        away_detail["transition_matrix"] = _round_matrix(away_detail["transition_matrix"])
+    if "transition_matrix" in home_detail:
+        home_detail["transition_matrix"] = _round_matrix(home_detail["transition_matrix"])
 
     # Simulation details: PA distribution, convergence (per-half)
     away_sim_detail = simulate_with_details(away_rates, n_simulations=N_SIMS, seed=42, n_sample_traces=0)
@@ -353,6 +359,14 @@ def main():
             print(f"  {away_abbr}@{home_abbr}: skipped ({reason})", flush=True)
 
         output_games.append(game_entry)
+
+    # Attach market odds where available
+    market = load_market_data()
+    if market:
+        for ge in output_games:
+            attach_to_game(ge, market)
+        attached = sum(1 for ge in output_games if ge.get("market"))
+        print(f"  Attached market odds to {attached} games", flush=True)
 
     # Compute daily summary
     modeled_games = [g for g in output_games if g.get("modeled")]
