@@ -3,208 +3,1306 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NRFI Model — Markov Chain Baseball Predictions</title>
+  <title>The NRFI Observer — Markovian Inning Model</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..900,100&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.css">
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.js"></script>
+
   <style>
-    :root { --bg:#0f1117;--s1:#1a1d27;--s2:#242836;--s3:#2e3345;--t1:#e4e6ed;--t2:#8b8fa3;--acc:#4f8cff;--grn:#34d399;--yel:#fbbf24;--red:#f87171;--org:#fb923c; }
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;font-size:14px}
-    a{color:var(--acc);text-decoration:none}
-    .header{padding:20px 28px;border-bottom:1px solid var(--s3);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
-    .header h1{font-size:20px;font-weight:700;letter-spacing:-.5px}
-    .header h1 span{color:var(--acc)}
-    .header .meta{font-size:12px;color:var(--t2)}
-    .tabs{display:flex;gap:6px;padding:12px 28px;border-bottom:1px solid var(--s3);overflow-x:auto}
-    .tab-btn{background:transparent;border:1px solid var(--s3);color:var(--t2);padding:6px 16px;border-radius:6px;font-size:13px;cursor:pointer;white-space:nowrap}
-    .tab-btn:hover{border-color:var(--acc);color:var(--t1)}
-    .tab-btn.active{border-color:var(--acc);color:var(--acc);background:rgba(79,140,255,.08)}
-    .tab-content{display:none;padding:20px 28px;max-width:1400px;margin:0 auto}
-    .tab-content.active{display:block}
+    :root {
+      --paper: #f4ede1;
+      --paper-dark: #ebe1cf;
+      --paper-darker: #ded2ba;
+      --ink: #1a1814;
+      --ink-soft: #3a342a;
+      --muted: #8a8476;
+      --rule: #cfc3a9;
+      --accent: #c3392b;     /* vintage red */
+      --accent-dark: #9a2a1e;
+      --navy: #2d3f5f;
+      --moss: #6b7a3d;
+      --gold: #b8941f;
 
-    /* Summary cards */
-    .summary-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
-    .stat-card{background:var(--s1);border:1px solid var(--s3);border-radius:10px;padding:14px 16px;text-align:center}
-    .stat-card .sc-label{font-size:11px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px}
-    .stat-card .sc-val{font-size:26px;font-weight:800;margin:4px 0;letter-spacing:-1px}
-    .stat-card .sc-sub{font-size:11px;color:var(--t2)}
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'IBM Plex Sans', -apple-system, sans-serif;
+      --mono: 'JetBrains Mono', ui-monospace, monospace;
+    }
 
-    /* Slate chart */
-    .slate-chart{background:var(--s1);border:1px solid var(--s3);border-radius:10px;padding:16px;margin-bottom:20px}
-    .slate-chart h3{font-size:13px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
-    .slate-bar{display:flex;align-items:center;margin-bottom:6px;gap:8px;font-size:12px;cursor:pointer}
-    .slate-bar:hover .bar-fill{filter:brightness(1.2)}
-    .slate-label{width:90px;text-align:right;color:var(--t2);flex-shrink:0}
-    .bar-track{flex:1;height:22px;background:var(--s2);border-radius:4px;position:relative;overflow:hidden}
-    .bar-fill{height:100%;border-radius:4px;transition:width .6s ease}
-    .bar-pct{width:50px;font-weight:700;text-align:right;flex-shrink:0}
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* Game cards */
-    .games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
-    .game-card{background:var(--s1);border:1px solid var(--s3);border-radius:10px;padding:16px;cursor:pointer;transition:border-color .15s,transform .1s}
-    .game-card:hover{border-color:var(--acc);transform:translateY(-1px)}
-    .game-card.no-model{opacity:.4;cursor:default}.game-card.no-model:hover{border-color:var(--s3);transform:none}
-    .card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-    .badge{font-size:10px;padding:2px 7px;border-radius:4px}
-    .badge-ok{background:rgba(52,211,153,.12);color:var(--grn)}.badge-proj{background:rgba(79,140,255,.12);color:var(--acc)}.badge-no{background:var(--s2);color:var(--t2)}
-    .nrfi-pill{font-size:20px;font-weight:800}
-    .matchup{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-    .team{text-align:center;flex:1}.team .abbr{font-size:20px;font-weight:800}.team .name{font-size:10px;color:var(--t2);margin-top:1px}
-    .at-sym{font-size:12px;color:var(--t2);padding:0 8px}
-    .pitchers{display:flex;justify-content:space-between;font-size:11px;color:var(--t2);padding-top:8px;border-top:1px solid var(--s3)}
-    .halves{display:flex;justify-content:space-around;margin-top:8px;font-size:11px;color:var(--t2)}
-    .halves .hv{font-size:15px;font-weight:700;color:var(--t1)}
+    html, body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
 
-    /* Overlay */
-    .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:100;justify-content:center;align-items:flex-start;padding:30px 16px;overflow-y:auto}
-    .overlay.open{display:flex}
-    .panel{background:var(--s1);border:1px solid var(--s3);border-radius:14px;width:100%;max-width:900px;padding:28px;position:relative}
-    .panel .close{position:absolute;top:14px;right:18px;background:none;border:none;color:var(--t2);font-size:22px;cursor:pointer}.panel .close:hover{color:var(--t1)}
-    .detail-hdr{text-align:center;margin-bottom:20px}
-    .detail-hdr .teams{font-size:26px;font-weight:800;letter-spacing:-1px}
-    .detail-hdr .sub{color:var(--t2);font-size:12px;margin-top:3px}
+    /* Paper texture — subtle grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.35;
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(139, 115, 85, 0.04) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(139, 115, 85, 0.04) 0%, transparent 50%),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E");
+    }
 
-    .nrfi-big{text-align:center;margin:16px 0}
-    .nrfi-big .label{font-size:12px;color:var(--t2);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
-    .nrfi-big .value{font-size:56px;font-weight:800;letter-spacing:-2px}
-    .nrfi-big .pct{font-size:30px}
-    .nrfi-big .ci{font-size:12px;color:var(--t2);margin-top:3px}
+    main { position: relative; z-index: 2; }
 
-    .half-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
-    .half-card{background:var(--s2);border-radius:8px;padding:14px;text-align:center}
-    .half-card .hl{font-size:11px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px}
-    .half-card .hval{font-size:28px;font-weight:700;margin:4px 0}
-    .half-card .hs{font-size:11px;color:var(--t2)}
+    .tabular { font-variant-numeric: tabular-nums; font-feature-settings: 'tnum'; }
+    .mono { font-family: var(--mono); }
+    .small-caps { text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.72em; font-weight: 600; }
 
-    .detail-section{margin-top:20px}
-    .detail-section h3{font-size:13px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;border-bottom:1px solid var(--s3);padding-bottom:6px}
+    /* ═══ MASTHEAD ═══ */
+    .masthead {
+      border-bottom: 3px double var(--ink);
+      padding: 32px 48px 20px;
+      max-width: 1380px;
+      margin: 0 auto;
+    }
 
-    .chart-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
-    .chart-box{background:var(--s2);border-radius:8px;padding:14px}
-    .chart-box h4{font-size:12px;color:var(--t2);margin-bottom:8px}
-    .chart-box canvas{width:100%!important;max-height:220px}
+    .masthead-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 10px;
+      margin-bottom: 18px;
+      font-weight: 500;
+    }
 
-    .impact-bar{display:flex;align-items:center;margin-bottom:5px;font-size:11px;gap:6px;height:20px}
-    .impact-name{width:110px;text-align:right;color:var(--t2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:0;font-size:10px}
-    .impact-track{flex:1;height:14px;position:relative;background:var(--s1);border-radius:3px;overflow:visible}
-    .impact-center{position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--s3)}
-    .impact-fill{height:100%;position:absolute;top:0;border-radius:3px}
-    .impact-val{width:52px;text-align:right;font-size:11px;font-weight:600;flex-shrink:0}
+    .masthead-top span:nth-child(2) { color: var(--accent); font-weight: 600; }
 
-    .park-bar{margin-top:12px;padding:8px 12px;background:var(--s2);border-radius:6px;font-size:12px;display:flex;gap:16px;flex-wrap:wrap}
-    .park-bar span{color:var(--t2)}
+    .masthead h1 {
+      font-family: var(--serif);
+      font-size: clamp(48px, 7vw, 88px);
+      font-weight: 300;
+      font-variation-settings: 'opsz' 144, 'SOFT' 50;
+      line-height: 0.92;
+      letter-spacing: -0.035em;
+      font-style: italic;
+      text-align: center;
+      color: var(--ink);
+    }
 
-    .lineup-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .lineup-col h4{font-size:12px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
-    table.lt{width:100%;border-collapse:collapse;font-size:11px}
-    table.lt th{text-align:left;color:var(--t2);font-weight:500;padding:4px 5px;border-bottom:1px solid var(--s3)}
-    table.lt td{padding:4px 5px;border-bottom:1px solid var(--s3)}
-    table.lt .sl{color:var(--t2);width:20px}
+    .masthead h1 .the {
+      font-size: 0.45em;
+      font-style: normal;
+      font-weight: 400;
+      vertical-align: 0.8em;
+      letter-spacing: 0.04em;
+      margin-right: 0.15em;
+      color: var(--accent);
+    }
 
-    /* Methodology */
-    .method-section{max-width:800px}
-    .method-section h2{font-size:18px;margin:24px 0 12px;font-weight:700}
-    .method-section h2:first-child{margin-top:0}
-    .method-section p{color:var(--t2);line-height:1.65;margin-bottom:12px}
-    .method-section .formula{background:var(--s2);border-radius:8px;padding:16px;margin:12px 0;text-align:center;overflow-x:auto}
-    .method-section .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .state-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin:12px 0}
-    .state-cell{background:var(--s2);border-radius:4px;padding:6px 4px;text-align:center;font-size:9px;color:var(--t2);line-height:1.3}
-    .state-cell .sv{font-size:12px;font-weight:700;color:var(--t1);display:block}
+    .masthead h1 strong {
+      font-weight: 900;
+      font-style: normal;
+    }
 
-    /* Trace replay */
-    .trace-btn{padding:4px 10px;border-radius:4px;font-size:10px;cursor:pointer;border:1px solid var(--s3);background:var(--s2);color:var(--t2);font-weight:600}
-    .trace-btn:hover{border-color:var(--acc);color:var(--t1)}
-    .trace-btn.nrfi-trace{border-color:rgba(52,211,153,.3)}.trace-btn.rfi-trace{border-color:rgba(248,113,113,.3)}
-    .trace-btn.active{border-color:var(--acc);color:var(--acc);background:rgba(79,140,255,.1)}
+    .masthead-sub {
+      text-align: center;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+      font-size: 11px;
+      color: var(--ink-soft);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 500;
+      flex-wrap: wrap;
+    }
 
-    .diamond-wrap{display:flex;align-items:center;gap:24px;justify-content:center;flex-wrap:wrap}
-    .diamond-svg{width:200px;height:200px;flex-shrink:0}
-    .diamond-info{display:flex;flex-direction:column;gap:8px;min-width:180px}
-    .diamond-outs{display:flex;gap:6px;align-items:center}
-    .out-dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--s3);transition:all .4s}
-    .out-dot.filled{background:var(--yel);border-color:var(--yel)}
-    .diamond-pa{font-size:12px;color:var(--t2)}
-    .diamond-pa strong{color:var(--t1)}
-    .diamond-result{font-size:16px;font-weight:700;opacity:0;transition:opacity .5s}
-    .diamond-result.show{opacity:1}
-    .diamond-event{font-size:12px;color:var(--t2);min-height:18px;transition:all .3s}
-    .diamond-event.active{color:var(--t1);font-weight:600}
+    .masthead-sub .ornament { color: var(--accent); font-size: 14px; }
 
-    /* Results tracker */
-    .results-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:20px}
-    .daily-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:20px}
-    .daily-table th{text-align:left;color:var(--t2);font-weight:500;padding:8px 10px;border-bottom:1px solid var(--s3)}
-    .daily-table td{padding:8px 10px;border-bottom:1px solid var(--s3)}
-    .daily-table tr:hover{background:var(--s2)}
-    .correct-tag{color:var(--grn);font-weight:600;font-size:11px}
-    .miss-tag{color:var(--red);font-weight:600;font-size:11px}
-    .nrfi-tag{background:rgba(52,211,153,.12);color:var(--grn);padding:1px 6px;border-radius:3px;font-size:10px;font-weight:600}
-    .rfi-tag{background:rgba(248,113,113,.12);color:var(--red);padding:1px 6px;border-radius:3px;font-size:10px;font-weight:600}
-    .tracker-section{margin-bottom:24px}
-    .tracker-section h3{font-size:14px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;border-bottom:1px solid var(--s3);padding-bottom:6px}
+    /* ═══ TABS ═══ */
+    .tabs {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 14px 48px 0;
+      display: flex;
+      gap: 32px;
+      border-bottom: 1px solid var(--rule);
+    }
 
-    .prob-high{color:var(--grn)}.prob-mid{color:var(--yel)}.prob-low{color:var(--org)}.prob-vlow{color:var(--red)}
-    .empty{text-align:center;padding:50px 20px;color:var(--t2)}
-    .empty h2{font-size:16px;margin-bottom:6px;color:var(--t1)}
-    .spinner{display:inline-block;width:22px;height:22px;border:3px solid var(--s3);border-top-color:var(--acc);border-radius:50%;animation:spin .7s linear infinite}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    @media(max-width:700px){.chart-row,.half-cards,.lineup-cols{grid-template-columns:1fr}.games-grid{grid-template-columns:1fr}}
+    .tab-btn {
+      background: none;
+      border: none;
+      padding: 12px 0;
+      font-family: var(--sans);
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 500;
+      cursor: pointer;
+      position: relative;
+      transition: color 0.2s;
+    }
+
+    .tab-btn:hover { color: var(--ink); }
+
+    .tab-btn.active {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 3px;
+      background: var(--accent);
+    }
+
+    /* ═══ CONTAINER ═══ */
+    .container {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 40px 48px 80px;
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .section-head {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-style: italic;
+      font-variation-settings: 'opsz' 144;
+      font-size: 32px;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+      color: var(--ink);
+    }
+
+    .section-sub {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: 24px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    /* ═══ SUMMARY DASHBOARD ═══ */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 0;
+      border-top: 2px solid var(--ink);
+      border-bottom: 2px solid var(--ink);
+      margin-bottom: 36px;
+    }
+
+    .stat-cell {
+      padding: 22px 24px;
+      border-right: 1px solid var(--rule);
+      position: relative;
+    }
+
+    .stat-cell:last-child { border-right: none; }
+
+    .stat-cell.feature {
+      background: var(--paper-dark);
+      border-right: 1px solid var(--ink);
+    }
+
+    .stat-label {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .stat-value {
+      font-family: var(--serif);
+      font-variation-settings: 'opsz' 144;
+      font-weight: 700;
+      font-size: 52px;
+      line-height: 0.9;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-cell.feature .stat-value {
+      font-size: 68px;
+      color: var(--accent);
+      font-style: italic;
+      font-weight: 500;
+    }
+
+    .stat-value .unit {
+      font-size: 0.45em;
+      font-weight: 400;
+      color: var(--muted);
+      margin-left: 4px;
+    }
+
+    .stat-sub {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-soft);
+      margin-top: 8px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ═══ SLATE RANKING ═══ */
+    .slate {
+      margin-bottom: 48px;
+    }
+
+    .slate-list {
+      display: flex;
+      flex-direction: column;
+      border-top: 1px solid var(--rule);
+    }
+
+    .slate-row {
+      display: grid;
+      grid-template-columns: 32px 140px 1fr 64px;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--rule);
+      cursor: pointer;
+      gap: 16px;
+      transition: background 0.2s;
+    }
+
+    .slate-row:hover { background: var(--paper-dark); }
+
+    .slate-rank {
+      font-family: var(--serif);
+      font-variation-settings: 'opsz' 144;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 22px;
+      color: var(--muted);
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .slate-matchup {
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.02em;
+    }
+
+    .slate-matchup .at {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 300;
+      color: var(--muted);
+      margin: 0 4px;
+    }
+
+    .slate-bar {
+      height: 10px;
+      background: var(--paper-dark);
+      position: relative;
+      border: 1px solid var(--rule);
+    }
+
+    .slate-bar-fill {
+      height: 100%;
+      transition: width 0.6s ease;
+    }
+
+    .slate-value {
+      font-family: var(--mono);
+      font-size: 15px;
+      font-weight: 700;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ═══ GAME CARDS — NEWSPAPER BRIEFS ═══ */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 2px;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+    }
+
+    .game-card {
+      background: var(--paper);
+      padding: 22px 24px;
+      cursor: pointer;
+      transition: background 0.2s;
+      position: relative;
+    }
+
+    .game-card:hover { background: var(--paper-dark); }
+
+    .game-card.no-model { opacity: 0.55; cursor: default; }
+    .game-card.no-model:hover { background: var(--paper); }
+
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 14px;
+    }
+
+    .card-badge {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border: 1px solid currentColor;
+      font-weight: 600;
+    }
+
+    .badge-ok { color: var(--moss); }
+    .badge-proj { color: var(--navy); }
+    .badge-no { color: var(--muted); }
+
+    .card-nrfi {
+      font-family: var(--serif);
+      font-variation-settings: 'opsz' 144;
+      font-weight: 700;
+      font-size: 36px;
+      line-height: 0.9;
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .card-nrfi.none { color: var(--muted); font-weight: 400; font-style: italic; }
+
+    .card-teams {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 500;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+
+    .card-teams .versus {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--muted);
+      font-size: 0.75em;
+      margin: 0 6px;
+    }
+
+    .card-names {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      margin-bottom: 14px;
+      font-variant: small-caps;
+    }
+
+    .card-pitchers {
+      font-size: 11px;
+      color: var(--ink-soft);
+      border-top: 1px solid var(--rule);
+      padding-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .card-pitchers div {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .card-pitchers div:last-child { text-align: right; }
+
+    .card-pitchers .sp-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    .card-halves {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .card-halves .hv {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    /* ═══ OVERLAY — FEATURE ARTICLE ═══ */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 24, 20, 0.75);
+      z-index: 100;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 20px;
+      overflow-y: auto;
+      backdrop-filter: blur(2px);
+    }
+    .overlay.open { display: flex; }
+
+    .panel {
+      background: var(--paper);
+      width: 100%;
+      max-width: 920px;
+      padding: 48px 56px;
+      position: relative;
+      border: 1px solid var(--ink);
+      box-shadow: 6px 6px 0 var(--ink);
+    }
+
+    .panel .close {
+      position: absolute;
+      top: 18px;
+      right: 22px;
+      background: none;
+      border: 1px solid var(--ink);
+      color: var(--ink);
+      font-size: 20px;
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--serif);
+    }
+
+    .panel .close:hover { background: var(--ink); color: var(--paper); }
+
+    .detail-kicker {
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .detail-headline {
+      font-family: var(--serif);
+      font-variation-settings: 'opsz' 144;
+      font-size: 54px;
+      font-weight: 400;
+      font-style: italic;
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .detail-headline strong { font-style: normal; font-weight: 700; }
+
+    .detail-byline {
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .feature-stat {
+      text-align: center;
+      padding: 20px 0 28px;
+      border-bottom: 3px double var(--ink);
+      margin-bottom: 30px;
+    }
+
+    .feature-stat .fs-label {
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .feature-stat .fs-value {
+      font-family: var(--serif);
+      font-variation-settings: 'opsz' 144;
+      font-size: 128px;
+      font-weight: 300;
+      font-style: italic;
+      line-height: 0.85;
+      color: var(--accent);
+      letter-spacing: -0.05em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .feature-stat .fs-value .pct {
+      font-size: 0.45em;
+      vertical-align: 0.3em;
+      font-style: normal;
+      font-weight: 400;
+    }
+
+    .feature-stat .fs-ci {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink-soft);
+      margin-top: 8px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .half-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1px solid var(--ink);
+      margin-bottom: 32px;
+    }
+
+    .half-panel {
+      padding: 22px 24px;
+      border-right: 1px solid var(--ink);
+    }
+
+    .half-panel:last-child { border-right: none; }
+
+    .half-panel .hp-label {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .half-panel .hp-value {
+      font-family: var(--serif);
+      font-variation-settings: 'opsz' 144;
+      font-size: 48px;
+      font-weight: 500;
+      font-style: italic;
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .half-panel .hp-detail {
+      font-size: 11px;
+      color: var(--ink-soft);
+      line-height: 1.5;
+    }
+
+    .half-panel .hp-detail .mono { font-size: 10px; color: var(--muted); }
+
+    /* ═══ SECTIONS INSIDE OVERLAY ═══ */
+    .detail-section {
+      margin-top: 32px;
+    }
+
+    .detail-section-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 700;
+      padding-bottom: 6px;
+      border-bottom: 2px solid var(--ink);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .detail-section-label::before {
+      content: '§';
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 18px;
+      color: var(--accent);
+    }
+
+    .chart-duo {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .chart-box {
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      padding: 16px 18px;
+    }
+
+    .chart-box h4 {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+
+    .chart-box canvas {
+      max-height: 200px;
+    }
+
+    /* ═══ BATTER IMPACT BARS ═══ */
+    .impact-bar {
+      display: grid;
+      grid-template-columns: 130px 1fr 56px;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 0;
+      font-size: 11px;
+    }
+
+    .impact-name {
+      color: var(--ink-soft);
+      text-align: right;
+      font-weight: 500;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .impact-name .sl {
+      font-family: var(--mono);
+      color: var(--muted);
+      margin-right: 4px;
+    }
+
+    .impact-track {
+      height: 14px;
+      background: var(--paper-dark);
+      position: relative;
+      border: 1px solid var(--rule);
+    }
+
+    .impact-center {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--ink);
+    }
+
+    .impact-fill {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      transition: width 0.4s;
+    }
+
+    .impact-val {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ═══ BASEBALL DIAMOND ═══ */
+    .diamond-wrap {
+      display: flex;
+      align-items: flex-start;
+      gap: 30px;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 8px;
+    }
+
+    .diamond-svg {
+      width: 220px;
+      height: 220px;
+      flex-shrink: 0;
+    }
+
+    .diamond-info {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 220px;
+      max-width: 280px;
+    }
+
+    #dHalfLabel {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 18px !important;
+      font-weight: 500 !important;
+      color: var(--ink) !important;
+    }
+
+    .diamond-outs {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .out-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid var(--ink);
+      transition: all 0.4s;
+    }
+
+    .out-dot.filled {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .diamond-pa {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-soft);
+    }
+
+    .diamond-pa strong {
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .diamond-event {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 14px;
+      color: var(--ink);
+      min-height: 20px;
+      padding: 6px 0;
+      border-top: 1px dashed var(--rule);
+    }
+
+    .diamond-result {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 700;
+      font-style: italic;
+      opacity: 0;
+      transition: opacity 0.5s;
+      padding: 6px 0;
+    }
+
+    .diamond-result.show { opacity: 1; }
+
+    #dLog {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--ink-soft);
+      max-height: 110px;
+      overflow-y: auto;
+      line-height: 1.7;
+      border-top: 1px dashed var(--rule);
+      padding-top: 6px;
+    }
+
+    .trace-btn {
+      font-family: var(--mono);
+      font-size: 10px;
+      padding: 5px 10px;
+      background: var(--paper);
+      color: var(--ink-soft);
+      border: 1px solid var(--rule);
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+      transition: all 0.15s;
+    }
+
+    .trace-btn:hover { border-color: var(--ink); color: var(--ink); }
+    .trace-btn.nrfi-trace { border-left: 3px solid var(--moss); }
+    .trace-btn.rfi-trace { border-left: 3px solid var(--accent); }
+    .trace-btn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+    /* ═══ LINEUP TABLES ═══ */
+    .lineup-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .lineup-col h4 {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 15px;
+      margin-bottom: 8px;
+      color: var(--ink);
+    }
+
+    table.lt {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    table.lt th {
+      text-align: left;
+      color: var(--muted);
+      font-weight: 600;
+      padding: 6px 6px;
+      border-bottom: 2px solid var(--ink);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-size: 9px;
+    }
+
+    table.lt td {
+      padding: 6px 6px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    table.lt td:first-child {
+      color: var(--muted);
+      width: 16px;
+    }
+
+    table.lt td:nth-child(2) {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .park-strip {
+      margin-top: 24px;
+      padding: 14px 18px;
+      background: var(--paper-dark);
+      border: 1px solid var(--rule);
+      font-family: var(--mono);
+      font-size: 11px;
+      display: flex;
+      gap: 22px;
+      flex-wrap: wrap;
+      color: var(--ink-soft);
+    }
+
+    .park-strip strong { color: var(--ink); }
+
+    /* ═══ METHODOLOGY ═══ */
+    .method-section {
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .method-section h2 {
+      font-family: var(--serif);
+      font-size: 36px;
+      font-weight: 500;
+      font-style: italic;
+      font-variation-settings: 'opsz' 144;
+      letter-spacing: -0.02em;
+      margin: 44px 0 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .method-section h2:first-child { margin-top: 0; }
+
+    .method-section p {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--ink-soft);
+      margin-bottom: 16px;
+      font-family: var(--sans);
+    }
+
+    .method-section p strong { color: var(--ink); font-weight: 600; }
+    .method-section p code {
+      font-family: var(--mono);
+      font-size: 13px;
+      background: var(--paper-dark);
+      padding: 1px 6px;
+      border: 1px solid var(--rule);
+    }
+
+    .method-section p:first-of-type::first-letter {
+      font-family: var(--serif);
+      font-size: 58px;
+      font-weight: 700;
+      float: left;
+      line-height: 0.9;
+      padding: 6px 8px 0 0;
+      color: var(--accent);
+      font-style: italic;
+    }
+
+    .formula {
+      padding: 28px 24px;
+      margin: 20px 0;
+      background: var(--paper-dark);
+      border-top: 2px solid var(--ink);
+      border-bottom: 2px solid var(--ink);
+      text-align: center;
+      overflow-x: auto;
+    }
+
+    .formula .katex { color: var(--ink); font-size: 1.2em !important; }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin: 20px 0;
+    }
+
+    .grid-2 h3 {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: var(--accent);
+    }
+
+    .grid-2 p { font-size: 14px; margin-bottom: 0; }
+
+    .state-grid {
+      display: grid;
+      grid-template-columns: 140px repeat(3, 1fr);
+      gap: 1px;
+      background: var(--ink);
+      border: 1px solid var(--ink);
+      margin: 24px 0;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .state-cell {
+      background: var(--paper);
+      padding: 10px 8px;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--ink-soft);
+      text-align: center;
+    }
+
+    .state-cell.header {
+      background: var(--ink);
+      color: var(--paper);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-size: 9px;
+    }
+
+    .state-cell.row-label {
+      text-align: right;
+      font-weight: 600;
+      color: var(--ink);
+      background: var(--paper-dark);
+      font-family: var(--sans);
+      font-size: 11px;
+      padding-right: 12px;
+    }
+
+    .state-cell .sv {
+      display: block;
+      font-family: var(--serif);
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--accent);
+      font-style: italic;
+      margin-bottom: 2px;
+    }
+
+    /* ═══ RESULTS TRACKER ═══ */
+    .tracker-section { margin-bottom: 40px; }
+
+    .tracker-section h3 {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 700;
+      padding-bottom: 6px;
+      border-bottom: 2px solid var(--ink);
+      margin-bottom: 18px;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0;
+      border-top: 2px solid var(--ink);
+      border-bottom: 2px solid var(--ink);
+      margin-bottom: 24px;
+    }
+
+    .results-grid .stat-cell { padding: 18px 20px; }
+    .results-grid .stat-cell .stat-value { font-size: 42px; }
+
+    .daily-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 24px;
+      font-family: var(--sans);
+    }
+
+    .daily-table th {
+      text-align: left;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+      padding: 10px 14px 8px;
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .daily-table td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--rule);
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .daily-table tr:hover td { background: var(--paper-dark); }
+
+    .daily-table td.matchup {
+      font-family: var(--serif);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .daily-table .pct-val {
+      font-family: var(--mono);
+      font-weight: 700;
+    }
+
+    .correct-tag {
+      font-family: var(--mono);
+      color: var(--moss);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .miss-tag {
+      font-family: var(--mono);
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .nrfi-tag, .rfi-tag {
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 2px 6px;
+      border: 1px solid currentColor;
+    }
+
+    .nrfi-tag { color: var(--moss); }
+    .rfi-tag { color: var(--accent); }
+
+    /* Color classes for P(NRFI) */
+    .prob-high { color: var(--moss); }
+    .prob-mid { color: var(--gold); }
+    .prob-low { color: var(--accent); }
+    .prob-vlow { color: var(--accent-dark); }
+
+    /* ═══ EMPTY STATES ═══ */
+    .empty {
+      text-align: center;
+      padding: 80px 20px;
+      font-family: var(--serif);
+      font-style: italic;
+      color: var(--muted);
+    }
+
+    .empty h2 {
+      font-size: 28px;
+      color: var(--ink);
+      margin-bottom: 8px;
+      font-weight: 400;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      border: 2px solid var(--rule);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ═══ RESPONSIVE ═══ */
+    @media (max-width: 900px) {
+      .masthead, .container, .tabs { padding-left: 20px; padding-right: 20px; }
+      .summary-grid { grid-template-columns: 1fr 1fr; }
+      .half-grid, .chart-duo, .lineup-cols, .grid-2 { grid-template-columns: 1fr; }
+      .panel { padding: 28px 22px; }
+      .detail-headline { font-size: 36px; }
+      .feature-stat .fs-value { font-size: 84px; }
+    }
+
+    @media (max-width: 600px) {
+      .masthead h1 { font-size: 48px; }
+      .summary-grid { grid-template-columns: 1fr; }
+      .cards-grid { grid-template-columns: 1fr; }
+      .slate-row { grid-template-columns: 24px 80px 1fr 48px; gap: 8px; }
+    }
   </style>
 </head>
 <body>
 
-<div class="header">
-  <h1><span>NRFI</span> Markov Model</h1>
-  <div class="meta" id="meta">Loading...</div>
-</div>
+<main>
 
-<div class="tabs">
-  <button class="tab-btn active" onclick="switchTab(0)">Predictions</button>
+<header class="masthead">
+  <div class="masthead-top">
+    <span>Vol. I &middot; No. 1</span>
+    <span>Markovian Inning Model</span>
+    <span id="meta-issue">Loading&hellip;</span>
+  </div>
+  <h1><span class="the">The</span> NRFI <em><strong>Observer</strong></em></h1>
+  <div class="masthead-sub">
+    <span>Predictions</span>
+    <span class="ornament">&#10022;</span>
+    <span>Markov Chain Analysis</span>
+    <span class="ornament">&#10022;</span>
+    <span id="meta">Loading&hellip;</span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" onclick="switchTab(0)">The Slate</button>
   <button class="tab-btn" onclick="switchTab(1)">Results Tracker</button>
-  <button class="tab-btn" onclick="switchTab(2)">Methodology</button>
+  <button class="tab-btn" onclick="switchTab(2)">The Method</button>
+</nav>
+
+<div class="container">
+
+  <!-- TAB 0: Predictions -->
+  <div class="tab-content active" id="tab0">
+    <div id="summaryArea"></div>
+    <div id="slateArea"></div>
+    <div class="cards-grid" id="grid">
+      <div class="empty"><div class="spinner"></div><p style="margin-top:14px">Loading predictions&hellip;</p></div>
+    </div>
+  </div>
+
+  <!-- TAB 1: Results Tracker -->
+  <div class="tab-content" id="tab1">
+    <div id="resultsTracker"><div class="empty"><div class="spinner"></div><p style="margin-top:14px">Loading results&hellip;</p></div></div>
+  </div>
+
+  <!-- TAB 2: Methodology -->
+  <div class="tab-content" id="tab2">
+    <div class="method-section" id="methodContent"></div>
+  </div>
+
 </div>
 
-<!-- TAB 0: Predictions -->
-<div class="tab-content active" id="tab0">
-  <div id="summaryArea"></div>
-  <div id="slateArea"></div>
-  <div class="games-grid" id="grid"><div class="empty"><div class="spinner"></div><p style="margin-top:10px">Loading predictions...</p></div></div>
-</div>
+</main>
 
-<!-- TAB 1: Results Tracker -->
-<div class="tab-content" id="tab1">
-  <div id="resultsTracker"><div class="empty"><div class="spinner"></div><p style="margin-top:10px">Loading results...</p></div></div>
-</div>
-
-<!-- TAB 2: Methodology -->
-<div class="tab-content" id="tab2">
-  <div class="method-section" id="methodContent"></div>
-</div>
-
-<!-- Detail Overlay -->
 <div class="overlay" id="overlay" onclick="if(event.target===this)closeDetail()">
-  <div class="panel"><button class="close" onclick="closeDetail()">&times;</button><div id="detailContent"></div></div>
+  <div class="panel">
+    <button class="close" onclick="closeDetail()">&times;</button>
+    <div id="detailContent"></div>
+  </div>
 </div>
 
 <script>
-let D = {};  // full data
+// ══════════════════════════════════════════════════
+// NRFI Observer — client-side rendering
+// ══════════════════════════════════════════════════
+
+let D = {};
+let RL = {};
+
 const pC = p => p>=.55?'prob-high':p>=.48?'prob-mid':p>=.40?'prob-low':'prob-vlow';
 const pS = p => (p*100).toFixed(1);
 const rnd = (n,d=1) => Number(n).toFixed(d);
 
+// Chart.js defaults for editorial aesthetic
+if (typeof Chart !== 'undefined') {
+  Chart.defaults.font.family = "'IBM Plex Sans', sans-serif";
+  Chart.defaults.font.size = 10;
+  Chart.defaults.color = '#3a342a';
+}
+
+const INK = '#1a1814';
+const MUTED = '#8a8476';
+const ACCENT = '#c3392b';
+const MOSS = '#6b7a3d';
+const GOLD = '#b8941f';
+const NAVY = '#2d3f5f';
+const RULE = '#cfc3a9';
+const PAPER_DARK = '#ebe1cf';
+
 document.addEventListener('DOMContentLoaded', () => {
   fetch('data/latest.json').then(r=>r.json()).then(d => {
     D = d;
-    document.getElementById('meta').textContent = `${d.date} — ${d.summary?.n_games_modeled||0} games modeled — ${(d.n_simulations||0).toLocaleString()} sims/game`;
+    const issueEl = document.getElementById('meta-issue');
+    if (issueEl) {
+      const dtObj = new Date(d.date);
+      issueEl.textContent = dtObj.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    }
+    document.getElementById('meta').textContent = `${d.summary?.n_games_modeled||0} games modeled \u00b7 ${(d.n_simulations||0).toLocaleString()} simulations`;
     renderSummary();
     loadResultsTracker();
     renderSlate();
     renderCards();
     renderMethodology();
   }).catch(() => {
-    document.getElementById('grid').innerHTML = '<div class="empty"><h2>No data available</h2><p>Run compute_daily.py to generate predictions.</p></div>';
+    document.getElementById('grid').innerHTML = '<div class="empty"><h2>No issue available</h2><p>Run compute_daily.py to generate today\'s edition.</p></div>';
   });
 });
 
@@ -218,50 +1316,90 @@ function renderSummary() {
   const s = D.summary;
   if (!s || !s.n_games_modeled) return;
   document.getElementById('summaryArea').innerHTML = `
-    <div class="summary-row">
-      <div class="stat-card"><div class="sc-label">Games</div><div class="sc-val">${s.n_games_modeled}</div><div class="sc-sub">of ${s.n_games_total} scheduled</div></div>
-      <div class="stat-card"><div class="sc-label">Mean P(NRFI)</div><div class="sc-val ${pC(s.mean_p_nrfi)}">${pS(s.mean_p_nrfi)}%</div><div class="sc-sub">&sigma; = ${pS(s.std_p_nrfi)}%</div></div>
-      <div class="stat-card"><div class="sc-label">Best NRFI</div><div class="sc-val prob-high">${pS(s.best_nrfi.value)}%</div><div class="sc-sub">${s.best_nrfi.matchup}</div></div>
-      <div class="stat-card"><div class="sc-label">Worst NRFI</div><div class="sc-val prob-vlow">${pS(s.worst_nrfi.value)}%</div><div class="sc-sub">${s.worst_nrfi.matchup}</div></div>
-      <div class="stat-card"><div class="sc-label">Avg CI Width</div><div class="sc-val">${pS(s.mean_ci_width)}%</div><div class="sc-sub">95% confidence</div></div>
-      <div class="stat-card"><div class="sc-label">Sim-Analytic Gap</div><div class="sc-val">${pS(s.mean_sim_analytic_gap)}%</div><div class="sc-sub">lineup order effect</div></div>
+    <div class="summary-grid">
+      <div class="stat-cell feature">
+        <div class="stat-label">Mean P(NRFI)</div>
+        <div class="stat-value tabular">${pS(s.mean_p_nrfi)}<span class="unit">%</span></div>
+        <div class="stat-sub">&sigma; = ${pS(s.std_p_nrfi)}% &middot; ${s.n_games_modeled}/${s.n_games_total} games</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Highest NRFI</div>
+        <div class="stat-value tabular prob-high">${pS(s.best_nrfi.value)}<span class="unit">%</span></div>
+        <div class="stat-sub">${s.best_nrfi.matchup}</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Lowest NRFI</div>
+        <div class="stat-value tabular prob-vlow">${pS(s.worst_nrfi.value)}<span class="unit">%</span></div>
+        <div class="stat-sub">${s.worst_nrfi.matchup}</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Sim \u2212 Analytic</div>
+        <div class="stat-value tabular">${pS(s.mean_sim_analytic_gap)}<span class="unit">%</span></div>
+        <div class="stat-sub">lineup order effect</div>
+      </div>
     </div>`;
 }
 
-// ── Slate Bar Chart ──
+// ── Slate ──
 function renderSlate() {
   const games = (D.games||[]).filter(g=>g.modeled).sort((a,b)=>b.results.p_nrfi_game-a.results.p_nrfi_game);
   if (!games.length) return;
   const maxP = Math.max(...games.map(g=>g.results.p_nrfi_game));
   document.getElementById('slateArea').innerHTML = `
-    <div class="slate-chart"><h3>Full Slate — Ranked by P(NRFI)</h3>
-    ${games.map((g,i)=>{
-      const p=g.results.p_nrfi_game;
-      const w=Math.max(5, p/Math.max(maxP,.01)*100);
-      const c=p>=.55?'var(--grn)':p>=.48?'var(--yel)':p>=.40?'var(--org)':'var(--red)';
-      const idx=D.games.indexOf(g);
-      return `<div class="slate-bar" onclick="openDetail(${idx})">
-        <div class="slate-label">${g.away_team}@${g.home_team}</div>
-        <div class="bar-track"><div class="bar-fill" style="width:${w}%;background:${c}"></div></div>
-        <div class="bar-pct ${pC(p)}">${pS(p)}%</div>
-      </div>`;
-    }).join('')}</div>`;
+    <div class="slate">
+      <div class="section-head">The Full Slate</div>
+      <div class="section-sub">Ranked by No-Run-First-Inning Probability</div>
+      <div class="slate-list">
+      ${games.map((g,i)=>{
+        const p=g.results.p_nrfi_game;
+        const w=Math.max(6, p/Math.max(maxP,.01)*100);
+        const c=p>=.55?MOSS:p>=.48?GOLD:p>=.40?ACCENT:'#9a2a1e';
+        const idx=D.games.indexOf(g);
+        return `<div class="slate-row" onclick="openDetail(${idx})">
+          <div class="slate-rank">${String(i+1).padStart(2,'0')}</div>
+          <div class="slate-matchup">${g.away_team} <span class="at">at</span> ${g.home_team}</div>
+          <div class="slate-bar"><div class="slate-bar-fill" style="width:${w}%;background:${c}"></div></div>
+          <div class="slate-value ${pC(p)}">${pS(p)}%</div>
+        </div>`;
+      }).join('')}
+      </div>
+    </div>`;
 }
 
 // ── Game Cards ──
 function renderCards() {
   const games = D.games||[];
   if (!games.length) { document.getElementById('grid').innerHTML='<div class="empty"><h2>No games</h2></div>'; return; }
-  document.getElementById('grid').innerHTML = games.map((g,idx)=>{
+
+  document.getElementById('grid').innerHTML = `
+    <div style="grid-column:1/-1;background:var(--paper);padding:20px 24px 16px;">
+      <div class="section-head">Today's Dispatches</div>
+      <div class="section-sub">Click any card for the full analysis</div>
+    </div>
+  ` + games.map((g,idx)=>{
     const m=g.modeled, r=g.results;
-    const badge = m ? (g.lineup_source==='projected'?'<span class="badge badge-proj">Projected</span>':'<span class="badge badge-ok">Official</span>') : '<span class="badge badge-no">No data</span>';
-    const pill = m ? `<div class="nrfi-pill ${pC(r.p_nrfi_game)}">${pS(r.p_nrfi_game)}%</div>` : '<div class="nrfi-pill" style="color:var(--t2)">--</div>';
-    return `<div class="game-card ${m?'':'no-model'}" onclick="${m?`openDetail(${idx})`:''}">${
-      `<div class="card-top">${badge}${pill}</div>
-      <div class="matchup"><div class="team"><div class="abbr">${g.away_team}</div><div class="name">${g.away_name}</div></div><div class="at-sym">@</div><div class="team"><div class="abbr">${g.home_team}</div><div class="name">${g.home_name}</div></div></div>
-      <div class="pitchers"><div>${g.away_pitcher.name}</div><div>${g.home_pitcher.name}</div></div>
-      ${m?`<div class="halves"><div><div class="hv ${pC(r.p_nrfi_away)}">${pS(r.p_nrfi_away)}%</div>Top 1st</div><div><div class="hv ${pC(r.p_nrfi_home)}">${pS(r.p_nrfi_home)}%</div>Bot 1st</div></div>`:''}`
-    }</div>`;
+    let badgeCls='badge-no', badgeText='No Data';
+    if (m) {
+      if (g.lineup_source==='projected') { badgeCls='badge-proj'; badgeText='Projected'; }
+      else { badgeCls='badge-ok'; badgeText='Official'; }
+    }
+    const pill = m ? `<div class="card-nrfi tabular ${pC(r.p_nrfi_game)}">${pS(r.p_nrfi_game)}%</div>` : '<div class="card-nrfi none">—</div>';
+    return `<div class="game-card ${m?'':'no-model'}" onclick="${m?`openDetail(${idx})`:''}">
+      <div class="card-head">
+        <span class="card-badge ${badgeCls}">${badgeText}</span>
+        ${pill}
+      </div>
+      <div class="card-teams">${g.away_team}<span class="versus">vs</span>${g.home_team}</div>
+      <div class="card-names">${g.away_name} at ${g.home_name}</div>
+      <div class="card-pitchers">
+        <div><span class="sp-label">AWAY SP &middot; </span>${g.away_pitcher.name}</div>
+        <div><span class="sp-label">HOME SP &middot; </span>${g.home_pitcher.name}</div>
+      </div>
+      ${m?`<div class="card-halves">
+        <div><span class="hv tabular ${pC(r.p_nrfi_away)}">${pS(r.p_nrfi_away)}%</span>Top 1st</div>
+        <div><span class="hv tabular ${pC(r.p_nrfi_home)}">${pS(r.p_nrfi_home)}%</span>Bot 1st</div>
+      </div>`:''}
+    </div>`;
   }).join('');
 }
 
@@ -271,62 +1409,86 @@ function openDetail(idx) {
   const r=g.results, p=g.pitchers, pk=g.park, md=g.model_detail||{};
   document.getElementById('overlay').classList.add('open');
   const el=document.getElementById('detailContent');
+
   el.innerHTML=`
-    <div class="detail-hdr"><div class="teams">${g.away_team} @ ${g.home_team}</div><div class="sub">${g.away_name} at ${g.home_name} ${g.lineup_source==='projected'?'(projected)':''}</div></div>
-    <div class="nrfi-big"><div class="label">P(NRFI) Full Game</div><div class="value ${pC(r.p_nrfi_game)}">${pS(r.p_nrfi_game)}<span class="pct">%</span></div><div class="ci">95% CI: ${pS(r.ci_lower)}% – ${pS(r.ci_upper)}% · Analytic: ${pS(r.p_nrfi_game_analytic)}%</div></div>
-    <div class="half-cards">
-      <div class="half-card"><div class="hl">Top 1st — ${g.away_team} batting</div><div class="hval ${pC(r.p_nrfi_away)}">${pS(r.p_nrfi_away)}%</div><div class="hs">vs ${p.home.name} (${p.home.hand}HP) · K: ${pS(p.home.k_rate)}% HR: ${pS(p.home.hr_rate)}% BB: ${pS(p.home.bb_rate)}%</div><div class="hs">Analytic: ${pS(r.p_nrfi_away_analytic)}% · E[PA]: ${md.away_half?.expected_pa||r.avg_pa_away}</div></div>
-      <div class="half-card"><div class="hl">Bot 1st — ${g.home_team} batting</div><div class="hval ${pC(r.p_nrfi_home)}">${pS(r.p_nrfi_home)}%</div><div class="hs">vs ${p.away.name} (${p.away.hand}HP) · K: ${pS(p.away.k_rate)}% HR: ${pS(p.away.hr_rate)}% BB: ${pS(p.away.bb_rate)}%</div><div class="hs">Analytic: ${pS(r.p_nrfi_home_analytic)}% · E[PA]: ${md.home_half?.expected_pa||r.avg_pa_home}</div></div>
+    <div class="detail-kicker">Feature Analysis &middot; ${g.lineup_source==='projected'?'Projected Lineups':'Official Lineups'}</div>
+    <h2 class="detail-headline"><em>${g.away_team}</em> <strong>at</strong> <em>${g.home_team}</em></h2>
+    <div class="detail-byline">${g.away_name} &middot; ${g.home_name}</div>
+
+    <div class="feature-stat">
+      <div class="fs-label">Probability of No Run in the First Inning</div>
+      <div class="fs-value ${pC(r.p_nrfi_game)}">${pS(r.p_nrfi_game)}<span class="pct">%</span></div>
+      <div class="fs-ci">95% CI [${pS(r.ci_lower)}%, ${pS(r.ci_upper)}%] &nbsp;\u00b7&nbsp; Analytic ${pS(r.p_nrfi_game_analytic)}%</div>
     </div>
 
-    <div class="detail-section"><h3>Batter NRFI Impact</h3>
-      <div class="chart-row">
-        <div class="chart-box"><h4>${g.away_team} Lineup (vs ${p.home.name})</h4>${renderImpactBars(g.away_lineup)}</div>
-        <div class="chart-box"><h4>${g.home_team} Lineup (vs ${p.away.name})</h4>${renderImpactBars(g.home_lineup)}</div>
+    <div class="half-grid">
+      <div class="half-panel">
+        <div class="hp-label">Top 1st &middot; ${g.away_team} Batting</div>
+        <div class="hp-value tabular ${pC(r.p_nrfi_away)}">${pS(r.p_nrfi_away)}%</div>
+        <div class="hp-detail">vs <strong>${p.home.name}</strong> (${p.home.hand}HP)<br>
+        <span class="mono">K ${pS(p.home.k_rate)}% &middot; HR ${pS(p.home.hr_rate)}% &middot; BB ${pS(p.home.bb_rate)}% &middot; E[PA] ${md.away_half?.expected_pa||r.avg_pa_away}</span></div>
+      </div>
+      <div class="half-panel">
+        <div class="hp-label">Bot 1st &middot; ${g.home_team} Batting</div>
+        <div class="hp-value tabular ${pC(r.p_nrfi_home)}">${pS(r.p_nrfi_home)}%</div>
+        <div class="hp-detail">vs <strong>${p.away.name}</strong> (${p.away.hand}HP)<br>
+        <span class="mono">K ${pS(p.away.k_rate)}% &middot; HR ${pS(p.away.hr_rate)}% &middot; BB ${pS(p.away.bb_rate)}% &middot; E[PA] ${md.home_half?.expected_pa||r.avg_pa_home}</span></div>
       </div>
     </div>
 
-    <div class="detail-section"><h3>Markov Chain — State Visit Probabilities</h3>
-      <div class="chart-row">
-        <div class="chart-box"><h4>Top 1st — Expected visits per state</h4><canvas id="stateChartAway"></canvas></div>
-        <div class="chart-box"><h4>Bot 1st — Expected visits per state</h4><canvas id="stateChartHome"></canvas></div>
+    <div class="detail-section">
+      <div class="detail-section-label">Batter NRFI Impact</div>
+      <div class="chart-duo">
+        <div class="chart-box"><h4>${g.away_team} Lineup <span style="color:var(--muted);font-size:11px"> \u2014 vs ${p.home.name}</span></h4>${renderImpactBars(g.away_lineup)}</div>
+        <div class="chart-box"><h4>${g.home_team} Lineup <span style="color:var(--muted);font-size:11px"> \u2014 vs ${p.away.name}</span></h4>${renderImpactBars(g.home_lineup)}</div>
       </div>
     </div>
 
-    <div class="detail-section"><h3>Monte Carlo Simulation</h3>
-      <div class="chart-row">
-        <div class="chart-box"><h4>Convergence — P(NRFI) vs simulation count</h4><canvas id="convChartAway"></canvas></div>
-        <div class="chart-box"><h4>Convergence — P(NRFI) vs simulation count</h4><canvas id="convChartHome"></canvas></div>
+    <div class="detail-section">
+      <div class="detail-section-label">Monte Carlo Simulation</div>
+      <div class="chart-duo">
+        <div class="chart-box"><h4>Convergence \u2014 Top 1st</h4><canvas id="convChartAway"></canvas></div>
+        <div class="chart-box"><h4>Convergence \u2014 Bot 1st</h4><canvas id="convChartHome"></canvas></div>
       </div>
-      <div class="chart-row">
-        <div class="chart-box"><h4>PA Distribution — Top 1st</h4><canvas id="paChartAway"></canvas></div>
-        <div class="chart-box"><h4>PA Distribution — Bot 1st</h4><canvas id="paChartHome"></canvas></div>
+      <div class="chart-duo" style="margin-top:20px">
+        <div class="chart-box"><h4>PA Distribution \u2014 Top 1st</h4><canvas id="paChartAway"></canvas></div>
+        <div class="chart-box"><h4>PA Distribution \u2014 Bot 1st</h4><canvas id="paChartHome"></canvas></div>
       </div>
-      <div class="chart-row">
-        <div class="chart-box" style="grid-column:1/-1">
-          <h4>Sample Inning Simulation — click to replay</h4>
-          <div id="traceContainer" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px"></div>
-          <div id="traceReplay" style="min-height:220px;display:flex;align-items:center;justify-content:center">
-            <span style="color:var(--t2);font-size:12px">Select a simulation above to watch it play out</span>
-          </div>
+      <div class="chart-box" style="margin-top:20px">
+        <h4>Sample Inning Replay <span style="color:var(--muted);font-size:11px"> \u2014 click a trace to animate</span></h4>
+        <div id="traceContainer" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px"></div>
+        <div id="traceReplay" style="min-height:240px;display:flex;align-items:center;justify-content:center">
+          <span style="color:var(--muted);font-style:italic;font-family:var(--serif)">Select a trace above to watch the Markov chain play out</span>
         </div>
       </div>
     </div>
 
-    <div class="detail-section"><h3>Sensitivity Analysis</h3>
-      <div class="chart-row">
-        <div class="chart-box"><h4>Top 1st — +1pp change in rate</h4><canvas id="sensChartAway"></canvas></div>
-        <div class="chart-box"><h4>Bot 1st — +1pp change in rate</h4><canvas id="sensChartHome"></canvas></div>
+    <div class="detail-section">
+      <div class="detail-section-label">Markov Chain Diagnostics</div>
+      <div class="chart-duo">
+        <div class="chart-box"><h4>State Visit Probabilities \u2014 Top 1st</h4><canvas id="stateChartAway"></canvas></div>
+        <div class="chart-box"><h4>State Visit Probabilities \u2014 Bot 1st</h4><canvas id="stateChartHome"></canvas></div>
+      </div>
+      <div class="chart-duo" style="margin-top:20px">
+        <div class="chart-box"><h4>Rate Sensitivity \u2014 Top 1st</h4><canvas id="sensChartAway"></canvas></div>
+        <div class="chart-box"><h4>Rate Sensitivity \u2014 Bot 1st</h4><canvas id="sensChartHome"></canvas></div>
       </div>
     </div>
 
-    <div class="detail-section"><h3>Lineups</h3>
-    <div class="lineup-cols">
-      <div class="lineup-col"><h4>${g.away_team} (vs ${p.home.name})</h4>${renderLineupTable(g.away_lineup)}</div>
-      <div class="lineup-col"><h4>${g.home_team} (vs ${p.away.name})</h4>${renderLineupTable(g.home_lineup)}</div>
-    </div></div>
+    <div class="detail-section">
+      <div class="detail-section-label">Starting Lineups</div>
+      <div class="lineup-cols">
+        <div class="lineup-col"><h4>${g.away_team} &mdash; vs ${p.home.name}</h4>${renderLineupTable(g.away_lineup)}</div>
+        <div class="lineup-col"><h4>${g.home_team} &mdash; vs ${p.away.name}</h4>${renderLineupTable(g.home_lineup)}</div>
+      </div>
+    </div>
 
-    <div class="park-bar"><div>Park: <strong>${pk.team}</strong></div><div><span>HR Factor:</span> <strong>${pk.hr_factor}</strong></div><div><span>Run Factor:</span> <strong>${pk.run_factor}</strong></div><div><span>Sims:</span> <strong>${r.n_simulations.toLocaleString()}</strong></div></div>
+    <div class="park-strip">
+      <div>Park <strong>${pk.team}</strong></div>
+      <div>HR Factor <strong>${pk.hr_factor}</strong></div>
+      <div>Run Factor <strong>${pk.run_factor}</strong></div>
+      <div>Simulations <strong>${r.n_simulations.toLocaleString()}</strong></div>
+    </div>
   `;
 
   // Store full-inning traces for replay
@@ -360,39 +1522,68 @@ function renderImpactBars(lineup) {
   return lineup.map((b,i)=>{
     const v = b.nrfi_impact||0;
     const pct = Math.abs(v)/maxAbs*45;
-    const col = v>=0?'var(--grn)':'var(--red)';
-    const dir = v>=0?`left:50%;width:${pct}%`:`right:50%;width:${pct}%`;
+    const col = v>=0 ? MOSS : ACCENT;
     const left = v>=0 ? 50 : 50 - pct;
-    return `<div class="impact-bar"><div class="impact-name">${i+1}. ${b.name}</div><div class="impact-track"><div class="impact-center"></div><div class="impact-fill" style="left:${left}%;width:${pct}%;background:${col}"></div></div><div class="impact-val" style="color:${col}">${v>=0?'+':''}${(v*100).toFixed(2)}%</div></div>`;
+    return `<div class="impact-bar">
+      <div class="impact-name"><span class="sl">${i+1}.</span>${b.name}</div>
+      <div class="impact-track"><div class="impact-center"></div><div class="impact-fill" style="left:${left}%;width:${pct}%;background:${col}"></div></div>
+      <div class="impact-val" style="color:${col}">${v>=0?'+':''}${(v*100).toFixed(2)}%</div>
+    </div>`;
   }).join('');
 }
 
 function renderLineupTable(lineup) {
   if(!lineup) return '';
-  return `<table class="lt"><tr><th class="sl">#</th><th>Batter</th><th>B</th><th>K%</th><th>HR%</th><th>BB%</th></tr>${lineup.map((b,i)=>`<tr><td class="sl">${i+1}</td><td>${b.name}</td><td>${b.hand}</td><td>${pS(b.k_rate)}</td><td>${pS(b.hr_rate)}</td><td>${pS(b.bb_rate)}</td></tr>`).join('')}</table>`;
+  return `<table class="lt"><tr><th>#</th><th>Batter</th><th>B</th><th>K%</th><th>HR%</th><th>BB%</th></tr>${lineup.map((b,i)=>`<tr><td>${i+1}</td><td>${b.name}</td><td>${b.hand}</td><td>${pS(b.k_rate)}</td><td>${pS(b.hr_rate)}</td><td>${pS(b.bb_rate)}</td></tr>`).join('')}</table>`;
+}
+
+function chartOpts(extras = {}) {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      ...(extras.plugins || {})
+    },
+    scales: {
+      y: {
+        grid: { color: 'rgba(207,195,169,0.5)', drawBorder: false },
+        ticks: { color: '#8a8476', font: { size: 10, family: 'JetBrains Mono' } },
+        ...(extras.scalesY || {})
+      },
+      x: {
+        grid: { display: false },
+        ticks: { color: '#8a8476', font: { size: 9, family: 'JetBrains Mono' }, maxRotation: 45 },
+        ...(extras.scalesX || {})
+      }
+    }
+  };
 }
 
 function renderStateChart(canvasId, half) {
   const ctx = document.getElementById(canvasId);
   if(!ctx || !half.state_visit_probs) return;
-  // Group states: show top 12 most visited
   const labels = half.state_labels||[];
   const vals = half.state_visit_probs||[];
   const indexed = vals.map((v,i)=>({v,i,label:labels[i]||`S${i}`})).sort((a,b)=>b.v-a.v).slice(0,12);
   new Chart(ctx, {
     type:'bar',
     data:{
-      labels: indexed.map(d=>d.label),
-      datasets:[{data:indexed.map(d=>d.v), backgroundColor:indexed.map(d=>{
-        const outs = d.i%3;
-        return outs===0?'rgba(79,140,255,.7)':outs===1?'rgba(251,191,36,.7)':'rgba(248,113,113,.7)';
-      }), borderRadius:3}]
+      labels: indexed.map(d=>d.label.replace(' outs','o').replace(' out','o').replace(' & ','+')),
+      datasets:[{
+        data:indexed.map(d=>d.v),
+        backgroundColor:indexed.map(d=>{
+          const outs = d.i%3;
+          return outs===0?NAVY : outs===1?GOLD : ACCENT;
+        }),
+        borderRadius:0,
+        borderWidth:0,
+      }]
     },
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`E[visits] = ${ctx.raw.toFixed(3)}`}}},
-      scales:{y:{beginAtZero:true,grid:{color:'rgba(46,51,69,.5)'},ticks:{color:'#8b8fa3',font:{size:10}}},x:{ticks:{color:'#8b8fa3',font:{size:9},maxRotation:45},grid:{display:false}}}
-    }
+    options: chartOpts({
+      plugins: { tooltip: { callbacks: { label: ctx=>`E[visits] = ${ctx.raw.toFixed(3)}` } } },
+      scalesY: { beginAtZero: true }
+    })
   });
 }
 
@@ -405,12 +1596,23 @@ function renderSensChart(canvasId, sens) {
     type:'bar',
     data:{
       labels,
-      datasets:[{data:vals, backgroundColor:vals.map(v=>v>=0?'rgba(52,211,153,.7)':'rgba(248,113,113,.7)'), borderRadius:3}]
+      datasets:[{
+        data:vals,
+        backgroundColor:vals.map(v=>v>=0?MOSS:ACCENT),
+        borderRadius:0,
+        borderWidth:0,
+      }]
     },
-    options:{
+    options: {
       indexAxis:'y', responsive:true, maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.raw>=0?'+':''}${ctx.raw.toFixed(2)}pp NRFI per +1pp`}}},
-      scales:{x:{grid:{color:'rgba(46,51,69,.5)'},ticks:{color:'#8b8fa3',callback:v=>(v>=0?'+':'')+v.toFixed(1)+'pp'}},y:{ticks:{color:'#8b8fa3'},grid:{display:false}}}
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:ctx=>`${ctx.raw>=0?'+':''}${ctx.raw.toFixed(2)}pp NRFI per +1pp`}}
+      },
+      scales:{
+        x:{grid:{color:'rgba(207,195,169,0.5)'},ticks:{color:'#8a8476',font:{family:'JetBrains Mono',size:10},callback:v=>(v>=0?'+':'')+v.toFixed(1)+'pp'}},
+        y:{grid:{display:false},ticks:{color:'#1a1814',font:{family:'JetBrains Mono',size:11,weight:'700'}}}
+      }
     }
   });
 }
@@ -425,38 +1627,34 @@ function renderConvergenceChart(canvasId, sim, analyticP) {
       labels: pts.map(p => p.n >= 1000 ? (p.n/1000)+'K' : p.n),
       datasets: [
         {
-          label: 'Simulation',
+          label: 'Sim',
           data: pts.map(p => p.p_nrfi * 100),
-          borderColor: 'rgba(79,140,255,.9)',
-          backgroundColor: 'rgba(79,140,255,.1)',
-          pointRadius: 4,
-          pointBackgroundColor: 'rgba(79,140,255,.9)',
+          borderColor: ACCENT,
+          backgroundColor: 'rgba(195,57,43,0.08)',
+          pointRadius: 3,
+          pointBackgroundColor: ACCENT,
           borderWidth: 2,
-          tension: 0.3,
+          tension: 0.25,
           fill: false,
         },
         {
           label: 'Analytic',
           data: pts.map(() => analyticP * 100),
-          borderColor: 'rgba(142,142,142,.4)',
-          borderDash: [6, 4],
+          borderColor: 'rgba(26,24,20,0.4)',
+          borderDash: [4, 4],
           pointRadius: 0,
           borderWidth: 1,
           fill: false,
         }
       ]
     },
-    options: {
-      responsive: true, maintainAspectRatio: false,
+    options: chartOpts({
       plugins: {
-        legend: { labels: { color: '#8b8fa3', font: { size: 10 } } },
+        legend: { display: true, labels: { color: '#3a342a', font: { size: 10, family: 'JetBrains Mono' }, boxWidth: 12 }, position: 'bottom' },
         tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw.toFixed(1)}%` } }
       },
-      scales: {
-        y: { grid: { color: 'rgba(46,51,69,.5)' }, ticks: { color: '#8b8fa3', callback: v => v + '%' } },
-        x: { title: { display: true, text: 'Simulations', color: '#8b8fa3', font: { size: 10 } }, grid: { display: false }, ticks: { color: '#8b8fa3', font: { size: 9 } } }
-      }
-    }
+      scalesY: { ticks: { color: '#8a8476', font: { size: 10, family: 'JetBrains Mono' }, callback: v => v + '%' } }
+    })
   });
 }
 
@@ -464,11 +1662,10 @@ function renderPAChart(canvasId, sim) {
   const ctx = document.getElementById(canvasId);
   if (!ctx || !sim.pa_distribution) return;
   const dist = sim.pa_distribution;
-  // Only show PA counts that have non-zero probability (skip 0)
   const labels = []; const vals = [];
   for (let i = 1; i < dist.length; i++) {
     if (dist[i] > 0.001 || (i >= 2 && i <= 7)) {
-      labels.push(i + ' PA');
+      labels.push(i);
       vals.push(dist[i] * 100);
     }
   }
@@ -479,41 +1676,24 @@ function renderPAChart(canvasId, sim) {
       datasets: [{
         data: vals,
         backgroundColor: vals.map((_, i) => {
-          const pa = parseInt(labels[i]);
-          return pa <= 3 ? 'rgba(52,211,153,.6)' : pa <= 5 ? 'rgba(251,191,36,.6)' : 'rgba(248,113,113,.6)';
+          const pa = labels[i];
+          return pa <= 3 ? MOSS : pa <= 5 ? GOLD : ACCENT;
         }),
-        borderRadius: 3,
+        borderRadius: 0,
       }]
     },
-    options: {
-      responsive: true, maintainAspectRatio: false,
+    options: chartOpts({
       plugins: {
-        legend: { display: false },
         tooltip: { callbacks: { label: ctx => `${ctx.raw.toFixed(1)}% of innings` } },
-        subtitle: { display: true, text: `Mean: ${sim.pa_mean} PA · Median: ${sim.pa_median} PA`, color: '#8b8fa3', font: { size: 10 }, padding: { bottom: 4 } }
+        subtitle: { display: true, text: `Mean ${sim.pa_mean} PA  \u00b7  Median ${sim.pa_median} PA`, color: '#8a8476', font: { size: 10, family: 'IBM Plex Sans', style: 'italic' }, padding: { bottom: 6 } }
       },
-      scales: {
-        y: { grid: { color: 'rgba(46,51,69,.5)' }, ticks: { color: '#8b8fa3', callback: v => v + '%' } },
-        x: { grid: { display: false }, ticks: { color: '#8b8fa3', font: { size: 10 } } }
-      }
-    }
+      scalesY: { ticks: { color: '#8a8476', font: { size: 10, family: 'JetBrains Mono' }, callback: v => v + '%' } },
+      scalesX: { title: { display: true, text: 'Plate Appearances', color: '#8a8476', font: { size: 10 } } }
+    })
   });
 }
 
-function renderTraceButtons() {
-  const container = document.getElementById('traceContainer');
-  const traces = window._currentTraces || [];
-  if (!traces.length) { container.innerHTML = '<span style="color:var(--t2);font-size:12px">No trace data</span>'; return; }
-  container.innerHTML = traces.map((t, i) => {
-    const cls = t.nrfi ? 'nrfi-trace' : 'rfi-trace';
-    const label = t.nrfi ? 'NRFI' : 'RFI';
-    const totalPA = t.top.pa + t.bottom.pa;
-    return `<button class="trace-btn ${cls}" onclick="playTrace(${i})">#${i+1} ${label} (${totalPA} PA)</button>`;
-  }).join('');
-}
-
-let _traceTimer = null;
-
+// ── Baseball diamond replay ──
 function parseBaseOuts(stateIdx) {
   if (stateIdx === 24) return { bases: 0, outs: 3 };
   if (stateIdx === 25) return { bases: 0, outs: 0, run: true };
@@ -522,40 +1702,48 @@ function parseBaseOuts(stateIdx) {
 }
 
 function buildDiamondSVG() {
-  // Diamond with home, 1B, 2B, 3B as rotated squares
-  return `<svg class="diamond-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-    <!-- Field -->
-    <polygon points="100,20 180,100 100,180 20,100" fill="none" stroke="#2e3345" stroke-width="1.5"/>
+  // Editorial scorecard style — vintage red on paper
+  return `<svg class="diamond-svg" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="dirt" patternUnits="userSpaceOnUse" width="4" height="4">
+        <rect width="4" height="4" fill="#ebe1cf"/>
+        <circle cx="1" cy="1" r="0.4" fill="#ded2ba"/>
+        <circle cx="3" cy="3" r="0.4" fill="#ded2ba"/>
+      </pattern>
+    </defs>
+    <!-- Outfield boundary -->
+    <path d="M 110,30 Q 190,30 190,110 Q 190,190 110,190 Q 30,190 30,110 Q 30,30 110,30" fill="#f4ede1" stroke="#cfc3a9" stroke-width="0.5"/>
+    <!-- Infield diamond outline -->
+    <polygon points="110,190 190,110 110,30 30,110" fill="url(#dirt)" stroke="#1a1814" stroke-width="2"/>
+    <!-- Pitcher's mound -->
+    <circle cx="110" cy="110" r="10" fill="none" stroke="#8a8476" stroke-width="1" stroke-dasharray="2,2"/>
+    <circle cx="110" cy="110" r="2" fill="#1a1814"/>
     <!-- Base paths -->
-    <line x1="100" y1="180" x2="180" y2="100" stroke="#3a3f52" stroke-width="1" stroke-dasharray="4,4"/>
-    <line x1="180" y1="100" x2="100" y2="20" stroke="#3a3f52" stroke-width="1" stroke-dasharray="4,4"/>
-    <line x1="100" y1="20" x2="20" y2="100" stroke="#3a3f52" stroke-width="1" stroke-dasharray="4,4"/>
-    <line x1="20" y1="100" x2="100" y2="180" stroke="#3a3f52" stroke-width="1" stroke-dasharray="4,4"/>
-    <!-- Infield arc -->
-    <path d="M 55,145 Q 100,100 145,145" fill="none" stroke="#2e3345" stroke-width="1"/>
+    <line x1="110" y1="190" x2="190" y2="110" stroke="#1a1814" stroke-width="1.5"/>
+    <line x1="190" y1="110" x2="110" y2="30" stroke="#1a1814" stroke-width="1.5"/>
+    <line x1="110" y1="30" x2="30" y2="110" stroke="#1a1814" stroke-width="1.5"/>
+    <line x1="30" y1="110" x2="110" y2="190" stroke="#1a1814" stroke-width="1.5"/>
     <!-- Home plate -->
-    <polygon id="dHome" points="100,176 94,182 100,190 106,182" fill="#3a3f52" stroke="#555" stroke-width="1"/>
+    <polygon id="dHome" points="110,186 104,192 110,200 116,192" fill="#1a1814" stroke="#1a1814" stroke-width="1"/>
     <!-- 1st base -->
-    <rect id="d1B" x="172" y="92" width="16" height="16" rx="2" transform="rotate(45,180,100)" fill="#2e3345" stroke="#555" stroke-width="1"/>
+    <rect id="d1B" x="182" y="102" width="16" height="16" transform="rotate(45,190,110)" fill="#f4ede1" stroke="#1a1814" stroke-width="1.5"/>
     <!-- 2nd base -->
-    <rect id="d2B" x="92" y="12" width="16" height="16" rx="2" transform="rotate(45,100,20)" fill="#2e3345" stroke="#555" stroke-width="1"/>
+    <rect id="d2B" x="102" y="22" width="16" height="16" transform="rotate(45,110,30)" fill="#f4ede1" stroke="#1a1814" stroke-width="1.5"/>
     <!-- 3rd base -->
-    <rect id="d3B" x="12" y="92" width="16" height="16" rx="2" transform="rotate(45,20,100)" fill="#2e3345" stroke="#555" stroke-width="1"/>
-    <!-- Runner dots (hidden initially) -->
-    <circle id="r1B" cx="180" cy="100" r="8" fill="var(--acc)" opacity="0">
-      <animate attributeName="opacity" dur="0.3s" fill="freeze"/>
-    </circle>
-    <circle id="r2B" cx="100" cy="20" r="8" fill="var(--acc)" opacity="0"/>
-    <circle id="r3B" cx="20" cy="100" r="8" fill="var(--acc)" opacity="0"/>
-    <circle id="rHome" cx="100" cy="180" r="8" fill="var(--acc)" opacity="0"/>
-    <!-- Labels -->
-    <text x="100" y="204" text-anchor="middle" fill="#8b8fa3" font-size="9">HOME</text>
-    <text x="198" y="104" text-anchor="start" fill="#8b8fa3" font-size="9">1B</text>
-    <text x="100" y="8" text-anchor="middle" fill="#8b8fa3" font-size="9">2B</text>
-    <text x="-2" y="104" text-anchor="end" fill="#8b8fa3" font-size="9">3B</text>
-    <!-- Run scored indicator -->
-    <text id="dRunText" x="100" y="110" text-anchor="middle" fill="var(--red)" font-size="16" font-weight="800" opacity="0">RUN SCORED</text>
-    <text id="dNrfiText" x="100" y="110" text-anchor="middle" fill="var(--grn)" font-size="14" font-weight="800" opacity="0">INNING OVER</text>
+    <rect id="d3B" x="22" y="102" width="16" height="16" transform="rotate(45,30,110)" fill="#f4ede1" stroke="#1a1814" stroke-width="1.5"/>
+    <!-- Runner indicators -->
+    <circle id="r1B" cx="190" cy="110" r="7" fill="#c3392b" opacity="0" stroke="#1a1814" stroke-width="1"/>
+    <circle id="r2B" cx="110" cy="30" r="7" fill="#c3392b" opacity="0" stroke="#1a1814" stroke-width="1"/>
+    <circle id="r3B" cx="30" cy="110" r="7" fill="#c3392b" opacity="0" stroke="#1a1814" stroke-width="1"/>
+    <circle id="rHome" cx="110" cy="190" r="6" fill="#c3392b" opacity="0"/>
+    <!-- Position labels -->
+    <text x="110" y="214" text-anchor="middle" fill="#8a8476" font-size="9" font-family="IBM Plex Sans" font-weight="600" letter-spacing="1">HOME</text>
+    <text x="208" y="114" text-anchor="start" fill="#8a8476" font-size="9" font-family="IBM Plex Sans" font-weight="600">1B</text>
+    <text x="110" y="14" text-anchor="middle" fill="#8a8476" font-size="9" font-family="IBM Plex Sans" font-weight="600">2B</text>
+    <text x="12" y="114" text-anchor="end" fill="#8a8476" font-size="9" font-family="IBM Plex Sans" font-weight="600">3B</text>
+    <!-- Result text -->
+    <text id="dRunText" x="110" y="116" text-anchor="middle" fill="#c3392b" font-size="18" font-weight="900" font-family="Fraunces" font-style="italic" opacity="0">RUN!</text>
+    <text id="dNrfiText" x="110" y="116" text-anchor="middle" fill="#6b7a3d" font-size="15" font-weight="700" font-family="Fraunces" font-style="italic" opacity="0">3 OUTS</text>
   </svg>`;
 }
 
@@ -572,36 +1760,39 @@ function updateDiamond(bases, outs, isRun, isNrfi) {
   if (r2) r2.setAttribute('opacity', (bases & 2) ? '1' : '0');
   if (r3) r3.setAttribute('opacity', (bases & 4) ? '1' : '0');
 
-  // Color bases with runners
-  if (b1) b1.setAttribute('fill', (bases & 1) ? 'var(--acc)' : '#2e3345');
-  if (b2) b2.setAttribute('fill', (bases & 2) ? 'var(--acc)' : '#2e3345');
-  if (b3) b3.setAttribute('fill', (bases & 4) ? 'var(--acc)' : '#2e3345');
+  if (b1) b1.setAttribute('fill', (bases & 1) ? '#c3392b' : '#f4ede1');
+  if (b2) b2.setAttribute('fill', (bases & 2) ? '#c3392b' : '#f4ede1');
+  if (b3) b3.setAttribute('fill', (bases & 4) ? '#c3392b' : '#f4ede1');
 
-  // Outs
   for (let i = 0; i < 3; i++) {
     const dot = document.getElementById(`out${i}`);
     if (dot) dot.classList.toggle('filled', i < outs);
   }
 
-  // PA counter
-  const paEl = document.getElementById('dPaCount');
-  if (paEl) {
-    const current = parseInt(paEl.dataset.pa || '0');
-    paEl.dataset.pa = current;
-  }
-
-  // Result text
   const runText = document.getElementById('dRunText');
   const nrfiText = document.getElementById('dNrfiText');
   if (runText) runText.setAttribute('opacity', isRun ? '1' : '0');
   if (nrfiText) nrfiText.setAttribute('opacity', isNrfi ? '1' : '0');
 
-  // Flash batter at home
   if (rH && !isRun && !isNrfi) {
-    rH.setAttribute('opacity', '0.6');
-    setTimeout(() => rH.setAttribute('opacity', '0'), 300);
+    rH.setAttribute('opacity', '0.55');
+    setTimeout(() => rH.setAttribute('opacity', '0'), 280);
   }
 }
+
+function renderTraceButtons() {
+  const container = document.getElementById('traceContainer');
+  const traces = window._currentTraces || [];
+  if (!traces.length) { container.innerHTML = '<span style="color:var(--muted);font-size:11px;font-style:italic">No trace data available</span>'; return; }
+  container.innerHTML = traces.map((t, i) => {
+    const cls = t.nrfi ? 'nrfi-trace' : 'rfi-trace';
+    const label = t.nrfi ? 'NRFI' : 'RFI';
+    const totalPA = t.top.pa + t.bottom.pa;
+    return `<button class="trace-btn ${cls}" onclick="playTrace(${i})">${String(i+1).padStart(2,'0')} &middot; ${label} &middot; ${totalPA}PA</button>`;
+  }).join('');
+}
+
+let _traceTimer = null;
 
 function playTrace(idx) {
   const traces = window._currentTraces || [];
@@ -617,41 +1808,25 @@ function playTrace(idx) {
     <div class="diamond-wrap">
       ${buildDiamondSVG()}
       <div class="diamond-info">
-        <div id="dHalfLabel" style="font-size:14px;font-weight:700;margin-bottom:6px">Top 1st — ${t.away_team} batting</div>
+        <div id="dHalfLabel" style="font-family:var(--serif);font-style:italic;font-size:18px;font-weight:500">Top 1st &mdash; ${t.away_team}</div>
         <div class="diamond-outs">
-          <span style="font-size:11px;color:var(--t2)">Outs:</span>
+          <span>Outs</span>
           <div class="out-dot" id="out0"></div>
           <div class="out-dot" id="out1"></div>
           <div class="out-dot" id="out2"></div>
         </div>
         <div class="diamond-pa" id="dPaLabel">PA: <strong>0</strong> / ${totalPA}</div>
-        <div class="diamond-event" id="dEvent">Starting top of 1st...</div>
+        <div class="diamond-event" id="dEvent">Top of the 1st begins&hellip;</div>
         <div class="diamond-result" id="dResult"></div>
-        <div style="margin-top:8px">
-          <div style="font-size:10px;color:var(--t2);margin-bottom:4px">Play-by-play:</div>
-          <div id="dLog" style="font-size:10px;color:var(--t2);max-height:120px;overflow-y:auto;line-height:1.6"></div>
-        </div>
+        <div id="dLog"></div>
       </div>
     </div>
   `;
 
-  // Build combined timeline: top half states, then transition, then bottom half states
   const timeline = [];
-
-  // Top half
-  t.top.trace.forEach((s, i) => {
-    timeline.push({ ...s, half: 'top', paNum: i });
-  });
-
-  // Transition marker
+  t.top.trace.forEach((s, i) => { timeline.push({ ...s, half: 'top', paNum: i }); });
   timeline.push({ state: -99, label: 'TRANSITION', half: 'transition' });
-
-  // Bottom half
-  t.bottom.trace.forEach((s, i) => {
-    timeline.push({ ...s, half: 'bottom', paNum: i });
-  });
-
-  // Final game result
+  t.bottom.trace.forEach((s, i) => { timeline.push({ ...s, half: 'bottom', paNum: i }); });
   timeline.push({ state: -100, label: t.nrfi ? 'GAME NRFI' : 'GAME RFI', half: 'final', nrfi: t.nrfi });
 
   let step = 0;
@@ -675,23 +1850,20 @@ function playTrace(idx) {
     const nrfiText = document.getElementById('dNrfiText');
 
     if (s.half === 'transition') {
-      // Clear diamond for bottom half
       updateDiamond(0, 0, false, false);
-      if (halfLabel) halfLabel.textContent = `Bot 1st — ${t.home_team} batting`;
-      if (eventEl) eventEl.textContent = 'Starting bottom of 1st...';
-      logLines.push('<span style="color:var(--acc);font-weight:600">— Bottom of 1st —</span>');
-      // Clear any half-inning result text
+      if (halfLabel) halfLabel.innerHTML = `Bot 1st &mdash; ${t.home_team}`;
+      if (eventEl) eventEl.textContent = 'Bottom of the 1st begins…';
+      logLines.push('<span style="color:var(--accent);font-weight:700;font-family:var(--sans)">\u2014 Bottom of 1st \u2014</span>');
       if (runText) runText.setAttribute('opacity', '0');
       if (nrfiText) nrfiText.setAttribute('opacity', '0');
       if (resultEl) { resultEl.classList.remove('show'); resultEl.textContent = ''; }
     } else if (s.half === 'final') {
-      // Final game verdict
       if (resultEl) {
-        resultEl.textContent = s.nrfi ? 'NRFI' : 'RUN SCORED IN 1ST';
-        resultEl.style.color = s.nrfi ? 'var(--grn)' : 'var(--red)';
+        resultEl.textContent = s.nrfi ? 'NRFI' : 'RUN SCORED';
+        resultEl.style.color = s.nrfi ? MOSS : ACCENT;
         resultEl.classList.add('show');
       }
-      logLines.push(`<span style="color:${s.nrfi?'var(--grn)':'var(--red)'};font-weight:700;font-size:11px">${s.nrfi ? 'NRFI — No runs in the 1st inning' : 'RFI — Run(s) scored in the 1st inning'}</span>`);
+      logLines.push(`<span style="color:${s.nrfi?MOSS:ACCENT};font-weight:700;font-family:var(--sans);font-size:11px">${s.nrfi ? 'NRFI \u2014 no run in the 1st' : 'RFI \u2014 run scored in the 1st'}</span>`);
     } else {
       const isRun = s.state === 25;
       const isNrfi = s.state === 24;
@@ -699,9 +1871,8 @@ function playTrace(idx) {
 
       if (isRun || isNrfi) {
         updateDiamond(0, isNrfi ? 3 : 0, isRun, isNrfi);
-        const halfName = s.half === 'top' ? 'Top' : 'Bottom';
-        const verdict = isNrfi ? '3 outs — side retired' : 'Run scored!';
-        logLines.push(`<span style="color:${isNrfi?'var(--grn)':'var(--red)'};font-weight:600">${verdict}</span>`);
+        const verdict = isNrfi ? 'Side retired' : 'Run scored!';
+        logLines.push(`<span style="color:${isNrfi?MOSS:ACCENT};font-weight:700">${verdict}</span>`);
         if (eventEl) eventEl.textContent = verdict;
       } else {
         updateDiamond(parsed.bases, parsed.outs, false, false);
@@ -721,75 +1892,75 @@ function playTrace(idx) {
     }
 
     step++;
-  }, 600);
+  }, 650);
 }
 
-function closeDetail(){
-  if(_traceTimer){clearInterval(_traceTimer);_traceTimer=null}
+function closeDetail() {
+  if (_traceTimer) { clearInterval(_traceTimer); _traceTimer = null; }
   document.getElementById('overlay').classList.remove('open');
 }
 
-// ── Methodology Tab ──
+// ── Methodology ──
 function renderMethodology() {
-  const el=document.getElementById('methodContent');
-  el.innerHTML=`
-    <h2>Markov Chain State Space</h2>
-    <p>The first inning is modeled as an absorbing Markov chain over <strong>24 transient states</strong> defined by the base-out configuration: 8 possible base occupancy patterns &times; 3 out counts (0, 1, 2). Two absorbing states capture the outcomes we care about: <strong>3 outs with 0 runs (NRFI)</strong> and <strong>any run scoring (RFI)</strong>.</p>
+  const el = document.getElementById('methodContent');
+  el.innerHTML = `
+    <h2>The Markov State Space</h2>
+    <p>The first inning unfolds as an <strong>absorbing Markov chain</strong> over twenty-four transient states defined by the base-out configuration: eight possible base occupancy patterns multiplied by three out counts (0, 1, 2). Two absorbing states capture the outcomes of interest: <strong>three outs with zero runs (NRFI)</strong> and <strong>any run scored (RFI)</strong>. Each state is indexed by <code>state = bases &times; 3 + outs</code>, where <code>bases</code> is a three-bit mask with bit 0 for first base, bit 1 for second, bit 2 for third.</p>
+
     <div class="state-grid" id="stateGrid"></div>
-    <p>Each state is indexed as <code>state = bases &times; 3 + outs</code>, where <code>bases</code> is a 3-bit mask (bit 0 = 1B, bit 1 = 2B, bit 2 = 3B).</p>
 
     <h2>Transition Probabilities</h2>
     <p>For each plate appearance, the outcome distribution is a blend of pitcher and batter statistics using the <strong>log-odds (odds-ratio) method</strong>:</p>
     <div class="formula" id="blendFormula"></div>
-    <p>This produces a probability for each of 11 mutually exclusive PA outcomes: K, BB, HBP, HR, 1B, 2B, 3B, ground ball out, fly ball out, line drive out, and fielder's choice. Each outcome maps deterministically to a next state via baseball advancement rules, with conditional branching for GIDP and sacrifice flies.</p>
+    <p>This produces a probability for each of eleven mutually exclusive PA outcomes: strikeout, walk, hit by pitch, home run, single, double, triple, ground ball out, fly ball out, line drive out, and fielder's choice. Each outcome maps deterministically to a next state via standard baseball advancement rules, with conditional branching for double plays and sacrifice flies.</p>
 
-    <h2>Park &amp; Platoon Adjustments</h2>
-    <p>After blending, HR rates are scaled by a park-specific home run factor (0.82 for Miami to 1.25 for Coors Field). Hit rates receive a smaller run-environment adjustment. Platoon multipliers adjust K%, BB%, and HR% based on the pitcher-hand/batter-hand matchup.</p>
+    <h2>Park and Platoon Adjustments</h2>
+    <p>After blending, home run rates are scaled by a park-specific factor, ranging from 0.82 (Miami) to 1.25 (Coors Field). Hit rates receive a smaller run-environment adjustment. Platoon multipliers further adjust K%, BB%, and HR% based on the pitcher-hand and batter-hand matchup.</p>
 
     <h2>Two Computation Paths</h2>
     <div class="grid-2">
       <div>
-        <h3 style="font-size:14px;margin-bottom:6px">Analytic (Fundamental Matrix)</h3>
-        <p>Extract the 24&times;24 transient sub-matrix <strong>Q</strong> and compute the fundamental matrix <strong>N = (I - Q)<sup>-1</sup></strong>. The absorption probability vector <strong>B = N &middot; R</strong> gives P(NRFI) directly. Uses a lineup-averaged approximation.</p>
+        <h3>Analytic</h3>
+        <p>Extract the 24&times;24 transient sub-matrix <strong>Q</strong> and compute the fundamental matrix <strong>N = (I &minus; Q)<sup>&minus;1</sup></strong>. The absorption probability vector <strong>B = N &middot; R</strong> yields P(NRFI) directly, under a lineup-averaged approximation.</p>
       </div>
       <div>
-        <h3 style="font-size:14px;margin-bottom:6px">Monte Carlo Simulation</h3>
-        <p>Simulate 50,000 first innings with proper batting-order sequencing. Each PA draws from the current batter's outcome distribution and transitions the chain. The gap between methods quantifies the <em>batting order effect</em>.</p>
+        <h3>Monte Carlo</h3>
+        <p>Simulate fifty thousand first innings with proper batting-order sequencing. Each plate appearance draws from the current batter's outcome distribution and transitions the chain. The gap between both methods quantifies the batting order effect.</p>
       </div>
     </div>
 
     <h2>Player Profiles</h2>
-    <p>Each player's rates are built from <strong>3 years of MLB data (2024–2026)</strong> aggregated from counting stats via the MLB Stats API. The weighted merge uses PA counts: a player with 800 PA from prior seasons and 50 PA this year gets proportional blending, preventing early-season noise from overwhelming established priors.</p>
+    <p>Each player's rates are constructed from <strong>three years of MLB data (2024&ndash;2026)</strong>, aggregated from counting statistics via the official MLB Stats API. The weighted merge uses plate-appearance counts&mdash;a batter with 800 prior PA and 50 recent PA receives proportional blending&mdash;preventing early-season noise from overwhelming established priors.</p>
   `;
 
-  // Render state grid
-  const grid=document.getElementById('stateGrid');
-  const bases=['Empty','1B','2B','1B+2B','3B','1B+3B','2B+3B','Loaded'];
-  grid.innerHTML=`<div class="state-cell" style="background:transparent"></div>`+
-    [0,1,2].map(o=>`<div class="state-cell" style="background:transparent;font-weight:600">${o} Out${o!==1?'s':''}</div>`).join('')+
-    `<div class="state-cell" style="background:transparent"></div>`.repeat(4)+
-    bases.map((b,bi)=>
-      `<div class="state-cell" style="background:transparent;font-weight:500;text-align:right;font-size:10px">${b}</div>`+
-      [0,1,2].map(o=>{const idx=bi*3+o;return`<div class="state-cell"><span class="sv">${idx}</span>${b}, ${o}o</div>`}).join('')
-    ).join('');
+  const grid = document.getElementById('stateGrid');
+  const bases = ['Empty','1B','2B','1B + 2B','3B','1B + 3B','2B + 3B','Bases Loaded'];
+  let html = `<div class="state-cell header"></div>`;
+  for (let o of [0,1,2]) html += `<div class="state-cell header">${o} Out${o!==1?'s':''}</div>`;
+  for (let bi = 0; bi < bases.length; bi++) {
+    html += `<div class="state-cell row-label">${bases[bi]}</div>`;
+    for (let o of [0,1,2]) {
+      const idx = bi * 3 + o;
+      html += `<div class="state-cell"><span class="sv">${idx}</span></div>`;
+    }
+  }
+  grid.innerHTML = html;
 
-  // Render formula with KaTeX
-  const formulaEl=document.getElementById('blendFormula');
+  const formulaEl = document.getElementById('blendFormula');
   try {
-    katex.render('\\text{logit}(p_{\\text{blend}}) = \\text{logit}(p_{\\text{pitcher}}) + \\text{logit}(p_{\\text{batter}}) - \\text{logit}(p_{\\text{league}})', formulaEl, {displayMode:true});
-  } catch(e) { formulaEl.textContent='logit(p_blend) = logit(p_pitcher) + logit(p_batter) - logit(p_league)'; }
+    katex.render('\\text{logit}(p_{\\text{blend}}) = \\text{logit}(p_{\\text{pitcher}}) + \\text{logit}(p_{\\text{batter}}) - \\text{logit}(p_{\\text{league}})', formulaEl, { displayMode: true });
+  } catch(e) {
+    formulaEl.textContent = 'logit(p_blend) = logit(p_pitcher) + logit(p_batter) − logit(p_league)';
+  }
 }
 
 // ── Results Tracker ──
-
-let RL = {};
-
 function loadResultsTracker() {
   fetch('data/results_log.json').then(r=>r.json()).then(d => {
     RL = d;
     renderResultsTracker();
   }).catch(() => {
-    document.getElementById('resultsTracker').innerHTML = '<div class="empty"><h2>No results data yet</h2><p>Results will appear after games complete.</p></div>';
+    document.getElementById('resultsTracker').innerHTML = '<div class="empty"><h2>No results yet</h2><p>Results will populate as games resolve their first innings.</p></div>';
   });
 }
 
@@ -800,60 +1971,79 @@ function renderResultsTracker() {
   const daily = RL.daily || [];
 
   if (!entries.length) {
-    el.innerHTML = '<div class="empty"><h2>No results tracked yet</h2><p>Results will appear after games complete their first inning.</p></div>';
+    el.innerHTML = '<div class="empty"><h2>No results yet</h2><p>Results will populate as games resolve their first innings.</p></div>';
     return;
   }
 
+  const correctCount = Math.round(c.accuracy * c.n_games);
+
   el.innerHTML = `
-    <div class="tracker-section">
-      <h3>Cumulative Performance — ${c.n_games} Games Tracked</h3>
-      <div class="results-grid">
-        <div class="stat-card"><div class="sc-label">Accuracy</div><div class="sc-val ${c.accuracy>=.55?'prob-high':c.accuracy>=.48?'prob-mid':'prob-low'}">${(c.accuracy*100).toFixed(1)}%</div><div class="sc-sub">${Math.round(c.accuracy*c.n_games)}/${c.n_games} correct</div></div>
-        <div class="stat-card"><div class="sc-label">Brier Score</div><div class="sc-val">${c.brier_score?.toFixed(4)||'—'}</div><div class="sc-sub">lower is better</div></div>
-        <div class="stat-card"><div class="sc-label">Brier Skill</div><div class="sc-val ${(c.brier_skill_score||0)>0?'prob-high':'prob-low'}">${((c.brier_skill_score||0)*100).toFixed(1)}%</div><div class="sc-sub">vs always-predict-mean</div></div>
-        <div class="stat-card"><div class="sc-label">Log Loss</div><div class="sc-val">${c.log_loss?.toFixed(4)||'—'}</div><div class="sc-sub">cross-entropy</div></div>
-        <div class="stat-card"><div class="sc-label">Actual NRFI Rate</div><div class="sc-val">${pS(c.actual_nrfi_rate||0)}%</div><div class="sc-sub">observed</div></div>
-        <div class="stat-card"><div class="sc-label">Mean Predicted</div><div class="sc-val">${pS(c.mean_predicted||0)}%</div><div class="sc-sub">model average</div></div>
+    <div class="section-head">Running Performance</div>
+    <div class="section-sub">Tracked across ${c.n_games} resolved games</div>
+
+    <div class="results-grid">
+      <div class="stat-cell feature">
+        <div class="stat-label">Accuracy</div>
+        <div class="stat-value tabular ${c.accuracy>=.55?'prob-high':c.accuracy>=.48?'prob-mid':'prob-low'}">${(c.accuracy*100).toFixed(1)}<span class="unit">%</span></div>
+        <div class="stat-sub">${correctCount} / ${c.n_games} correct</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Brier Score</div>
+        <div class="stat-value tabular">${c.brier_score?.toFixed(4) || '—'}</div>
+        <div class="stat-sub">lower is better</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Log Loss</div>
+        <div class="stat-value tabular">${c.log_loss?.toFixed(4) || '—'}</div>
+        <div class="stat-sub">cross-entropy</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Actual Rate</div>
+        <div class="stat-value tabular">${pS(c.actual_nrfi_rate||0)}<span class="unit">%</span></div>
+        <div class="stat-sub">NRFI observed</div>
       </div>
     </div>
 
     <div class="tracker-section">
       <h3>Daily Breakdown</h3>
-      <div style="margin-bottom:16px"><canvas id="dailyChart" height="180"></canvas></div>
+      <div style="background:var(--paper);border:1px solid var(--rule);padding:16px 20px;margin-bottom:20px"><canvas id="dailyChart" height="200"></canvas></div>
       <table class="daily-table">
-        <tr><th>Date</th><th>Games</th><th>Correct</th><th>Accuracy</th><th>NRFI Count</th><th>NRFI Rate</th></tr>
+        <thead><tr><th>Date</th><th>Games</th><th>Correct</th><th>Accuracy</th><th>NRFI Count</th><th>NRFI Rate</th></tr></thead>
+        <tbody>
         ${daily.slice().reverse().map(d => `
           <tr>
             <td>${d.date}</td>
-            <td>${d.n_games}</td>
-            <td>${d.correct}/${d.n_games}</td>
-            <td class="${d.accuracy>=.55?'prob-high':d.accuracy>=.45?'prob-mid':'prob-low'}" style="font-weight:600">${(d.accuracy*100).toFixed(0)}%</td>
-            <td>${d.nrfi_count}/${d.n_games}</td>
-            <td>${(d.nrfi_count/d.n_games*100).toFixed(0)}%</td>
+            <td class="tabular">${d.n_games}</td>
+            <td class="tabular">${d.correct} / ${d.n_games}</td>
+            <td class="pct-val ${d.accuracy>=.55?'prob-high':d.accuracy>=.45?'prob-mid':'prob-low'}">${(d.accuracy*100).toFixed(0)}%</td>
+            <td class="tabular">${d.nrfi_count} / ${d.n_games}</td>
+            <td class="tabular">${(d.nrfi_count/d.n_games*100).toFixed(0)}%</td>
           </tr>
         `).join('')}
+        </tbody>
       </table>
     </div>
 
     <div class="tracker-section">
-      <h3>All Predictions vs Results</h3>
+      <h3>Ledger of Predictions</h3>
       <table class="daily-table">
-        <tr><th>Date</th><th>Matchup</th><th>Predicted</th><th>Result</th><th>1st Inning</th><th>Verdict</th></tr>
+        <thead><tr><th>Date</th><th>Matchup</th><th>Predicted</th><th>Outcome</th><th>1st Inning</th><th>Verdict</th></tr></thead>
+        <tbody>
         ${entries.slice().reverse().map(e => `
           <tr>
-            <td style="color:var(--t2)">${e.date}</td>
-            <td>${e.away_team}@${e.home_team}</td>
-            <td class="${pC(e.p_nrfi_predicted)}" style="font-weight:600">${pS(e.p_nrfi_predicted)}%</td>
+            <td style="color:var(--muted)">${e.date}</td>
+            <td class="matchup">${e.away_team} <span style="color:var(--muted);font-style:italic;font-weight:300">at</span> ${e.home_team}</td>
+            <td class="pct-val ${pC(e.p_nrfi_predicted)}">${pS(e.p_nrfi_predicted)}%</td>
             <td>${e.nrfi_actual ? '<span class="nrfi-tag">NRFI</span>' : '<span class="rfi-tag">RFI</span>'}</td>
-            <td style="color:var(--t2)">${e.nrfi_actual ? '0-0' : e.away_runs_1st+'-'+e.home_runs_1st}</td>
-            <td>${e.correct ? '<span class="correct-tag">Correct</span>' : '<span class="miss-tag">Miss</span>'}</td>
+            <td class="tabular" style="color:var(--muted)">${e.nrfi_actual ? '0–0' : e.away_runs_1st+'–'+e.home_runs_1st}</td>
+            <td>${e.correct ? '<span class="correct-tag">correct</span>' : '<span class="miss-tag">miss</span>'}</td>
           </tr>
         `).join('')}
+        </tbody>
       </table>
     </div>
   `;
 
-  // Daily accuracy chart
   setTimeout(() => {
     if (!daily.length) return;
     const ctx = document.getElementById('dailyChart');
@@ -866,20 +2056,23 @@ function renderResultsTracker() {
           {
             label: 'Accuracy',
             data: daily.map(d => d.accuracy * 100),
-            backgroundColor: daily.map(d => d.accuracy >= .55 ? 'rgba(52,211,153,.6)' : d.accuracy >= .45 ? 'rgba(251,191,36,.6)' : 'rgba(248,113,113,.6)'),
-            borderRadius: 3,
+            backgroundColor: daily.map(d => d.accuracy >= .55 ? MOSS : d.accuracy >= .45 ? GOLD : ACCENT),
+            borderRadius: 0,
+            borderWidth: 0,
             yAxisID: 'y',
           },
           {
             label: 'NRFI Rate',
             data: daily.map(d => (d.nrfi_count / d.n_games) * 100),
             type: 'line',
-            borderColor: 'rgba(79,140,255,.8)',
-            backgroundColor: 'rgba(79,140,255,.15)',
+            borderColor: INK,
+            backgroundColor: 'rgba(26,24,20,0.05)',
             pointRadius: 4,
-            pointBackgroundColor: 'rgba(79,140,255,.8)',
+            pointBackgroundColor: INK,
+            pointBorderColor: '#f4ede1',
+            pointBorderWidth: 2,
             borderWidth: 2,
-            tension: 0.3,
+            tension: 0.25,
             yAxisID: 'y',
           }
         ]
@@ -888,17 +2081,18 @@ function renderResultsTracker() {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { labels: { color: '#8b8fa3', font: { size: 11 } } },
+          legend: { labels: { color: '#3a342a', font: { size: 10, family: 'IBM Plex Sans' } }, position: 'bottom' },
           tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw.toFixed(1)}%` } }
         },
         scales: {
-          y: { min: 0, max: 100, grid: { color: 'rgba(46,51,69,.5)' }, ticks: { color: '#8b8fa3', callback: v => v + '%' } },
-          x: { grid: { display: false }, ticks: { color: '#8b8fa3', font: { size: 10 }, maxRotation: 45 } }
+          y: { min: 0, max: 100, grid: { color: 'rgba(207,195,169,0.5)' }, ticks: { color: '#8a8476', font: { size: 10, family: 'JetBrains Mono' }, callback: v => v + '%' } },
+          x: { grid: { display: false }, ticks: { color: '#8a8476', font: { size: 10, family: 'JetBrains Mono' }, maxRotation: 45 } }
         }
       }
     });
   }, 50);
 }
 </script>
+
 </body>
 </html>
