@@ -814,11 +814,17 @@
     .diamond-event {
       font-family: var(--serif);
       font-style: italic;
-      font-size: 14px;
+      font-size: 15px;
       color: var(--ink);
-      min-height: 20px;
-      padding: 6px 0;
+      min-height: 44px;
+      padding: 10px 0;
       border-top: 1px dashed var(--rule);
+      line-height: 1.3;
+    }
+    .diamond-event strong {
+      font-weight: 700;
+      font-style: normal;
+      color: var(--accent);
     }
 
     .diamond-result {
@@ -834,15 +840,16 @@
     .diamond-result.show { opacity: 1; }
 
     #dLog {
-      font-family: var(--mono);
-      font-size: 10px;
+      font-family: var(--sans);
+      font-size: 11px;
       color: var(--ink-soft);
-      max-height: 110px;
+      max-height: 160px;
       overflow-y: auto;
-      line-height: 1.7;
+      line-height: 1.65;
       border-top: 1px dashed var(--rule);
-      padding-top: 6px;
+      padding-top: 8px;
     }
+    #dLog > * { display: block; padding: 1px 0; }
 
     .trace-btn {
       font-family: var(--mono);
@@ -1868,19 +1875,43 @@ function playTrace(idx) {
       const isRun = s.state === 25;
       const isNrfi = s.state === 24;
       const parsed = parseBaseOuts(s.state);
+      const batter = s.batter;
+      const verb = s.event;
+      const outcome = s.outcome;
+
+      // Build pretty event line for the event display
+      const buildEventHtml = (batter, verb, outcome) => {
+        if (!batter || !verb) return '';
+        const outcomeTag = outcome ? `<span style="font-family:var(--mono);font-size:9px;color:var(--muted);margin-left:6px;letter-spacing:.1em">[${outcome}]</span>` : '';
+        return `<div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px">PA ${cumulativePA + (isRun || isNrfi ? 0 : 1)}${outcomeTag}</div><div><strong>${batter}</strong> ${verb}</div>`;
+      };
 
       if (isRun || isNrfi) {
         updateDiamond(0, isNrfi ? 3 : 0, isRun, isNrfi);
-        const verdict = isNrfi ? 'Side retired' : 'Run scored!';
-        logLines.push(`<span style="color:${isNrfi?MOSS:ACCENT};font-weight:700">${verdict}</span>`);
-        if (eventEl) eventEl.textContent = verdict;
+        cumulativePA++;
+        const verdictText = isNrfi ? (batter ? `${batter} ${verb} &mdash; side retired` : 'Side retired') : (batter ? `${batter} ${verb} &mdash; run scored!` : 'Run scored!');
+        if (eventEl) eventEl.innerHTML = buildEventHtml(batter, verb + (isNrfi ? ' — side retired' : ' — run scored!'), s.detail);
+        // Log entry
+        const logLine = batter
+          ? `<span style="color:${isNrfi?MOSS:ACCENT};font-weight:700">${batter}</span> ${verb}<span style="color:${isNrfi?MOSS:ACCENT};font-weight:700"> \u2014 ${isNrfi?'3 outs':'RUN'}</span>`
+          : `<span style="color:${isNrfi?MOSS:ACCENT};font-weight:700">${isNrfi?'Side retired':'Run scored!'}</span>`;
+        logLines.push(logLine);
       } else {
         updateDiamond(parsed.bases, parsed.outs, false, false);
-        if (s.paNum > 0) {
+        if (s.paNum > 0 || batter) {
           cumulativePA++;
-          logLines.push(s.label);
+          const logLine = batter
+            ? `<span style="color:var(--ink);font-weight:600">${batter}</span> ${verb} <span style="color:var(--muted)">&rarr; ${s.label}</span>`
+            : s.label;
+          logLines.push(logLine);
         }
-        if (eventEl) eventEl.textContent = s.label;
+        if (eventEl) {
+          if (batter) {
+            eventEl.innerHTML = buildEventHtml(batter, verb, s.detail);
+          } else {
+            eventEl.textContent = s.label;
+          }
+        }
       }
 
       if (paLabel) paLabel.innerHTML = `PA: <strong>${cumulativePA}</strong> / ${totalPA}`;

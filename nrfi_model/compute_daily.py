@@ -218,11 +218,16 @@ def run_game_model(away_lineup, home_lineup, away_sp_id, home_sp_id, home_team, 
     away_sim_detail.pop("sample_traces", None)
     home_sim_detail.pop("sample_traces", None)
 
-    # Full first-inning traces (top + bottom combined)
+    # Full first-inning traces with batter names and event details
     trace_rng = np.random.default_rng(44)
+    away_names = [d["name"] for d in away_details]
+    home_names = [d["name"] for d in home_details]
     full_inning_traces = []
     for _ in range(20):
-        full_inning_traces.append(simulate_full_inning_traced(away_rates, home_rates, trace_rng))
+        full_inning_traces.append(simulate_full_inning_traced(
+            away_rates, home_rates, trace_rng,
+            away_names=away_names, home_names=home_names,
+        ))
 
     return {
         "results": {

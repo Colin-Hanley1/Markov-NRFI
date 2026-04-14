@@ -173,51 +173,173 @@ def simulate_half_inning(
     )
 
 
+# Outcome categories drawn directly (matches PAOutcomeRates primary keys)
+_PA_OUTCOMES = ["K", "BB", "HBP", "HR", "1B", "2B", "3B", "GBOUT", "FBOUT", "LDOUT", "FC"]
+
+_OUTCOME_VERBS = {
+    "K": "strikes out",
+    "BB": "walks",
+    "HBP": "hit by pitch",
+    "HR": "homers",
+    "1B": "singles",
+    "2B": "doubles",
+    "3B": "triples",
+    "GBOUT": "grounds out",
+    "FBOUT": "flies out",
+    "LDOUT": "lines out",
+    "FC": "reaches on fielder's choice",
+    "GIDP": "grounds into double play",
+    "SF": "hits sac fly (runner scores)",
+}
+
+
+def _draw_pa_outcome(rates: PAOutcomeRates, bases: int, outs: int, rng: np.random.Generator) -> dict:
+    """
+    Draw a PA outcome directly from the batter's rate distribution and apply
+    the deterministic transition, returning the full event detail.
+    """
+    from .state import on_first, on_third, decode_state
+    from .transitions import (
+        _transition_K, _transition_BB_HBP, _transition_HR,
+        _transition_1B, _transition_2B, _transition_3B,
+        _transition_LDOUT, _transition_FC,
+    )
+
+    primary_probs = np.array([
+        rates.k_rate, rates.bb_rate, rates.hbp_rate, rates.hr_rate,
+        rates.single_rate, rates.double_rate, rates.triple_rate,
+        rates.gbout_rate, rates.fbout_rate, rates.ldout_rate, rates.fc_rate,
+    ])
+    primary_probs = primary_probs / primary_probs.sum()  # safety normalize
+    outcome = _PA_OUTCOMES[int(rng.choice(len(_PA_OUTCOMES), p=primary_probs))]
+
+    detail = outcome  # may get refined (GIDP, SF)
+
+    if outcome == "K":
+        nb, no, runs = _transition_K(bases, outs)
+    elif outcome in ("BB", "HBP"):
+        nb, no, runs = _transition_BB_HBP(bases, outs)
+    elif outcome == "HR":
+        nb, no, runs = _transition_HR(bases, outs)
+    elif outcome == "1B":
+        nb, no, runs = _transition_1B(bases, outs)
+    elif outcome == "2B":
+        nb, no, runs = _transition_2B(bases, outs)
+    elif outcome == "3B":
+        nb, no, runs = _transition_3B(bases, outs)
+    elif outcome == "GBOUT":
+        if on_first(bases) and outs < 2 and rng.random() < rates.gidp_prob_given_gbout:
+            detail = "GIDP"
+            no = outs + 2
+            nb = bases & ~0b001
+            runs = 0
+        else:
+            nb, no, runs = bases, outs + 1, 0
+    elif outcome == "FBOUT":
+        if on_third(bases) and outs < 2 and rng.random() < rates.sf_prob_given_fbout:
+            detail = "SF"
+            runs = 1
+            nb = bases & ~0b100
+            if bases & 0b010:
+                nb = (nb & ~0b010) | 0b100  # runner on 2B tags to 3B
+            no = outs + 1
+        else:
+            nb, no, runs = bases, outs + 1, 0
+    elif outcome == "LDOUT":
+        nb, no, runs = _transition_LDOUT(bases, outs)
+    elif outcome == "FC":
+        nb, no, runs = _transition_FC(bases, outs)
+    else:
+        nb, no, runs = bases, outs + 1, 0
+
+    return {
+        "outcome": outcome,
+        "detail": detail,
+        "verb": _OUTCOME_VERBS.get(detail, outcome),
+        "new_bases": nb,
+        "new_outs": no,
+        "runs": runs,
+    }
+
+
 def simulate_half_inning_traced(
     lineup_rates: List[PAOutcomeRates],
     batter_start: int,
     rng: np.random.Generator,
+    batter_names: List[str] = None,
 ) -> dict:
     """
-    Simulate a single half-inning and return the full state trace.
+    Simulate a single half-inning drawing outcomes directly from each batter's
+    distribution, recording batter name and event type per PA.
     """
-    from .state import describe_state
-    state = STARTING_STATE
+    from .state import describe_state, decode_state
+    bases, outs = 0, 0
     batter_slot = batter_start % 9
-    trace = [{"state": state, "label": describe_state(state)}]
+
+    # Starting state
+    trace = [{
+        "state": STARTING_STATE,
+        "label": describe_state(STARTING_STATE),
+        "event": None,
+        "batter": None,
+    }]
 
     for _ in range(27):
         rates = lineup_rates[batter_slot]
-        row, _ = build_transition_row(state, rates)
-        next_state = int(rng.choice(len(row), p=row))
+        batter_name = batter_names[batter_slot] if batter_names else f"Batter {batter_slot+1}"
+
+        ev = _draw_pa_outcome(rates, bases, outs, rng)
+        nb, no, runs = ev["new_bases"], ev["new_outs"], ev["runs"]
+
+        step = {
+            "batter": batter_name,
+            "batter_slot": batter_slot + 1,
+            "event": ev["verb"],
+            "outcome": ev["outcome"],
+            "detail": ev["detail"],
+        }
+
         batter_slot = (batter_slot + 1) % 9
 
-        if next_state == NRFI_ABSORBED:
-            trace.append({"state": NRFI_ABSORBED, "label": "3 outs (NRFI)"})
-            return {"nrfi": True, "pa": len(trace) - 1, "trace": trace}
-        if next_state == RUN_ABSORBED:
-            trace.append({"state": RUN_ABSORBED, "label": "Run scored"})
+        if runs > 0:
+            step["state"] = RUN_ABSORBED
+            step["label"] = "Run scored"
+            step["runs"] = runs
+            trace.append(step)
             return {"nrfi": False, "pa": len(trace) - 1, "trace": trace}
 
-        trace.append({"state": next_state, "label": describe_state(next_state)})
-        state = next_state
+        if no >= 3:
+            step["state"] = NRFI_ABSORBED
+            step["label"] = "3 outs (NRFI)"
+            trace.append(step)
+            return {"nrfi": True, "pa": len(trace) - 1, "trace": trace}
 
-    trace.append({"state": -1, "label": "Max PA reached"})
+        bases, outs = nb, no
+        state = encode_state_safe(bases, outs)
+        step["state"] = state
+        step["label"] = describe_state(state)
+        trace.append(step)
+
+    trace.append({"state": -1, "label": "Max PA reached", "event": None, "batter": None})
     return {"nrfi": False, "pa": 27, "trace": trace}
+
+
+def encode_state_safe(bases: int, outs: int) -> int:
+    return bases * 3 + outs
 
 
 def simulate_full_inning_traced(
     away_lineup: List[PAOutcomeRates],
     home_lineup: List[PAOutcomeRates],
     rng: np.random.Generator,
+    away_names: List[str] = None,
+    home_names: List[str] = None,
 ) -> dict:
     """
-    Simulate a full first inning (top + bottom) and return traces for both halves.
+    Simulate a full first inning (top + bottom) and return detailed traces.
     """
-    top = simulate_half_inning_traced(away_lineup, 0, rng)
-    # If a run scored in the top half, it's already RFI — but we still
-    # play out the bottom half for visualization purposes
-    bot = simulate_half_inning_traced(home_lineup, 0, rng)
+    top = simulate_half_inning_traced(away_lineup, 0, rng, batter_names=away_names)
+    bot = simulate_half_inning_traced(home_lineup, 0, rng, batter_names=home_names)
 
     nrfi = top["nrfi"] and bot["nrfi"]
     return {
