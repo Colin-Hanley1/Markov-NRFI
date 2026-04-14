@@ -26,7 +26,6 @@ from model.chain import (
     simulate_nrfi, compute_nrfi_analytic, compute_half_inning_detail,
     simulate_with_details, simulate_full_inning_traced,
 )
-from market_odds import load_market_data, attach_to_game
 
 DATA_DIR = "data/"
 OUT_DIR = Path("docs/data")
@@ -359,14 +358,6 @@ def main():
             print(f"  {away_abbr}@{home_abbr}: skipped ({reason})", flush=True)
 
         output_games.append(game_entry)
-
-    # Attach market odds where available
-    market = load_market_data()
-    if market:
-        for ge in output_games:
-            attach_to_game(ge, market)
-        attached = sum(1 for ge in output_games if ge.get("market"))
-        print(f"  Attached market odds to {attached} games", flush=True)
 
     # Compute daily summary
     modeled_games = [g for g in output_games if g.get("modeled")]

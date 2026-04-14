@@ -287,7 +287,7 @@
 
     .slate-row {
       display: grid;
-      grid-template-columns: 32px 140px 1fr 64px 56px;
+      grid-template-columns: 32px 140px 1fr 64px;
       align-items: center;
       padding: 10px 0;
       border-bottom: 1px solid var(--rule);
@@ -295,14 +295,6 @@
       gap: 16px;
       transition: background 0.2s;
     }
-    .slate-edge {
-      font-family: var(--mono);
-      font-size: 13px;
-      font-weight: 700;
-      text-align: right;
-      font-variant-numeric: tabular-nums;
-    }
-    .slate-edge.muted { color: var(--rule); font-weight: 400; }
 
     .slate-row:hover { background: var(--paper-dark); }
 
@@ -694,48 +686,6 @@
 
     .chart-box canvas {
       max-height: 200px;
-    }
-
-    /* ═══ MARKET GRID ═══ */
-    .market-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 0;
-      border-top: 2px solid var(--ink);
-      border-bottom: 2px solid var(--ink);
-    }
-    .market-cell {
-      padding: 16px 14px;
-      border-right: 1px solid var(--rule);
-      text-align: center;
-    }
-    .market-cell:last-child { border-right: none; }
-    .mc-label {
-      font-family: var(--mono);
-      font-size: 9px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-    .mc-value {
-      font-family: var(--serif);
-      font-style: italic;
-      font-weight: 500;
-      font-size: 36px;
-      line-height: 0.95;
-      letter-spacing: -0.02em;
-      font-variant-numeric: tabular-nums;
-    }
-    .mc-sub {
-      font-family: var(--mono);
-      font-size: 9px;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-    @media (max-width: 700px) {
-      .market-grid { grid-template-columns: 1fr 1fr; }
     }
 
     /* ═══ HEATMAP ═══ */
@@ -1494,19 +1444,11 @@ function renderSlate() {
         const w=Math.max(6, p/Math.max(maxP,.01)*100);
         const c=p>=.55?MOSS:p>=.48?GOLD:p>=.40?ACCENT:'#9a2a1e';
         const idx=D.games.indexOf(g);
-        const m = g.market;
-        const edgeHtml = m ? (() => {
-          const ep = m.edge_pp;
-          const cls = ep > 0.03 ? 'prob-high' : ep > 0 ? 'prob-mid' : ep > -0.03 ? 'prob-low' : 'prob-vlow';
-          const sign = ep >= 0 ? '+' : '';
-          return `<div class="slate-edge ${cls}" title="Edge vs no-vig market">${sign}${(ep*100).toFixed(1)}<span style="font-size:8px">pp</span></div>`;
-        })() : '<div class="slate-edge muted">\u2014</div>';
-        return `<div class="slate-row${m?' has-market':''}" onclick="openDetail(${idx})">
+        return `<div class="slate-row" onclick="openDetail(${idx})">
           <div class="slate-rank">${String(i+1).padStart(2,'0')}</div>
           <div class="slate-matchup">${g.away_team} <span class="at">at</span> ${g.home_team}</div>
           <div class="slate-bar"><div class="slate-bar-fill" style="width:${w}%;background:${c}"></div></div>
           <div class="slate-value ${pC(p)}">${pS(p)}%</div>
-          ${edgeHtml}
         </div>`;
       }).join('')}
       </div>
@@ -1582,37 +1524,6 @@ function openDetail(idx) {
         <span class="mono">K ${pS(p.away.k_rate)}% &middot; HR ${pS(p.away.hr_rate)}% &middot; BB ${pS(p.away.bb_rate)}% &middot; E[PA] ${md.home_half?.expected_pa||r.avg_pa_home}</span></div>
       </div>
     </div>
-
-    ${g.market ? `
-    <div class="detail-section">
-      <div class="detail-section-label">Market Comparison \u2014 ${g.market.book || 'Sportsbook'}</div>
-      <div class="market-grid">
-        <div class="market-cell">
-          <div class="mc-label">Model P(NRFI)</div>
-          <div class="mc-value tabular ${pC(r.p_nrfi_game)}">${pS(r.p_nrfi_game)}%</div>
-        </div>
-        <div class="market-cell">
-          <div class="mc-label">Market Fair</div>
-          <div class="mc-value tabular">${pS(g.market.fair_nrfi)}%</div>
-          <div class="mc-sub">vig ${(g.market.vig*100).toFixed(1)}%</div>
-        </div>
-        <div class="market-cell">
-          <div class="mc-label">Edge</div>
-          <div class="mc-value tabular ${g.market.edge_pp > 0.03 ? 'prob-high' : g.market.edge_pp > 0 ? 'prob-mid' : 'prob-vlow'}">${g.market.edge_pp >= 0 ? '+' : ''}${(g.market.edge_pp*100).toFixed(1)}<span style="font-size:14px">pp</span></div>
-        </div>
-        <div class="market-cell">
-          <div class="mc-label">Kelly Stake</div>
-          <div class="mc-value tabular">${(g.market.kelly*100).toFixed(1)}<span style="font-size:14px">%</span></div>
-          <div class="mc-sub">of bankroll</div>
-        </div>
-        <div class="market-cell">
-          <div class="mc-label">NRFI Line</div>
-          <div class="mc-value tabular" style="font-size:32px">${g.market.nrfi_american > 0 ? '+' : ''}${g.market.nrfi_american}</div>
-          <div class="mc-sub">decimal ${g.market.decimal_odds.toFixed(2)}</div>
-        </div>
-      </div>
-    </div>
-    ` : ''}
 
     <div class="detail-section">
       <div class="detail-section-label">Batter NRFI Impact</div>
