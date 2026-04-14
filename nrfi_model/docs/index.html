@@ -2479,12 +2479,69 @@ function mergeResults(rl, hs) {
   };
 }
 
+function computeCalibrationFromEntries(entries) {
+  // Calibration bins: 5pp buckets from 30% to 70%
+  const edges = [];
+  for (let v = 0.30; v < 0.70; v += 0.05) edges.push(Math.round(v * 100) / 100);
+  edges.push(0.70);
+
+  const cal = [];
+  for (let i = 0; i < edges.length - 1; i++) {
+    const lo = edges[i], hi = edges[i + 1];
+    const inBin = entries.filter(e => e.p_nrfi_predicted >= lo && e.p_nrfi_predicted < hi);
+    if (inBin.length < 3) continue;
+    const meanPred = inBin.reduce((a, e) => a + e.p_nrfi_predicted, 0) / inBin.length;
+    const meanActual = inBin.filter(e => e.nrfi_actual).length / inBin.length;
+    cal.push({
+      bin: `${(lo*100).toFixed(0)}%–${(hi*100).toFixed(0)}%`,
+      lo, hi,
+      n: inBin.length,
+      predicted: meanPred,
+      actual: meanActual,
+    });
+  }
+  return cal;
+}
+
+function computeTiersFromEntries(entries) {
+  const tierDefs = [
+    ["Strong NRFI (>58%)",   e => e.p_nrfi_predicted >= 0.58],
+    ["Lean NRFI (52–58%)",   e => e.p_nrfi_predicted >= 0.52 && e.p_nrfi_predicted < 0.58],
+    ["Coin Flip (48–52%)",   e => e.p_nrfi_predicted >= 0.48 && e.p_nrfi_predicted < 0.52],
+    ["Lean RFI (42–48%)",    e => e.p_nrfi_predicted >= 0.42 && e.p_nrfi_predicted < 0.48],
+    ["Strong RFI (<42%)",    e => e.p_nrfi_predicted < 0.42],
+  ];
+  const out = [];
+  for (const [name, fn] of tierDefs) {
+    const sub = entries.filter(fn);
+    if (!sub.length) continue;
+    const meanPred = sub.reduce((a, e) => a + e.p_nrfi_predicted, 0) / sub.length;
+    const actualRate = sub.filter(e => e.nrfi_actual).length / sub.length;
+    const acc = sub.filter(e => e.correct).length / sub.length;
+    out.push({
+      tier: name,
+      n: sub.length,
+      predicted: meanPred,
+      actual_nrfi_rate: actualRate,
+      accuracy: acc,
+    });
+  }
+  return out;
+}
+
 function renderHistoricalSection() {
-  if (!HS || !HS.n_games) return '';
-  const tiers = HS.tiers || [];
+  const entries = (RL && RL.entries) || [];
+  if (!entries.length) return '';
+
+  const cal = computeCalibrationFromEntries(entries);
+  const tiers = computeTiersFromEntries(entries);
+
+  // Stash for chart renderer to consume
+  window._calData = cal;
+
   return `
     <div class="tracker-section">
-      <h3>Calibration &amp; Confidence Tiers \u2014 ${HS.n_games} backtest games</h3>
+      <h3>Calibration &amp; Confidence Tiers \u2014 ${entries.length} games</h3>
       <div class="chart-duo" style="margin-bottom:24px">
         <div class="chart-box">
           <h4>Calibration Curve <span style="color:var(--muted);font-size:11px"> \u2014 predicted vs actual NRFI rate</span></h4>
@@ -2515,10 +2572,10 @@ function renderHistoricalSection() {
 }
 
 function renderCalibrationChart() {
-  if (!HS || !HS.calibration || !HS.calibration.length) return;
+  const cal = window._calData || (HS && HS.calibration) || [];
+  if (!cal.length) return;
   const ctx = document.getElementById('calChart');
   if (!ctx) return;
-  const cal = HS.calibration;
   new Chart(ctx, {
     type: 'scatter',
     data: {
