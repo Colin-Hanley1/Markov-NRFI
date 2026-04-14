@@ -1599,33 +1599,13 @@ function openDetail(idx) {
     </div>
 
     <div class="detail-section">
-      <div class="detail-section-label">Monte Carlo Simulation</div>
-      <div class="chart-duo">
-        <div class="chart-box"><h4>Convergence \u2014 Top 1st</h4><canvas id="convChartAway"></canvas></div>
-        <div class="chart-box"><h4>Convergence \u2014 Bot 1st</h4><canvas id="convChartHome"></canvas></div>
-      </div>
-      <div class="chart-duo" style="margin-top:20px">
-        <div class="chart-box"><h4>PA Distribution \u2014 Top 1st</h4><canvas id="paChartAway"></canvas></div>
-        <div class="chart-box"><h4>PA Distribution \u2014 Bot 1st</h4><canvas id="paChartHome"></canvas></div>
-      </div>
-      <div class="chart-box" style="margin-top:20px">
-        <h4>Sample Inning Replay <span style="color:var(--muted);font-size:11px"> \u2014 click a trace to animate</span></h4>
+      <div class="detail-section-label">Sample Inning Simulation</div>
+      <div class="chart-box">
+        <h4>Click a trace to animate <span style="color:var(--muted);font-size:11px"> \u2014 batter-by-batter Markov chain replay</span></h4>
         <div id="traceContainer" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px"></div>
         <div id="traceReplay" style="min-height:240px;display:flex;align-items:center;justify-content:center">
           <span style="color:var(--muted);font-style:italic;font-family:var(--serif)">Select a trace above to watch the Markov chain play out</span>
         </div>
-      </div>
-    </div>
-
-    <div class="detail-section">
-      <div class="detail-section-label">Markov Chain Diagnostics</div>
-      <div class="chart-duo">
-        <div class="chart-box"><h4>State Visit Probabilities \u2014 Top 1st</h4><canvas id="stateChartAway"></canvas></div>
-        <div class="chart-box"><h4>State Visit Probabilities \u2014 Bot 1st</h4><canvas id="stateChartHome"></canvas></div>
-      </div>
-      <div class="chart-duo" style="margin-top:20px">
-        <div class="chart-box"><h4>Rate Sensitivity \u2014 Top 1st</h4><canvas id="sensChartAway"></canvas></div>
-        <div class="chart-box"><h4>Rate Sensitivity \u2014 Bot 1st</h4><canvas id="sensChartHome"></canvas></div>
       </div>
     </div>
 
@@ -1670,18 +1650,6 @@ function openDetail(idx) {
 
   // Render charts after DOM is ready
   setTimeout(()=>{
-    if(md.away_half) renderStateChart('stateChartAway', md.away_half);
-    if(md.home_half) renderStateChart('stateChartHome', md.home_half);
-    if(md.away_half?.sensitivity) renderSensChart('sensChartAway', md.away_half.sensitivity);
-    if(md.home_half?.sensitivity) renderSensChart('sensChartHome', md.home_half.sensitivity);
-    if(md.away_half?.simulation) {
-      renderConvergenceChart('convChartAway', md.away_half.simulation, r.p_nrfi_away_analytic);
-      renderPAChart('paChartAway', md.away_half.simulation);
-    }
-    if(md.home_half?.simulation) {
-      renderConvergenceChart('convChartHome', md.home_half.simulation, r.p_nrfi_home_analytic);
-      renderPAChart('paChartHome', md.home_half.simulation);
-    }
     if(md.away_half?.transition_matrix) renderHeatmap('heatAway', 'tipAway', md.away_half);
     if(md.home_half?.transition_matrix) renderHeatmap('heatHome', 'tipHome', md.home_half);
     renderTraceButtons();
@@ -2419,47 +2387,83 @@ function loadResultsTracker() {
     fetch('data/results_log.json').then(r => r.json()).catch(() => null),
     fetch('data/historical_stats.json').then(r => r.json()).catch(() => null),
   ]).then(([rl, hs]) => {
-    RL = rl || { entries: [], cumulative: {}, daily: [] };
     HS = hs;
+    RL = mergeResults(rl, hs);
     renderResultsTracker();
   }).catch(() => {
     document.getElementById('resultsTracker').innerHTML = '<div class="empty"><h2>No results yet</h2><p>Results will populate as games resolve their first innings.</p></div>';
   });
 }
 
+function mergeResults(rl, hs) {
+  // Merge live entries (results_log.json) with historical entries (historical_stats.json).
+  // Live takes precedence on duplicates. Recompute cumulative + daily from the union.
+  const liveEntries = (rl && rl.entries) || [];
+  const histEntries = (hs && hs.entries) || [];
+
+  const seen = new Set(liveEntries.map(e => e.game_id));
+  const merged = [...liveEntries, ...histEntries.filter(e => !seen.has(e.game_id))];
+
+  if (!merged.length) {
+    return { entries: [], cumulative: {}, daily: [] };
+  }
+
+  // Sort by date ascending
+  merged.sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
+
+  // Cumulative stats
+  const n = merged.length;
+  const yTrue = merged.map(e => e.nrfi_actual ? 1 : 0);
+  const yPred = merged.map(e => e.p_nrfi_predicted);
+  const correctCount = merged.filter(e => e.correct).length;
+
+  const actualRate = yTrue.reduce((a, b) => a + b, 0) / n;
+  const meanPred = yPred.reduce((a, b) => a + b, 0) / n;
+  const brier = yPred.reduce((acc, p, i) => acc + (p - yTrue[i]) ** 2, 0) / n;
+  const brierNaive = yTrue.reduce((acc, y) => acc + (actualRate - y) ** 2, 0) / n;
+  const bss = brierNaive > 0 ? 1 - brier / brierNaive : 0;
+  const eps = 1e-7;
+  const logLoss = -yPred.reduce((acc, p, i) => {
+    const pc = Math.min(1 - eps, Math.max(eps, p));
+    return acc + yTrue[i] * Math.log(pc) + (1 - yTrue[i]) * Math.log(1 - pc);
+  }, 0) / n;
+  const accuracy = correctCount / n;
+
+  // Daily breakdown
+  const byDate = {};
+  for (const e of merged) {
+    if (!byDate[e.date]) byDate[e.date] = { date: e.date, n_games: 0, correct: 0, nrfi_count: 0 };
+    byDate[e.date].n_games++;
+    if (e.correct) byDate[e.date].correct++;
+    if (e.nrfi_actual) byDate[e.date].nrfi_count++;
+  }
+  const daily = Object.values(byDate).sort((a, b) => a.date.localeCompare(b.date));
+  for (const d of daily) d.accuracy = d.correct / d.n_games;
+
+  return {
+    entries: merged,
+    cumulative: {
+      n_games: n,
+      accuracy: accuracy,
+      brier_score: brier,
+      brier_skill_score: bss,
+      log_loss: logLoss,
+      actual_nrfi_rate: actualRate,
+      mean_predicted: meanPred,
+    },
+    daily,
+  };
+}
+
 function renderHistoricalSection() {
   if (!HS || !HS.n_games) return '';
   const tiers = HS.tiers || [];
-  const cal = HS.calibration || [];
   return `
     <div class="tracker-section">
-      <h3>Historical Backtest \u2014 ${HS.n_games} Games (${HS.date_range[0]} to ${HS.date_range[1]})</h3>
-      <div class="results-grid">
-        <div class="stat-cell feature">
-          <div class="stat-label">Brier Score</div>
-          <div class="stat-value tabular">${HS.brier_score?.toFixed(4) || '\u2014'}</div>
-          <div class="stat-sub">vs naive ${HS.brier_skill_score >= 0 ? '+' : ''}${(HS.brier_skill_score * 100).toFixed(1)}%</div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-label">Log Loss</div>
-          <div class="stat-value tabular">${HS.log_loss?.toFixed(4) || '\u2014'}</div>
-          <div class="stat-sub">cross-entropy</div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-label">Accuracy</div>
-          <div class="stat-value tabular ${HS.accuracy >= .55 ? 'prob-high' : HS.accuracy >= .48 ? 'prob-mid' : 'prob-low'}">${(HS.accuracy * 100).toFixed(1)}<span class="unit">%</span></div>
-          <div class="stat-sub">at 50% threshold</div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-label">Actual Rate</div>
-          <div class="stat-value tabular">${pS(HS.actual_nrfi_rate)}<span class="unit">%</span></div>
-          <div class="stat-sub">${HS.n_games} games</div>
-        </div>
-      </div>
-
+      <h3>Calibration &amp; Confidence Tiers \u2014 ${HS.n_games} backtest games</h3>
       <div class="chart-duo" style="margin-bottom:24px">
         <div class="chart-box">
-          <h4>Calibration Curve</h4>
+          <h4>Calibration Curve <span style="color:var(--muted);font-size:11px"> \u2014 predicted vs actual NRFI rate</span></h4>
           <canvas id="calChart" height="220"></canvas>
         </div>
         <div class="chart-box">

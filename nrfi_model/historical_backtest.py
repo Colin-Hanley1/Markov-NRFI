@@ -158,6 +158,7 @@ def main():
     print(f"  {len(games)} completed games", flush=True)
 
     results = []
+    entries = []
     for i, g in enumerate(games):
         if (i + 1) % 25 == 0:
             print(f"  {i+1}/{len(games)} processed", flush=True)
@@ -166,12 +167,25 @@ def main():
             continue
         try:
             home_abbr = TEAM_ABBREVS.get(g["home_id"], "???")
+            away_abbr = TEAM_ABBREVS.get(g["away_id"], "???")
             mr = run_model(gd, home_abbr, data)
             results.append({
                 "date": g["date"],
                 "p_pred": mr["p_sim"],
                 "p_analytic": mr["p_analytic"],
                 "nrfi": gd["nrfi"],
+            })
+            entries.append({
+                "game_id": str(g["pk"]),
+                "date": g["date"],
+                "away_team": away_abbr,
+                "home_team": home_abbr,
+                "p_nrfi_predicted": round(mr["p_sim"], 4),
+                "nrfi_actual": gd["nrfi"],
+                "away_runs_1st": gd["ar"],
+                "home_runs_1st": gd["hr"],
+                "correct": (mr["p_sim"] >= 0.5) == gd["nrfi"],
+                "lineup_source": "historical",
             })
         except Exception:
             pass
@@ -240,6 +254,7 @@ def main():
         "accuracy": round(accuracy, 4),
         "calibration": cal,
         "tiers": tiers,
+        "entries": entries,
     }
 
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
