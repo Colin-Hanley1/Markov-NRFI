@@ -779,16 +779,28 @@
       "home_runs_1st": 0,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824693",
+      "date": "2026-04-17",
+      "away_team": "NYM",
+      "home_team": "CHC",
+      "p_nrfi_predicted": 0.5482,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 4,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 65,
-    "accuracy": 0.5846,
-    "brier_score": 0.24579,
-    "brier_skill_score": -0.0385,
-    "log_loss": 0.68493,
-    "actual_nrfi_rate": 0.3846,
-    "mean_predicted": 0.5061,
+    "n_games": 66,
+    "accuracy": 0.5758,
+    "brier_score": 0.24662,
+    "brier_skill_score": -0.0481,
+    "log_loss": 0.68659,
+    "actual_nrfi_rate": 0.3788,
+    "mean_predicted": 0.5067,
     "last_updated": "2026-04-17"
   },
   "daily": [
@@ -826,6 +838,13 @@
       "correct": 6,
       "accuracy": 0.6,
       "nrfi_count": 7
+    },
+    {
+      "date": "2026-04-17",
+      "n_games": 1,
+      "correct": 0,
+      "accuracy": 0.0,
+      "nrfi_count": 0
     }
   ]
 }
