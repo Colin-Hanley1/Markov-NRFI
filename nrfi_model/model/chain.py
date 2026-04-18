@@ -198,11 +198,12 @@ def _draw_pa_outcome(rates: PAOutcomeRates, bases: int, outs: int, rng: np.rando
     Draw a PA outcome directly from the batter's rate distribution and apply
     the deterministic transition, returning the full event detail.
     """
-    from .state import on_first, on_third, decode_state
+    from .state import on_first, on_second, on_third, decode_state
     from .transitions import (
         _transition_K, _transition_BB_HBP, _transition_HR,
         _transition_1B, _transition_2B, _transition_3B,
         _transition_LDOUT, _transition_FC,
+        ADVANCEMENT,
     )
 
     primary_probs = np.array([
@@ -222,9 +223,29 @@ def _draw_pa_outcome(rates: PAOutcomeRates, bases: int, outs: int, rng: np.rando
     elif outcome == "HR":
         nb, no, runs = _transition_HR(bases, outs)
     elif outcome == "1B":
-        nb, no, runs = _transition_1B(bases, outs)
+        # Probabilistic runner advancement
+        runs = 1 if on_third(bases) else 0
+        nb = 0b001  # batter to 1B
+        if on_second(bases):
+            if rng.random() < ADVANCEMENT["p_2b_scores_single"]:
+                runs += 1
+            else:
+                nb |= 0b100  # runner to 3B
+        if on_first(bases):
+            if rng.random() < ADVANCEMENT["p_1b_to_3b_single"]:
+                nb |= 0b100
+            else:
+                nb |= 0b010
+        no = outs
     elif outcome == "2B":
-        nb, no, runs = _transition_2B(bases, outs)
+        runs = (1 if on_second(bases) else 0) + (1 if on_third(bases) else 0)
+        nb = 0b010  # batter to 2B
+        if on_first(bases):
+            if rng.random() < ADVANCEMENT["p_1b_scores_double"]:
+                runs += 1
+            else:
+                nb |= 0b100
+        no = outs
     elif outcome == "3B":
         nb, no, runs = _transition_3B(bases, outs)
     elif outcome == "GBOUT":

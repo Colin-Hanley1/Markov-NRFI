@@ -25,6 +25,12 @@ CURRENT_SEASON = int(sys.argv[1]) if len(sys.argv) > 1 else 2026
 AIR_OUT_FB_FRAC = 0.80
 FC_FRAC_OF_GBOUT = 0.06
 
+# Recency weights (must match build_profiles.RECENCY_WEIGHTS). When updating
+# an existing profile we scale the new season's contribution so the recency
+# scheme established during the full rebuild is preserved.
+RECENCY_WEIGHTS = {2024: 1.0, 2025: 2.0, 2026: 5.0}
+_NEW_SEASON_WEIGHT = RECENCY_WEIGHTS.get(CURRENT_SEASON, 1.0)
+
 PITCHER_COLS = [
     "pitcher_id", "name", "team", "hand", "pa",
     "k_rate", "bb_rate", "hbp_rate", "hr_rate",
@@ -173,9 +179,9 @@ def main():
             pid_str = str(pid)
 
             if pid_str in old_pitchers.index:
-                # Weighted merge: old profile (prior years) + new season
+                # Weighted merge with recency scale on new season
                 old_pa = float(old_pitchers.loc[pid_str].get("pa", 0))
-                new_pa = rates["pa"]
+                new_pa = rates["pa"] * _NEW_SEASON_WEIGHT
                 total_pa = old_pa + new_pa
                 if total_pa > 0:
                     w_old = old_pa / total_pa
@@ -229,7 +235,7 @@ def main():
 
             if pid_str in old_batters.index:
                 old_pa = float(old_batters.loc[pid_str].get("pa", 0))
-                new_pa = rates["pa"]
+                new_pa = rates["pa"] * _NEW_SEASON_WEIGHT
                 total_pa = old_pa + new_pa
                 if total_pa > 0:
                     w_old = old_pa / total_pa

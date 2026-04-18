@@ -23,6 +23,11 @@ MLB_API = "https://statsapi.mlb.com/api/v1"
 
 SEASONS = [2024, 2025, 2026]
 
+# Recency weights applied to each season's counting stats before aggregation.
+# Higher weights for more recent seasons let profiles track current trends.
+# Default: linear (2024: 1x, 2025: 2x, 2026: 3x).
+RECENCY_WEIGHTS = {2024: 1.0, 2025: 2.0, 2026: 5.0}
+
 # Fraction of air outs that are fly ball outs vs line drive outs
 AIR_OUT_FB_FRAC = 0.80
 AIR_OUT_LD_FRAC = 0.20
@@ -107,13 +112,18 @@ def get_multi_season_hitting(player_id: int) -> List[dict]:
 
 
 def aggregate_counting_stats(season_stats: List[dict], count_keys: List[str]) -> dict:
-    """Sum counting stats across multiple seasons."""
-    totals = {k: 0 for k in count_keys}
+    """
+    Sum counting stats across seasons, scaled by RECENCY_WEIGHTS.
+    More recent seasons contribute proportionally more to the blended profile.
+    """
+    totals = {k: 0.0 for k in count_keys}
     seasons_found = []
     for s in season_stats:
-        seasons_found.append(s.get("_season", "?"))
+        season = s.get("_season", 0)
+        w = RECENCY_WEIGHTS.get(season, 1.0)
+        seasons_found.append(season)
         for k in count_keys:
-            totals[k] += int(s.get(k, 0))
+            totals[k] += float(s.get(k, 0)) * w
     totals["_seasons"] = seasons_found
     return totals
 

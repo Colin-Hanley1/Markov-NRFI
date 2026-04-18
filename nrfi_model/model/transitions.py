@@ -13,6 +13,29 @@ from .outcomes import PAOutcomeRates
 
 
 # ---------------------------------------------------------------------------
+# Probabilistic runner-advancement parameters.
+#
+# These replace the old deterministic "runner on 2B always scores on single,
+# runner on 1B never scores on double" assumptions with league-average rates.
+# Values are module-level so the parameter sweep can patch them before
+# running the backtest.
+# ---------------------------------------------------------------------------
+
+ADVANCEMENT = {
+    "p_2b_scores_single":    0.70,  # runner on 2B, single hit → scores
+    "p_1b_scores_double":    0.50,  # runner on 1B, double hit → scores
+    "p_1b_to_3b_single":     0.30,  # runner on 1B, single hit → goes to 3B (vs 2B)
+}
+
+
+def set_advancement(**params):
+    """Update runner-advancement parameters in place (used by param sweep)."""
+    for k, v in params.items():
+        if k in ADVANCEMENT:
+            ADVANCEMENT[k] = v
+
+
+# ---------------------------------------------------------------------------
 # Low-level transition functions
 # Each returns (new_bases, new_outs, runs_scored).
 # new_outs == 3 signals end of inning.
@@ -263,13 +286,69 @@ def build_transition_row(
     nb, no, r = _transition_HR(bases, outs)
     _apply(rates.hr_rate, nb, no, r)
 
-    # ---- Single ----
-    nb, no, r = _transition_1B(bases, outs)
-    _apply(rates.single_rate, nb, no, r)
+    # ---- Single — probabilistic branching on runner advancement ----
+    p_1b = rates.single_rate
+    if p_1b > 0:
+        p_2b_scores = ADVANCEMENT["p_2b_scores_single"]
+        p_1b_to_3b  = ADVANCEMENT["p_1b_to_3b_single"]
 
-    # ---- Double ----
-    nb, no, r = _transition_2B(bases, outs)
-    _apply(rates.double_rate, nb, no, r)
+        # Base: batter reaches 1B. Runner on 3B always scores.
+        # Compute each branch explicitly.
+        r3b_scores = on_third(bases)
+        base_runs = 1 if r3b_scores else 0
+
+        # Enumerate branches: (prob, runs, bases_after)
+        # Keep 2B-runner and 1B-runner fates orthogonal (independent).
+        # 2B-runner fate (if present)
+        branches_2b = [(1.0, 0, 0)]  # (prob, runs_added, bases_bit_set)
+        if on_second(bases):
+            branches_2b = [
+                (p_2b_scores,    1, 0),          # scores
+                (1 - p_2b_scores, 0, 0b100),     # ends at 3B
+            ]
+
+        # 1B-runner fate (if present)
+        branches_1b = [(1.0, 0, 0)]
+        if on_first(bases):
+            branches_1b = [
+                (1 - p_1b_to_3b, 0, 0b010),  # 1B → 2B
+                (p_1b_to_3b,     0, 0b100),  # 1B → 3B (first-to-third)
+            ]
+
+        # Batter to 1B always
+        batter_bit = 0b001
+
+        for p2, r2, nb2 in branches_2b:
+            for p1, r1, nb1 in branches_1b:
+                prob_branch = p_1b * p2 * p1
+                if prob_branch <= 0: continue
+                runs = base_runs + r2 + r1
+                new_bases = batter_bit | nb1 | nb2
+                # If two runners both end up at 3B, cap at one (shouldn't happen often)
+                _apply(prob_branch, new_bases, outs, runs)
+
+    # ---- Double — probabilistic branching on runner-from-1B scoring ----
+    p_2b = rates.double_rate
+    if p_2b > 0:
+        p_1b_scores = ADVANCEMENT["p_1b_scores_double"]
+
+        # Runner on 2B always scores, runner on 3B always scores.
+        # Batter always ends up at 2B.
+        base_runs = (1 if on_second(bases) else 0) + (1 if on_third(bases) else 0)
+
+        branches_1b = [(1.0, 0, 0)]
+        if on_first(bases):
+            branches_1b = [
+                (p_1b_scores,    1, 0),         # scores
+                (1 - p_1b_scores, 0, 0b100),    # ends at 3B
+            ]
+
+        for p1, r1, nb1 in branches_1b:
+            prob_branch = p_2b * p1
+            if prob_branch <= 0: continue
+            runs = base_runs + r1
+            new_bases = 0b010 | nb1  # batter on 2B
+            _apply(prob_branch, new_bases, outs, runs)
 
     # ---- Triple ----
     nb, no, r = _transition_3B(bases, outs)
