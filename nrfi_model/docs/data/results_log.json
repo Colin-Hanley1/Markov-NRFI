@@ -1283,16 +1283,40 @@
       "home_runs_1st": 1,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "825100",
+      "date": "2026-04-19",
+      "away_team": "TOR",
+      "home_team": "ARI",
+      "p_nrfi_predicted": 0.5684,
+      "nrfi_actual": false,
+      "away_runs_1st": 8,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "824777",
+      "date": "2026-04-19",
+      "away_team": "DET",
+      "home_team": "BOS",
+      "p_nrfi_predicted": 0.5637,
+      "nrfi_actual": false,
+      "away_runs_1st": 1,
+      "home_runs_1st": 1,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 107,
-    "accuracy": 0.5701,
-    "brier_score": 0.2507,
-    "brier_skill_score": -0.0178,
-    "log_loss": 0.69499,
-    "actual_nrfi_rate": 0.4393,
-    "mean_predicted": 0.5097,
+    "n_games": 109,
+    "accuracy": 0.5596,
+    "brier_score": 0.25198,
+    "brier_skill_score": -0.0274,
+    "log_loss": 0.69756,
+    "actual_nrfi_rate": 0.4312,
+    "mean_predicted": 0.5108,
     "last_updated": "2026-04-19"
   },
   "daily": [
@@ -1347,9 +1371,9 @@
     },
     {
       "date": "2026-04-19",
-      "n_games": 12,
+      "n_games": 14,
       "correct": 5,
-      "accuracy": 0.4167,
+      "accuracy": 0.3571,
       "nrfi_count": 6
     }
   ]
