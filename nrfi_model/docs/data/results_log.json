@@ -1223,16 +1223,28 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824371",
+      "date": "2026-04-19",
+      "away_team": "LAD",
+      "home_team": "COL",
+      "p_nrfi_predicted": 0.3159,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 102,
-    "accuracy": 0.5882,
-    "brier_score": 0.24573,
-    "brier_skill_score": 0.0033,
-    "log_loss": 0.68474,
-    "actual_nrfi_rate": 0.4412,
-    "mean_predicted": 0.5119,
+    "n_games": 103,
+    "accuracy": 0.5825,
+    "brier_score": 0.24788,
+    "brier_skill_score": -0.003,
+    "log_loss": 0.68928,
+    "actual_nrfi_rate": 0.4466,
+    "mean_predicted": 0.51,
     "last_updated": "2026-04-19"
   },
   "daily": [
@@ -1287,10 +1299,10 @@
     },
     {
       "date": "2026-04-19",
-      "n_games": 7,
+      "n_games": 8,
       "correct": 4,
-      "accuracy": 0.5714,
-      "nrfi_count": 4
+      "accuracy": 0.5,
+      "nrfi_count": 5
     }
   ]
 }
