@@ -1655,16 +1655,28 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824123",
+      "date": "2026-04-22",
+      "away_team": "BAL",
+      "home_team": "KC",
+      "p_nrfi_predicted": 0.5732,
+      "nrfi_actual": false,
+      "away_runs_1st": 2,
+      "home_runs_1st": 1,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 138,
-    "accuracy": 0.5725,
-    "brier_score": 0.2513,
-    "brier_skill_score": -0.0226,
-    "log_loss": 0.69638,
-    "actual_nrfi_rate": 0.4348,
-    "mean_predicted": 0.5146,
+    "n_games": 139,
+    "accuracy": 0.5683,
+    "brier_score": 0.25185,
+    "brier_skill_score": -0.0266,
+    "log_loss": 0.69749,
+    "actual_nrfi_rate": 0.4317,
+    "mean_predicted": 0.515,
     "last_updated": "2026-04-22"
   },
   "daily": [
@@ -1740,9 +1752,9 @@
     },
     {
       "date": "2026-04-22",
-      "n_games": 3,
+      "n_games": 4,
       "correct": 3,
-      "accuracy": 1.0,
+      "accuracy": 0.75,
       "nrfi_count": 2
     }
   ]
