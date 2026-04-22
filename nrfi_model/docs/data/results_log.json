@@ -1523,17 +1523,65 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824127",
+      "date": "2026-04-21",
+      "away_team": "BAL",
+      "home_team": "KC",
+      "p_nrfi_predicted": 0.5559,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "824690",
+      "date": "2026-04-21",
+      "away_team": "PHI",
+      "home_team": "CHC",
+      "p_nrfi_predicted": 0.4854,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "822914",
+      "date": "2026-04-21",
+      "away_team": "PIT",
+      "home_team": "TEX",
+      "p_nrfi_predicted": 0.5206,
+      "nrfi_actual": false,
+      "away_runs_1st": 1,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "824369",
+      "date": "2026-04-21",
+      "away_team": "SD",
+      "home_team": "COL",
+      "p_nrfi_predicted": 0.5028,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 127,
-    "accuracy": 0.5669,
-    "brier_score": 0.25265,
-    "brier_skill_score": -0.0337,
-    "log_loss": 0.69915,
-    "actual_nrfi_rate": 0.4252,
-    "mean_predicted": 0.5138,
-    "last_updated": "2026-04-21"
+    "n_games": 131,
+    "accuracy": 0.5649,
+    "brier_score": 0.25242,
+    "brier_skill_score": -0.027,
+    "log_loss": 0.69866,
+    "actual_nrfi_rate": 0.4351,
+    "mean_predicted": 0.5139,
+    "last_updated": "2026-04-22"
   },
   "daily": [
     {
@@ -1601,10 +1649,10 @@
     },
     {
       "date": "2026-04-21",
-      "n_games": 7,
-      "correct": 5,
-      "accuracy": 0.7143,
-      "nrfi_count": 3
+      "n_games": 11,
+      "correct": 7,
+      "accuracy": 0.6364,
+      "nrfi_count": 6
     }
   ]
 }
