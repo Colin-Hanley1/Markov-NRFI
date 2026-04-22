@@ -1679,16 +1679,28 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823147",
+      "date": "2026-04-22",
+      "away_team": "OAK",
+      "home_team": "SEA",
+      "p_nrfi_predicted": 0.5064,
+      "nrfi_actual": false,
+      "away_runs_1st": 2,
+      "home_runs_1st": 1,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 140,
-    "accuracy": 0.5714,
-    "brier_score": 0.25143,
-    "brier_skill_score": -0.0226,
-    "log_loss": 0.69665,
-    "actual_nrfi_rate": 0.4357,
-    "mean_predicted": 0.5153,
+    "n_games": 141,
+    "accuracy": 0.5674,
+    "brier_score": 0.25147,
+    "brier_skill_score": -0.0245,
+    "log_loss": 0.69672,
+    "actual_nrfi_rate": 0.4326,
+    "mean_predicted": 0.5152,
     "last_updated": "2026-04-22"
   },
   "daily": [
@@ -1764,9 +1776,9 @@
     },
     {
       "date": "2026-04-22",
-      "n_games": 5,
+      "n_games": 6,
       "correct": 4,
-      "accuracy": 0.8,
+      "accuracy": 0.6667,
       "nrfi_count": 3
     }
   ]
