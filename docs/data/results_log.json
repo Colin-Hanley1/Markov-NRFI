@@ -1619,16 +1619,28 @@
       "home_runs_1st": 3,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823878",
+      "date": "2026-04-22",
+      "away_team": "STL",
+      "home_team": "MIA",
+      "p_nrfi_predicted": 0.6181,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 135,
-    "accuracy": 0.563,
-    "brier_score": 0.25278,
-    "brier_skill_score": -0.0315,
-    "log_loss": 0.69939,
-    "actual_nrfi_rate": 0.4296,
-    "mean_predicted": 0.5137,
+    "n_games": 136,
+    "accuracy": 0.5662,
+    "brier_score": 0.25199,
+    "brier_skill_score": -0.0259,
+    "log_loss": 0.69778,
+    "actual_nrfi_rate": 0.4338,
+    "mean_predicted": 0.5144,
     "last_updated": "2026-04-22"
   },
   "daily": [
@@ -1701,6 +1713,13 @@
       "correct": 9,
       "accuracy": 0.6,
       "nrfi_count": 7
+    },
+    {
+      "date": "2026-04-22",
+      "n_games": 1,
+      "correct": 1,
+      "accuracy": 1.0,
+      "nrfi_count": 1
     }
   ]
 }
