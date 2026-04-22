@@ -1691,16 +1691,64 @@
       "home_runs_1st": 1,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824286",
+      "date": "2026-04-22",
+      "away_team": "MIL",
+      "home_team": "DET",
+      "p_nrfi_predicted": 0.5434,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "822748",
+      "date": "2026-04-22",
+      "away_team": "ATL",
+      "home_team": "WSH",
+      "p_nrfi_predicted": 0.4018,
+      "nrfi_actual": false,
+      "away_runs_1st": 1,
+      "home_runs_1st": 4,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "824774",
+      "date": "2026-04-22",
+      "away_team": "NYY",
+      "home_team": "BOS",
+      "p_nrfi_predicted": 0.5527,
+      "nrfi_actual": false,
+      "away_runs_1st": 3,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823641",
+      "date": "2026-04-22",
+      "away_team": "MIN",
+      "home_team": "NYM",
+      "p_nrfi_predicted": 0.5778,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 1,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 141,
-    "accuracy": 0.5674,
-    "brier_score": 0.25147,
-    "brier_skill_score": -0.0245,
-    "log_loss": 0.69672,
-    "actual_nrfi_rate": 0.4326,
-    "mean_predicted": 0.5152,
+    "n_games": 145,
+    "accuracy": 0.5655,
+    "brier_score": 0.25149,
+    "brier_skill_score": -0.0275,
+    "log_loss": 0.69674,
+    "actual_nrfi_rate": 0.4276,
+    "mean_predicted": 0.5153,
     "last_updated": "2026-04-22"
   },
   "daily": [
@@ -1776,10 +1824,10 @@
     },
     {
       "date": "2026-04-22",
-      "n_games": 6,
-      "correct": 4,
-      "accuracy": 0.6667,
-      "nrfi_count": 3
+      "n_games": 10,
+      "correct": 6,
+      "accuracy": 0.6,
+      "nrfi_count": 4
     }
   ]
 }
