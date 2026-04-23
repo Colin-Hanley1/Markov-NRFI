@@ -1775,16 +1775,40 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "825097",
+      "date": "2026-04-22",
+      "away_team": "CWS",
+      "home_team": "ARI",
+      "p_nrfi_predicted": 0.492,
+      "nrfi_actual": false,
+      "away_runs_1st": 2,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823231",
+      "date": "2026-04-22",
+      "away_team": "LAD",
+      "home_team": "SF",
+      "p_nrfi_predicted": 0.4967,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 148,
-    "accuracy": 0.5676,
-    "brier_score": 0.25086,
-    "brier_skill_score": -0.0306,
-    "log_loss": 0.69544,
-    "actual_nrfi_rate": 0.4189,
-    "mean_predicted": 0.5143,
+    "n_games": 150,
+    "accuracy": 0.5667,
+    "brier_score": 0.25082,
+    "brier_skill_score": -0.0296,
+    "log_loss": 0.69535,
+    "actual_nrfi_rate": 0.42,
+    "mean_predicted": 0.514,
     "last_updated": "2026-04-23"
   },
   "daily": [
@@ -1860,10 +1884,10 @@
     },
     {
       "date": "2026-04-22",
-      "n_games": 13,
-      "correct": 8,
-      "accuracy": 0.6154,
-      "nrfi_count": 4
+      "n_games": 15,
+      "correct": 9,
+      "accuracy": 0.6,
+      "nrfi_count": 5
     }
   ]
 }
