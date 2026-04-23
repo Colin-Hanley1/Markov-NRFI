@@ -1883,16 +1883,28 @@
       "home_runs_1st": 0,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823639",
+      "date": "2026-04-23",
+      "away_team": "MIN",
+      "home_team": "NYM",
+      "p_nrfi_predicted": 0.555,
+      "nrfi_actual": false,
+      "away_runs_1st": 1,
+      "home_runs_1st": 3,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 157,
-    "accuracy": 0.5732,
-    "brier_score": 0.25022,
-    "brier_skill_score": -0.0269,
-    "log_loss": 0.69412,
-    "actual_nrfi_rate": 0.4204,
-    "mean_predicted": 0.5129,
+    "n_games": 158,
+    "accuracy": 0.5696,
+    "brier_score": 0.25059,
+    "brier_skill_score": -0.0302,
+    "log_loss": 0.69485,
+    "actual_nrfi_rate": 0.4177,
+    "mean_predicted": 0.5131,
     "last_updated": "2026-04-23"
   },
   "daily": [
@@ -1975,9 +1987,9 @@
     },
     {
       "date": "2026-04-23",
-      "n_games": 7,
+      "n_games": 8,
       "correct": 5,
-      "accuracy": 0.7143,
+      "accuracy": 0.625,
       "nrfi_count": 3
     }
   ]
