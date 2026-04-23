@@ -1739,17 +1739,53 @@
       "home_runs_1st": 1,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824688",
+      "date": "2026-04-22",
+      "away_team": "PHI",
+      "home_team": "CHC",
+      "p_nrfi_predicted": 0.4479,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 1,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "822913",
+      "date": "2026-04-22",
+      "away_team": "PIT",
+      "home_team": "TEX",
+      "p_nrfi_predicted": 0.5647,
+      "nrfi_actual": false,
+      "away_runs_1st": 1,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "824367",
+      "date": "2026-04-22",
+      "away_team": "SD",
+      "home_team": "COL",
+      "p_nrfi_predicted": 0.3764,
+      "nrfi_actual": false,
+      "away_runs_1st": 1,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 145,
-    "accuracy": 0.5655,
-    "brier_score": 0.25149,
-    "brier_skill_score": -0.0275,
-    "log_loss": 0.69674,
-    "actual_nrfi_rate": 0.4276,
-    "mean_predicted": 0.5153,
-    "last_updated": "2026-04-22"
+    "n_games": 148,
+    "accuracy": 0.5676,
+    "brier_score": 0.25086,
+    "brier_skill_score": -0.0306,
+    "log_loss": 0.69544,
+    "actual_nrfi_rate": 0.4189,
+    "mean_predicted": 0.5143,
+    "last_updated": "2026-04-23"
   },
   "daily": [
     {
@@ -1824,9 +1860,9 @@
     },
     {
       "date": "2026-04-22",
-      "n_games": 10,
-      "correct": 6,
-      "accuracy": 0.6,
+      "n_games": 13,
+      "correct": 8,
+      "accuracy": 0.6154,
       "nrfi_count": 4
     }
   ]
