@@ -688,6 +688,60 @@
       max-height: 200px;
     }
 
+    /* ═══ PITCHER SPLITS ═══ */
+    .splits-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .splits-card {
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      padding: 14px 16px;
+    }
+    .splits-card h4 {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--ink);
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .splits-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+    }
+    .splits-table th {
+      text-align: left;
+      color: var(--muted);
+      font-weight: 600;
+      padding: 4px 6px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-size: 9px;
+    }
+    .splits-table td {
+      padding: 5px 6px;
+      border-bottom: 1px dashed var(--rule);
+    }
+    .splits-table tr:last-child td { border-bottom: none; }
+    .splits-table .row-label {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 12px;
+      color: var(--ink);
+      font-weight: 500;
+    }
+    .splits-table .pa-cell { color: var(--muted); font-size: 9px; }
+    .splits-table .delta-up   { color: var(--accent); font-weight: 700; }
+    .splits-table .delta-down { color: var(--moss);   font-weight: 700; }
+    .splits-table .delta-neutral { color: var(--muted); }
+
     /* ═══ HEATMAP ═══ */
     .heatmap-wrap {
       position: relative;
@@ -1525,6 +1579,19 @@ function openDetail(idx) {
       </div>
     </div>
 
+    ${(p.away.first_inning || p.away.vs_R || p.home.first_inning || p.home.vs_R) ? `
+    <div class="detail-section">
+      <div class="detail-section-label">Pitcher Splits Breakdown</div>
+      <div class="splits-grid">
+        ${renderPitcherSplits(p.home, 'Home SP — ' + p.home.name)}
+        ${renderPitcherSplits(p.away, 'Away SP — ' + p.away.name)}
+      </div>
+      <p style="font-size:11px;color:var(--muted);font-style:italic;margin-top:10px;line-height:1.6">
+        The model substitutes each pitcher's actual L/R split (when batter hand matches) and blends in 1st-inning rates (40% weight). Highlighted cells show meaningful deviations from season average.
+      </p>
+    </div>
+    ` : ''}
+
     <div class="detail-section">
       <div class="detail-section-label">Batter NRFI Impact</div>
       <div class="chart-duo">
@@ -1607,9 +1674,63 @@ function renderImpactBars(lineup) {
   }).join('');
 }
 
+function renderPitcherSplits(p, title) {
+  if (!p) return '';
+  const season = { k_rate: p.k_rate, hr_rate: p.hr_rate, bb_rate: p.bb_rate, label: 'Season', pa: null };
+  const rows = [season];
+  if (p.first_inning) rows.push({ ...p.first_inning, label: '1st Inning Only' });
+  if (p.vs_R)         rows.push({ ...p.vs_R,         label: 'vs RHB' });
+  if (p.vs_L)         rows.push({ ...p.vs_L,         label: 'vs LHB' });
+
+  const fmt = (v) => v == null ? '—' : pS(v) + '%';
+  const delta = (split, base) => {
+    if (split == null || base == null || split === base) return 'delta-neutral';
+    const diff = split - base;
+    return diff > 0 ? 'delta-up' : 'delta-down';
+  };
+  const arrow = (split, base) => {
+    if (split == null || base == null) return '';
+    const diff = split - base;
+    if (Math.abs(diff) < 0.01) return '';
+    return diff > 0 ? ' ▲' : ' ▼';
+  };
+
+  return `<div class="splits-card">
+    <h4>${title}</h4>
+    <table class="splits-table">
+      <thead><tr><th>Split</th><th>K%</th><th>BB%</th><th>HR%</th><th>PA</th></tr></thead>
+      <tbody>
+      ${rows.map((r, i) => {
+        const isBase = i === 0;
+        const k_cls  = isBase ? '' : delta(r.k_rate, season.k_rate);
+        const bb_cls = isBase ? '' : delta(r.bb_rate, season.bb_rate);
+        const hr_cls = isBase ? '' : delta(r.hr_rate, season.hr_rate);
+        return `<tr>
+          <td class="row-label">${r.label}</td>
+          <td class="${k_cls}">${fmt(r.k_rate)}${isBase ? '' : arrow(r.k_rate, season.k_rate)}</td>
+          <td class="${bb_cls}">${fmt(r.bb_rate)}${isBase ? '' : arrow(r.bb_rate, season.bb_rate)}</td>
+          <td class="${hr_cls}">${fmt(r.hr_rate)}${isBase ? '' : arrow(r.hr_rate, season.hr_rate)}</td>
+          <td class="pa-cell">${r.pa != null ? r.pa : '—'}</td>
+        </tr>`;
+      }).join('')}
+      </tbody>
+    </table>
+  </div>`;
+}
+
 function renderLineupTable(lineup) {
   if(!lineup) return '';
-  return `<table class="lt"><tr><th>#</th><th>Batter</th><th>B</th><th>K%</th><th>HR%</th><th>BB%</th></tr>${lineup.map((b,i)=>`<tr><td>${i+1}</td><td>${b.name}</td><td>${b.hand}</td><td>${pS(b.k_rate)}</td><td>${pS(b.hr_rate)}</td><td>${pS(b.bb_rate)}</td></tr>`).join('')}</table>`;
+  const renderPlatoon = (b) => {
+    const sp = b.platoon_split;
+    const vs = b.platoon_vs || '?';
+    if (!sp) return `<span style="color:var(--rule)">—</span>`;
+    const parts = [];
+    if (sp.k_rate != null)  parts.push(`K ${pS(sp.k_rate)}`);
+    if (sp.hr_rate != null) parts.push(`HR ${pS(sp.hr_rate)}`);
+    if (sp.bb_rate != null) parts.push(`BB ${pS(sp.bb_rate)}`);
+    return `<span style="color:var(--ink)" title="vs ${vs}HP, ${sp.pa} PA">v${vs}: ${parts.join(' / ')}</span>`;
+  };
+  return `<table class="lt"><tr><th>#</th><th>Batter</th><th>B</th><th>K%</th><th>HR%</th><th>BB%</th><th>vs SP Hand</th></tr>${lineup.map((b,i)=>`<tr><td>${i+1}</td><td>${b.name}</td><td>${b.hand}</td><td>${pS(b.k_rate)}</td><td>${pS(b.hr_rate)}</td><td>${pS(b.bb_rate)}</td><td style="font-size:9px">${renderPlatoon(b)}</td></tr>`).join('')}</table>`;
 }
 
 function chartOpts(extras = {}) {

@@ -106,6 +106,35 @@ def get_player_splits(pid, ptype, data):
     return df.loc[pid].to_dict()
 
 
+def _safe_pa(splits, prefix):
+    """Read a split's PA count safely, returning 0 on missing/NaN."""
+    if not splits:
+        return 0
+    v = splits.get(f"{prefix}pa")
+    try:
+        return int(float(v)) if v is not None else 0
+    except (ValueError, TypeError):
+        return 0
+
+
+def split_summary(splits, prefix):
+    """Return {pa, k_rate, bb_rate, hr_rate} for a given split prefix, or None."""
+    if not splits:
+        return None
+    pa = _safe_pa(splits, prefix)
+    if pa < 1:
+        return None
+    out = {"pa": pa}
+    for k in ("k_rate", "bb_rate", "hr_rate"):
+        v = splits.get(f"{prefix}{k}")
+        if v is not None:
+            try:
+                out[k] = round(float(v), 4)
+            except (ValueError, TypeError):
+                pass
+    return out if len(out) > 1 else None
+
+
 def build_rates(pitcher_row, batter_row, league, park_row,
                 pitcher_splits=None, batter_splits=None):
     blended = build_blended_rates(
@@ -165,17 +194,26 @@ def run_game_model(away_lineup, home_lineup, away_sp_id, home_sp_id, home_team, 
     home_sp_splits = get_player_splits(home_sp_id, "pitcher", data)
     away_sp_splits = get_player_splits(away_sp_id, "pitcher", data)
 
+    # Pitcher hands for split lookup direction
+    home_sp_hand = home_sp.get("hand", "R")
+    away_sp_hand = away_sp.get("hand", "R")
+
     away_rates, away_details = [], []
     for b in away_lineup:
         br = get_player_rates(b["id"], "batter", data)
         bs = get_player_splits(b["id"], "batter", data)
         away_rates.append(build_rates(home_sp, br, league, park_row,
                                       pitcher_splits=home_sp_splits, batter_splits=bs))
+        # Batter facing home pitcher: use vL_ if home_sp is L, else vR_
+        prefix = "vl_" if home_sp_hand == "L" else "vr_"
+        platoon = split_summary(bs, prefix)
         away_details.append({
             "name": br.get("name", b["name"]), "hand": br.get("hand", "?"),
             "k_rate": round(float(br.get("k_rate", 0)), 3),
             "hr_rate": round(float(br.get("hr_rate", 0)), 3),
             "bb_rate": round(float(br.get("bb_rate", 0)), 3),
+            "platoon_split": platoon,  # vs the pitcher's hand
+            "platoon_vs": home_sp_hand,
         })
 
     home_rates, home_details = [], []
@@ -184,11 +222,15 @@ def run_game_model(away_lineup, home_lineup, away_sp_id, home_sp_id, home_team, 
         bs = get_player_splits(b["id"], "batter", data)
         home_rates.append(build_rates(away_sp, br, league, park_row,
                                       pitcher_splits=away_sp_splits, batter_splits=bs))
+        prefix = "vl_" if away_sp_hand == "L" else "vr_"
+        platoon = split_summary(bs, prefix)
         home_details.append({
             "name": br.get("name", b["name"]), "hand": br.get("hand", "?"),
             "k_rate": round(float(br.get("k_rate", 0)), 3),
             "hr_rate": round(float(br.get("hr_rate", 0)), 3),
             "bb_rate": round(float(br.get("bb_rate", 0)), 3),
+            "platoon_split": platoon,
+            "platoon_vs": away_sp_hand,
         })
 
     sim = simulate_nrfi(home_rates, away_rates, n_simulations=N_SIMS, seed=42)
@@ -288,17 +330,23 @@ def run_game_model(away_lineup, home_lineup, away_sp_id, home_sp_id, home_team, 
         "pitchers": {
             "away": {
                 "id": away_sp_id,
-                "name": away_sp.get("name", "Unknown"), "hand": away_sp.get("hand", "?"),
+                "name": away_sp.get("name", "Unknown"), "hand": away_sp_hand,
                 "k_rate": round(float(away_sp.get("k_rate", 0)), 3),
                 "hr_rate": round(float(away_sp.get("hr_rate", 0)), 3),
                 "bb_rate": round(float(away_sp.get("bb_rate", 0)), 3),
+                "first_inning": split_summary(away_sp_splits, "i1_"),
+                "vs_R": split_summary(away_sp_splits, "vr_"),
+                "vs_L": split_summary(away_sp_splits, "vl_"),
             },
             "home": {
                 "id": home_sp_id,
-                "name": home_sp.get("name", "Unknown"), "hand": home_sp.get("hand", "?"),
+                "name": home_sp.get("name", "Unknown"), "hand": home_sp_hand,
                 "k_rate": round(float(home_sp.get("k_rate", 0)), 3),
                 "hr_rate": round(float(home_sp.get("hr_rate", 0)), 3),
                 "bb_rate": round(float(home_sp.get("bb_rate", 0)), 3),
+                "first_inning": split_summary(home_sp_splits, "i1_"),
+                "vs_R": split_summary(home_sp_splits, "vr_"),
+                "vs_L": split_summary(home_sp_splits, "vl_"),
             },
         },
         "park": {
