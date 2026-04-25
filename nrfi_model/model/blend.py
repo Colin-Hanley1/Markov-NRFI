@@ -114,6 +114,72 @@ def apply_platoon(
     return out
 
 
+# Weight given to first-inning split when blending with the global pitcher
+# profile. Set to 0 to disable, 1 to use only 1st-inning rates.
+FIRST_INNING_BLEND = 0.40
+
+# Minimum PA in a split for it to be trusted (otherwise fall back to global).
+MIN_SPLIT_PA = 50
+
+
+def _resolve_split_rates(
+    base_stats: Dict[str, float],
+    splits: Optional[Dict[str, float]],
+    prefix: str,
+    primary_keys: list,
+) -> Dict[str, float]:
+    """
+    If `splits` contains rates with the given prefix and meets MIN_SPLIT_PA,
+    return a copy of base_stats with those rates substituted in. Otherwise
+    return base_stats unchanged.
+    """
+    if not splits:
+        return base_stats
+    pa = splits.get(f"{prefix}pa", 0)
+    if pa < MIN_SPLIT_PA:
+        return base_stats
+    out = dict(base_stats)
+    for k in primary_keys:
+        sk = f"{prefix}{k}"
+        if sk in splits and splits[sk] is not None:
+            try:
+                v = float(splits[sk])
+                if v >= 0:
+                    out[k] = v
+            except (TypeError, ValueError):
+                pass
+    return out
+
+
+def _blend_first_inning(
+    pitcher_stats: Dict[str, float],
+    pitcher_splits: Optional[Dict[str, float]],
+    primary_keys: list,
+) -> Dict[str, float]:
+    """
+    Blend the pitcher's 1st-inning rates with their global rates.
+    Uses FIRST_INNING_BLEND as the weight on the 1st-inning sample.
+    """
+    if not pitcher_splits or FIRST_INNING_BLEND <= 0:
+        return pitcher_stats
+    pa = pitcher_splits.get("i1_pa", 0)
+    if pa < MIN_SPLIT_PA:
+        return pitcher_stats
+    # Effective weight scales with sample reliability
+    w = FIRST_INNING_BLEND * min(1.0, pa / 200.0)
+    out = dict(pitcher_stats)
+    for k in primary_keys:
+        sk = f"i1_{k}"
+        if sk in pitcher_splits and pitcher_splits[sk] is not None:
+            try:
+                v = float(pitcher_splits[sk])
+                if v >= 0:
+                    out[k] = (1 - w) * out.get(k, 0) + w * v
+            except (TypeError, ValueError):
+                pass
+    return out
+
+
 def build_blended_rates(
     pitcher_stats:   Dict[str, float],
     batter_stats:    Dict[str, float],
@@ -122,6 +188,8 @@ def build_blended_rates(
     pitcher_hand:    str,
     batter_hand:     str,
     run_park_factor: float = 1.0,
+    pitcher_splits:  Optional[Dict[str, float]] = None,
+    batter_splits:   Optional[Dict[str, float]] = None,
 ) -> Dict[str, float]:
     """
     Full pipeline: blend all rates, apply park factor, apply platoon, normalize.
@@ -157,6 +225,17 @@ def build_blended_rates(
         'sac_bunt_prob',
     ]
 
+    # Substitute platoon-specific rates if available.
+    # Pitcher uses split corresponding to BATTER's hand (vr_ when facing R).
+    # Batter uses split corresponding to PITCHER's hand (vl_ when facing L).
+    pitcher_prefix = "vr_" if batter_hand == "R" else "vl_"
+    batter_prefix  = "vl_" if pitcher_hand == "L" else "vr_"
+    pitcher_stats = _resolve_split_rates(pitcher_stats, pitcher_splits, pitcher_prefix, PRIMARY_OUTCOMES)
+    batter_stats  = _resolve_split_rates(batter_stats,  batter_splits,  batter_prefix,  PRIMARY_OUTCOMES)
+
+    # Blend in the pitcher's 1st-inning tendencies (sample-weighted)
+    pitcher_stats = _blend_first_inning(pitcher_stats, pitcher_splits, PRIMARY_OUTCOMES)
+
     blended: Dict[str, float] = {}
 
     # Blend primary outcome rates
@@ -180,8 +259,12 @@ def build_blended_rates(
     # Park adjustment
     blended = apply_park_factor(blended, hr_park_factor, run_park_factor)
 
-    # Platoon adjustment
-    blended = apply_platoon(blended, pitcher_hand, batter_hand)
+    # Platoon adjustment — only apply hardcoded multipliers as a fallback.
+    # If real per-player splits were already substituted in above, skip this.
+    real_pitcher_split = pitcher_splits and pitcher_splits.get(f"{pitcher_prefix}pa", 0) >= MIN_SPLIT_PA
+    real_batter_split  = batter_splits  and batter_splits.get(f"{batter_prefix}pa", 0) >= MIN_SPLIT_PA
+    if not (real_pitcher_split or real_batter_split):
+        blended = apply_platoon(blended, pitcher_hand, batter_hand)
 
     # Normalize primary outcomes only (conditional rates stay as-is)
     total = sum(blended[k] for k in PRIMARY_OUTCOMES)

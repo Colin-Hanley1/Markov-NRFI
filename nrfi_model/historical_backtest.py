@@ -25,7 +25,7 @@ from model.chain import simulate_nrfi, compute_nrfi_analytic
 DATA_DIR = "data/"
 OUT_PATH = Path("docs/data/historical_stats.json")
 MLB_API = "https://statsapi.mlb.com/api/v1"
-N_SIMS = 10000  # reduced for speed across many games
+N_SIMS = 5000  # reduced for speed across many games
 
 TEAM_ABBREVS = {
     108: "LAA", 109: "ARI", 110: "BAL", 111: "BOS", 112: "CHC",
@@ -45,12 +45,23 @@ RATE_COLUMNS = [
 
 
 def load_data():
-    return {
+    out = {
         "pitchers": pd.read_csv(f"{DATA_DIR}pitchers.csv", dtype={"pitcher_id": str}).set_index("pitcher_id"),
         "batters":  pd.read_csv(f"{DATA_DIR}batters.csv",  dtype={"batter_id":  str}).set_index("batter_id"),
         "parks":    pd.read_csv(f"{DATA_DIR}park_factors.csv").set_index("team"),
         "league":   pd.read_csv(f"{DATA_DIR}league_averages.csv").iloc[0],
+        "pitcher_splits": None,
+        "batter_splits": None,
     }
+    try:
+        out["pitcher_splits"] = pd.read_csv(f"{DATA_DIR}pitcher_splits.csv", dtype={"pitcher_id": str}).set_index("pitcher_id")
+    except FileNotFoundError:
+        pass
+    try:
+        out["batter_splits"] = pd.read_csv(f"{DATA_DIR}batter_splits.csv", dtype={"batter_id": str}).set_index("batter_id")
+    except FileNotFoundError:
+        pass
+    return out
 
 
 def get_player_rates(pid, ptype, data):
@@ -65,7 +76,14 @@ def get_player_rates(pid, ptype, data):
     return fb
 
 
-def build_rates(pitcher, batter, league, park):
+def get_player_splits(pid, ptype, data):
+    df = data.get("pitcher_splits" if ptype == "pitcher" else "batter_splits")
+    if df is None or pid not in df.index:
+        return None
+    return df.loc[pid].to_dict()
+
+
+def build_rates(pitcher, batter, league, park, pitcher_splits=None, batter_splits=None):
     blended = build_blended_rates(
         pitcher_stats=pitcher, batter_stats=batter,
         league_averages=league,
@@ -73,6 +91,8 @@ def build_rates(pitcher, batter, league, park):
         pitcher_hand=pitcher.get("hand", "R"),
         batter_hand=batter.get("hand", "R"),
         run_park_factor=float(park.get("run_factor", 1.0)),
+        pitcher_splits=pitcher_splits,
+        batter_splits=batter_splits,
     )
     return PAOutcomeRates(**{k: blended.get(k, 0.0) for k in RATE_COLUMNS})
 
@@ -131,8 +151,20 @@ def run_model(gd, home_team, data):
 
     home_sp = get_player_rates(gd["home_sp"], "pitcher", data)
     away_sp = get_player_rates(gd["away_sp"], "pitcher", data)
-    away_rates = [build_rates(home_sp, get_player_rates(b, "batter", data), league, park) for b in gd["away_lineup"]]
-    home_rates = [build_rates(away_sp, get_player_rates(b, "batter", data), league, park) for b in gd["home_lineup"]]
+    home_sp_sp = get_player_splits(gd["home_sp"], "pitcher", data)
+    away_sp_sp = get_player_splits(gd["away_sp"], "pitcher", data)
+    away_rates = [
+        build_rates(home_sp, get_player_rates(b, "batter", data), league, park,
+                    pitcher_splits=home_sp_sp,
+                    batter_splits=get_player_splits(b, "batter", data))
+        for b in gd["away_lineup"]
+    ]
+    home_rates = [
+        build_rates(away_sp, get_player_rates(b, "batter", data), league, park,
+                    pitcher_splits=away_sp_sp,
+                    batter_splits=get_player_splits(b, "batter", data))
+        for b in gd["home_lineup"]
+    ]
 
     sim = simulate_nrfi(home_rates, away_rates, n_simulations=N_SIMS, seed=42)
     p_a, _ = compute_nrfi_analytic(away_rates)

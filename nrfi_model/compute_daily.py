@@ -67,7 +67,22 @@ def load_data():
     batters = pd.read_csv(f"{DATA_DIR}batters.csv", dtype={"batter_id": str}).set_index("batter_id")
     parks = pd.read_csv(f"{DATA_DIR}park_factors.csv").set_index("team")
     league = pd.read_csv(f"{DATA_DIR}league_averages.csv").iloc[0]
-    return {"pitchers": pitchers, "batters": batters, "parks": parks, "league": league}
+    # Optional splits files (1st-inning + L/R platoon)
+    pitcher_splits = None
+    batter_splits = None
+    try:
+        pitcher_splits = pd.read_csv(f"{DATA_DIR}pitcher_splits.csv", dtype={"pitcher_id": str}).set_index("pitcher_id")
+    except FileNotFoundError:
+        pass
+    try:
+        batter_splits = pd.read_csv(f"{DATA_DIR}batter_splits.csv", dtype={"batter_id": str}).set_index("batter_id")
+    except FileNotFoundError:
+        pass
+    return {
+        "pitchers": pitchers, "batters": batters,
+        "parks": parks, "league": league,
+        "pitcher_splits": pitcher_splits, "batter_splits": batter_splits,
+    }
 
 
 def get_player_rates(pid, ptype, data):
@@ -83,13 +98,24 @@ def get_player_rates(pid, ptype, data):
     return fallback
 
 
-def build_rates(pitcher_row, batter_row, league, park_row):
+def get_player_splits(pid, ptype, data):
+    """Look up splits row, or None if missing."""
+    df = data.get("pitcher_splits" if ptype == "pitcher" else "batter_splits")
+    if df is None or pid not in df.index:
+        return None
+    return df.loc[pid].to_dict()
+
+
+def build_rates(pitcher_row, batter_row, league, park_row,
+                pitcher_splits=None, batter_splits=None):
     blended = build_blended_rates(
         pitcher_stats=pitcher_row, batter_stats=batter_row,
         league_averages=league,
         hr_park_factor=float(park_row.get("hr_factor", 1.0)),
         pitcher_hand=pitcher_row.get("hand", "R"),
         batter_hand=batter_row.get("hand", "R"),
+        pitcher_splits=pitcher_splits,
+        batter_splits=batter_splits,
         run_park_factor=float(park_row.get("run_factor", 1.0)),
     )
     return PAOutcomeRates(**{k: blended.get(k, 0.0) for k in RATE_COLUMNS})
@@ -136,11 +162,15 @@ def run_game_model(away_lineup, home_lineup, away_sp_id, home_sp_id, home_team, 
 
     home_sp = get_player_rates(home_sp_id, "pitcher", data)
     away_sp = get_player_rates(away_sp_id, "pitcher", data)
+    home_sp_splits = get_player_splits(home_sp_id, "pitcher", data)
+    away_sp_splits = get_player_splits(away_sp_id, "pitcher", data)
 
     away_rates, away_details = [], []
     for b in away_lineup:
         br = get_player_rates(b["id"], "batter", data)
-        away_rates.append(build_rates(home_sp, br, league, park_row))
+        bs = get_player_splits(b["id"], "batter", data)
+        away_rates.append(build_rates(home_sp, br, league, park_row,
+                                      pitcher_splits=home_sp_splits, batter_splits=bs))
         away_details.append({
             "name": br.get("name", b["name"]), "hand": br.get("hand", "?"),
             "k_rate": round(float(br.get("k_rate", 0)), 3),
@@ -151,7 +181,9 @@ def run_game_model(away_lineup, home_lineup, away_sp_id, home_sp_id, home_team, 
     home_rates, home_details = [], []
     for b in home_lineup:
         br = get_player_rates(b["id"], "batter", data)
-        home_rates.append(build_rates(away_sp, br, league, park_row))
+        bs = get_player_splits(b["id"], "batter", data)
+        home_rates.append(build_rates(away_sp, br, league, park_row,
+                                      pitcher_splits=away_sp_splits, batter_splits=bs))
         home_details.append({
             "name": br.get("name", b["name"]), "hand": br.get("hand", "?"),
             "k_rate": round(float(br.get("k_rate", 0)), 3),
