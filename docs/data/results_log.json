@@ -2087,16 +2087,28 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823070",
+      "date": "2026-04-25",
+      "away_team": "SEA",
+      "home_team": "STL",
+      "p_nrfi_predicted": 0.5512,
+      "nrfi_actual": false,
+      "away_runs_1st": 2,
+      "home_runs_1st": 2,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 174,
-    "accuracy": 0.592,
-    "brier_score": 0.24887,
-    "brier_skill_score": -0.0116,
-    "log_loss": 0.69137,
-    "actual_nrfi_rate": 0.4368,
-    "mean_predicted": 0.5145,
+    "n_games": 175,
+    "accuracy": 0.5886,
+    "brier_score": 0.24918,
+    "brier_skill_score": -0.0143,
+    "log_loss": 0.692,
+    "actual_nrfi_rate": 0.4343,
+    "mean_predicted": 0.5147,
     "last_updated": "2026-04-25"
   },
   "daily": [
@@ -2193,9 +2205,9 @@
     },
     {
       "date": "2026-04-25",
-      "n_games": 1,
+      "n_games": 2,
       "correct": 1,
-      "accuracy": 1.0,
+      "accuracy": 0.5,
       "nrfi_count": 1
     }
   ]
