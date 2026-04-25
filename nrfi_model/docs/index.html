@@ -688,6 +688,117 @@
       max-height: 200px;
     }
 
+    /* ═══ FAIR ODDS — CARD STRIP ═══ */
+    .card-fair-odds {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--rule);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      color: var(--ink-soft);
+    }
+    .card-fair-odds .fo-label {
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .card-fair-odds .fo-side {
+      flex: 1;
+      text-align: center;
+    }
+    .card-fair-odds .fo-side strong {
+      color: var(--ink);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      margin-right: 4px;
+    }
+    .card-fair-odds .fo-divider {
+      width: 1px;
+      height: 14px;
+      background: var(--rule);
+    }
+
+    /* ═══ FAIR ODDS — DETAIL STRIP ═══ */
+    .fair-odds-strip {
+      display: grid;
+      grid-template-columns: auto 1fr 1px 1fr;
+      align-items: center;
+      gap: 0 24px;
+      padding: 18px 24px;
+      margin-bottom: 28px;
+      background: var(--paper-dark);
+      border-top: 2px solid var(--ink);
+      border-bottom: 2px solid var(--ink);
+      position: relative;
+    }
+    .fos-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 700;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      align-self: stretch;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+    }
+    .fos-side {
+      text-align: center;
+    }
+    .fos-name {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .fos-num {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 44px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .fos-pct {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .fos-divider {
+      background: var(--ink);
+      height: 60%;
+      align-self: center;
+    }
+    .fos-note {
+      grid-column: 1 / -1;
+      text-align: center;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 11px;
+      color: var(--muted);
+      padding-top: 10px;
+      border-top: 1px dashed var(--rule);
+      margin-top: 14px;
+    }
+    @media (max-width: 600px) {
+      .fair-odds-strip { grid-template-columns: 1fr 1px 1fr; }
+      .fos-label { display: none; }
+      .fos-num { font-size: 36px; }
+    }
+
     /* ═══ PITCHER SPLITS ═══ */
     .splits-grid {
       display: grid;
@@ -1411,6 +1522,15 @@ let RL = {};
 
 const pC = p => p>=.55?'prob-high':p>=.48?'prob-mid':p>=.40?'prob-low':'prob-vlow';
 const pS = p => (p*100).toFixed(1);
+
+// Convert probability (0-1) to American odds. Returns string like "-125" or "+110".
+const toAmerican = (p) => {
+  if (p == null || p <= 0 || p >= 1 || isNaN(p)) return '—';
+  const odds = p >= 0.5
+    ? Math.round(-100 * p / (1 - p))
+    : Math.round(100 * (1 - p) / p);
+  return odds >= 0 ? `+${odds}` : `${odds}`;
+};
 const rnd = (n,d=1) => Number(n).toFixed(d);
 
 // Chart.js defaults for editorial aesthetic
@@ -1541,6 +1661,12 @@ function renderCards() {
       ${m?`<div class="card-halves">
         <div><span class="hv tabular ${pC(r.p_nrfi_away)}">${pS(r.p_nrfi_away)}%</span>Top 1st</div>
         <div><span class="hv tabular ${pC(r.p_nrfi_home)}">${pS(r.p_nrfi_home)}%</span>Bot 1st</div>
+      </div>
+      <div class="card-fair-odds">
+        <span class="fo-label">Fair</span>
+        <span class="fo-side"><strong>NRFI</strong> ${toAmerican(r.p_nrfi_game)}</span>
+        <span class="fo-divider"></span>
+        <span class="fo-side"><strong>YRFI</strong> ${toAmerican(1 - r.p_nrfi_game)}</span>
       </div>`:''}
     </div>`;
   }).join('');
@@ -1562,6 +1688,24 @@ function openDetail(idx) {
       <div class="fs-label">Probability of No Run in the First Inning</div>
       <div class="fs-value ${pC(r.p_nrfi_game)}">${pS(r.p_nrfi_game)}<span class="pct">%</span></div>
       <div class="fs-ci">95% CI [${pS(r.ci_lower)}%, ${pS(r.ci_upper)}%] &nbsp;\u00b7&nbsp; Analytic ${pS(r.p_nrfi_game_analytic)}%</div>
+    </div>
+
+    <div class="fair-odds-strip">
+      <div class="fos-label">Fair Odds</div>
+      <div class="fos-side">
+        <div class="fos-name">NRFI</div>
+        <div class="fos-num tabular ${pC(r.p_nrfi_game)}">${toAmerican(r.p_nrfi_game)}</div>
+        <div class="fos-pct">${pS(r.p_nrfi_game)}% implied</div>
+      </div>
+      <div class="fos-divider"></div>
+      <div class="fos-side">
+        <div class="fos-name">YRFI</div>
+        <div class="fos-num tabular ${pC(1 - r.p_nrfi_game)}">${toAmerican(1 - r.p_nrfi_game)}</div>
+        <div class="fos-pct">${pS(1 - r.p_nrfi_game)}% implied</div>
+      </div>
+      <div class="fos-note">
+        American odds derived from the model's no-vig probability. Shop these against your sportsbook.
+      </div>
     </div>
 
     <div class="half-grid">
