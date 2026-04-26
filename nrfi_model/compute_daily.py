@@ -151,7 +151,12 @@ def build_rates(pitcher_row, batter_row, league, park_row,
 
 
 def fetch_last_lineup(team_abbr):
-    """Get a team's most recent batting order."""
+    """
+    Get a team's most recent batting order.
+    Walks backward through up to 5 candidate games, skipping any whose
+    boxscore is incomplete (the MLB API occasionally marks today's game
+    as "Final" with an empty boxscore — defensive guard).
+    """
     team_id = TEAM_IDS.get(team_abbr)
     if not team_id:
         return []
@@ -161,25 +166,36 @@ def fetch_last_lineup(team_abbr):
     try:
         url = f"{MLB_API}/schedule?sportId=1&teamId={team_id}&startDate={start}&endDate={end}&gameType=R"
         sched = requests.get(url, timeout=10).json()
-        game_pk = None
+
+        # Collect candidate game_pks in reverse-chronological order
+        candidates = []
         for d in reversed(sched.get("dates", [])):
+            game_date = d.get("date", "")
             for g in reversed(d.get("games", [])):
+                # Belt-and-suspenders: skip games dated today or later
+                if game_date >= today.isoformat():
+                    continue
                 if g.get("status", {}).get("abstractGameState") == "Final":
-                    game_pk = g["gamePk"]
-                    break
-            if game_pk:
-                break
-        if not game_pk:
-            return []
-        box = requests.get(f"{MLB_API}/game/{game_pk}/boxscore", timeout=10).json()
-        home_id = box["teams"]["home"]["team"]["id"]
-        side = "home" if home_id == team_id else "away"
-        team_data = box["teams"][side]
-        players = team_data.get("players", {})
-        return [
-            {"id": str(pid), "name": players.get(f"ID{pid}", {}).get("person", {}).get("fullName", f"Player {pid}")}
-            for pid in team_data.get("battingOrder", [])[:9]
-        ]
+                    candidates.append(g["gamePk"])
+
+        # Try each candidate until we get a real lineup
+        for game_pk in candidates[:5]:
+            try:
+                box = requests.get(f"{MLB_API}/game/{game_pk}/boxscore", timeout=10).json()
+                home_id = box["teams"]["home"]["team"]["id"]
+                side = "home" if home_id == team_id else "away"
+                team_data = box["teams"][side]
+                batting_order = team_data.get("battingOrder", [])[:9]
+                if len(batting_order) < 9:
+                    continue  # incomplete boxscore, walk further back
+                players = team_data.get("players", {})
+                return [
+                    {"id": str(pid), "name": players.get(f"ID{pid}", {}).get("person", {}).get("fullName", f"Player {pid}")}
+                    for pid in batting_order
+                ]
+            except Exception:
+                continue
+        return []
     except Exception:
         return []
 
