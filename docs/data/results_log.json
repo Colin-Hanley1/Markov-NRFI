@@ -2447,16 +2447,40 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823395",
+      "date": "2026-04-27",
+      "away_team": "STL",
+      "home_team": "PIT",
+      "p_nrfi_predicted": 0.4705,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 1,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "822825",
+      "date": "2026-04-27",
+      "away_team": "BOS",
+      "home_team": "TOR",
+      "p_nrfi_predicted": 0.537,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 204,
-    "accuracy": 0.5882,
-    "brier_score": 0.24628,
-    "brier_skill_score": 0.0102,
-    "log_loss": 0.68603,
-    "actual_nrfi_rate": 0.4657,
-    "mean_predicted": 0.5162,
+    "n_games": 206,
+    "accuracy": 0.5922,
+    "brier_score": 0.246,
+    "brier_skill_score": 0.0114,
+    "log_loss": 0.68548,
+    "actual_nrfi_rate": 0.466,
+    "mean_predicted": 0.5161,
     "last_updated": "2026-04-27"
   },
   "daily": [
@@ -2567,10 +2591,10 @@
     },
     {
       "date": "2026-04-27",
-      "n_games": 1,
-      "correct": 1,
+      "n_games": 3,
+      "correct": 3,
       "accuracy": 1.0,
-      "nrfi_count": 1
+      "nrfi_count": 2
     }
   ]
 }
