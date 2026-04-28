@@ -2507,16 +2507,40 @@
       "home_runs_1st": 3,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824609",
+      "date": "2026-04-27",
+      "away_team": "LAA",
+      "home_team": "CWS",
+      "p_nrfi_predicted": 0.3345,
+      "nrfi_actual": false,
+      "away_runs_1st": 1,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823961",
+      "date": "2026-04-27",
+      "away_team": "MIA",
+      "home_team": "LAD",
+      "p_nrfi_predicted": 0.4729,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 2,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 209,
-    "accuracy": 0.5885,
-    "brier_score": 0.24652,
-    "brier_skill_score": 0.0101,
-    "log_loss": 0.68653,
-    "actual_nrfi_rate": 0.4689,
-    "mean_predicted": 0.5167,
+    "n_games": 211,
+    "accuracy": 0.5924,
+    "brier_score": 0.24577,
+    "brier_skill_score": 0.0119,
+    "log_loss": 0.68499,
+    "actual_nrfi_rate": 0.4645,
+    "mean_predicted": 0.5156,
     "last_updated": "2026-04-28"
   },
   "daily": [
@@ -2627,9 +2651,9 @@
     },
     {
       "date": "2026-04-27",
-      "n_games": 6,
-      "correct": 4,
-      "accuracy": 0.6667,
+      "n_games": 8,
+      "correct": 6,
+      "accuracy": 0.75,
       "nrfi_count": 4
     }
   ]
