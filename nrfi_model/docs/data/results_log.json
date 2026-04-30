@@ -2963,16 +2963,40 @@
       "home_runs_1st": 1,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823471",
+      "date": "2026-04-30",
+      "away_team": "SF",
+      "home_team": "PHI",
+      "p_nrfi_predicted": 0.415,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 2,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "824850",
+      "date": "2026-04-30",
+      "away_team": "HOU",
+      "home_team": "BAL",
+      "p_nrfi_predicted": 0.3967,
+      "nrfi_actual": false,
+      "away_runs_1st": 5,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 247,
-    "accuracy": 0.5789,
-    "brier_score": 0.24703,
-    "brier_skill_score": 0.0106,
-    "log_loss": 0.68747,
-    "actual_nrfi_rate": 0.4818,
-    "mean_predicted": 0.5173,
+    "n_games": 249,
+    "accuracy": 0.5823,
+    "brier_score": 0.24637,
+    "brier_skill_score": 0.0126,
+    "log_loss": 0.68613,
+    "actual_nrfi_rate": 0.4779,
+    "mean_predicted": 0.5164,
     "last_updated": "2026-04-30"
   },
   "daily": [
@@ -3104,9 +3128,9 @@
     },
     {
       "date": "2026-04-30",
-      "n_games": 8,
-      "correct": 3,
-      "accuracy": 0.375,
+      "n_games": 10,
+      "correct": 5,
+      "accuracy": 0.5,
       "nrfi_count": 3
     }
   ]
