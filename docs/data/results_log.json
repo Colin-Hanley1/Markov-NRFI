@@ -2999,16 +2999,28 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824686",
+      "date": "2026-05-01",
+      "away_team": "ARI",
+      "home_team": "CHC",
+      "p_nrfi_predicted": 0.4934,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 3,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 250,
-    "accuracy": 0.584,
-    "brier_score": 0.24623,
-    "brier_skill_score": 0.0135,
-    "log_loss": 0.68584,
-    "actual_nrfi_rate": 0.48,
-    "mean_predicted": 0.5165,
+    "n_games": 251,
+    "accuracy": 0.5857,
+    "brier_score": 0.24622,
+    "brier_skill_score": 0.0132,
+    "log_loss": 0.68582,
+    "actual_nrfi_rate": 0.4781,
+    "mean_predicted": 0.5164,
     "last_updated": "2026-05-01"
   },
   "daily": [
@@ -3144,6 +3156,13 @@
       "correct": 6,
       "accuracy": 0.5455,
       "nrfi_count": 4
+    },
+    {
+      "date": "2026-05-01",
+      "n_games": 1,
+      "correct": 1,
+      "accuracy": 1.0,
+      "nrfi_count": 0
     }
   ]
 }
