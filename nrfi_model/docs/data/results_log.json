@@ -3275,16 +3275,28 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "822988",
+      "date": "2026-05-02",
+      "away_team": "SF",
+      "home_team": "TB",
+      "p_nrfi_predicted": 0.6346,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 273,
-    "accuracy": 0.5714,
-    "brier_score": 0.24821,
-    "brier_skill_score": 0.0023,
-    "log_loss": 0.68985,
-    "actual_nrfi_rate": 0.4652,
-    "mean_predicted": 0.516,
+    "n_games": 274,
+    "accuracy": 0.573,
+    "brier_score": 0.24779,
+    "brier_skill_score": 0.0045,
+    "log_loss": 0.68899,
+    "actual_nrfi_rate": 0.4672,
+    "mean_predicted": 0.5164,
     "last_updated": "2026-05-02"
   },
   "daily": [
@@ -3430,10 +3442,10 @@
     },
     {
       "date": "2026-05-02",
-      "n_games": 8,
-      "correct": 3,
-      "accuracy": 0.375,
-      "nrfi_count": 3
+      "n_games": 9,
+      "correct": 4,
+      "accuracy": 0.4444,
+      "nrfi_count": 4
     }
   ]
 }
