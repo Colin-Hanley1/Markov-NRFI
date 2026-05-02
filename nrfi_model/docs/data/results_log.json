@@ -3287,16 +3287,40 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823067",
+      "date": "2026-05-02",
+      "away_team": "LAD",
+      "home_team": "STL",
+      "p_nrfi_predicted": 0.4718,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "824284",
+      "date": "2026-05-02",
+      "away_team": "TEX",
+      "home_team": "DET",
+      "p_nrfi_predicted": 0.5171,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 3,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 274,
-    "accuracy": 0.573,
-    "brier_score": 0.24779,
-    "brier_skill_score": 0.0045,
-    "log_loss": 0.68899,
-    "actual_nrfi_rate": 0.4672,
-    "mean_predicted": 0.5164,
+    "n_games": 276,
+    "accuracy": 0.5688,
+    "brier_score": 0.24797,
+    "brier_skill_score": 0.0039,
+    "log_loss": 0.68936,
+    "actual_nrfi_rate": 0.4674,
+    "mean_predicted": 0.5163,
     "last_updated": "2026-05-02"
   },
   "daily": [
@@ -3442,10 +3466,10 @@
     },
     {
       "date": "2026-05-02",
-      "n_games": 9,
+      "n_games": 11,
       "correct": 4,
-      "accuracy": 0.4444,
-      "nrfi_count": 4
+      "accuracy": 0.3636,
+      "nrfi_count": 5
     }
   ]
 }
