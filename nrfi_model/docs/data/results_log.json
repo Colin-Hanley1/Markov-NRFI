@@ -3359,16 +3359,40 @@
       "home_runs_1st": 1,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823711",
+      "date": "2026-05-03",
+      "away_team": "TOR",
+      "home_team": "MIN",
+      "p_nrfi_predicted": 0.5333,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 1,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "822742",
+      "date": "2026-05-03",
+      "away_team": "MIL",
+      "home_team": "WSH",
+      "p_nrfi_predicted": 0.589,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 280,
-    "accuracy": 0.5643,
-    "brier_score": 0.24879,
-    "brier_skill_score": -0.0003,
-    "log_loss": 0.69101,
-    "actual_nrfi_rate": 0.4643,
-    "mean_predicted": 0.5169,
+    "n_games": 282,
+    "accuracy": 0.5638,
+    "brier_score": 0.24863,
+    "brier_skill_score": 0.0004,
+    "log_loss": 0.69069,
+    "actual_nrfi_rate": 0.4645,
+    "mean_predicted": 0.5172,
     "last_updated": "2026-05-03"
   },
   "daily": [
@@ -3518,6 +3542,13 @@
       "correct": 5,
       "accuracy": 0.3333,
       "nrfi_count": 6
+    },
+    {
+      "date": "2026-05-03",
+      "n_games": 2,
+      "correct": 1,
+      "accuracy": 0.5,
+      "nrfi_count": 1
     }
   ]
 }
