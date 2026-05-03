@@ -3347,16 +3347,28 @@
       "home_runs_1st": 1,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823144",
+      "date": "2026-05-02",
+      "away_team": "KC",
+      "home_team": "SEA",
+      "p_nrfi_predicted": 0.5542,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 1,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 279,
-    "accuracy": 0.5663,
-    "brier_score": 0.24858,
-    "brier_skill_score": 0.001,
-    "log_loss": 0.69059,
-    "actual_nrfi_rate": 0.4659,
-    "mean_predicted": 0.5168,
+    "n_games": 280,
+    "accuracy": 0.5643,
+    "brier_score": 0.24879,
+    "brier_skill_score": -0.0003,
+    "log_loss": 0.69101,
+    "actual_nrfi_rate": 0.4643,
+    "mean_predicted": 0.5169,
     "last_updated": "2026-05-03"
   },
   "daily": [
@@ -3502,9 +3514,9 @@
     },
     {
       "date": "2026-05-02",
-      "n_games": 14,
+      "n_games": 15,
       "correct": 5,
-      "accuracy": 0.3571,
+      "accuracy": 0.3333,
       "nrfi_count": 6
     }
   ]
