@@ -3383,16 +3383,100 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824769",
+      "date": "2026-05-03",
+      "away_team": "HOU",
+      "home_team": "BOS",
+      "p_nrfi_predicted": 0.4678,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823387",
+      "date": "2026-05-03",
+      "away_team": "CIN",
+      "home_team": "PIT",
+      "p_nrfi_predicted": 0.661,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823555",
+      "date": "2026-05-03",
+      "away_team": "BAL",
+      "home_team": "NYY",
+      "p_nrfi_predicted": 0.5106,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 1,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "822987",
+      "date": "2026-05-03",
+      "away_team": "SF",
+      "home_team": "TB",
+      "p_nrfi_predicted": 0.5627,
+      "nrfi_actual": false,
+      "away_runs_1st": 1,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823875",
+      "date": "2026-05-03",
+      "away_team": "PHI",
+      "home_team": "MIA",
+      "p_nrfi_predicted": 0.5561,
+      "nrfi_actual": false,
+      "away_runs_1st": 6,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823065",
+      "date": "2026-05-03",
+      "away_team": "LAD",
+      "home_team": "STL",
+      "p_nrfi_predicted": 0.4287,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "824687",
+      "date": "2026-05-03",
+      "away_team": "ARI",
+      "home_team": "CHC",
+      "p_nrfi_predicted": 0.4663,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 282,
-    "accuracy": 0.5638,
-    "brier_score": 0.24863,
-    "brier_skill_score": 0.0004,
-    "log_loss": 0.69069,
-    "actual_nrfi_rate": 0.4645,
-    "mean_predicted": 0.5172,
+    "n_games": 289,
+    "accuracy": 0.5536,
+    "brier_score": 0.24917,
+    "brier_skill_score": -0.001,
+    "log_loss": 0.69174,
+    "actual_nrfi_rate": 0.4671,
+    "mean_predicted": 0.5173,
     "last_updated": "2026-05-03"
   },
   "daily": [
@@ -3545,10 +3629,10 @@
     },
     {
       "date": "2026-05-03",
-      "n_games": 2,
-      "correct": 1,
-      "accuracy": 0.5,
-      "nrfi_count": 1
+      "n_games": 9,
+      "correct": 2,
+      "accuracy": 0.2222,
+      "nrfi_count": 5
     }
   ]
 }
