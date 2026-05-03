@@ -3479,16 +3479,64 @@
       "home_runs_1st": 1,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "825013",
+      "date": "2026-05-03",
+      "away_team": "CLE",
+      "home_team": "OAK",
+      "p_nrfi_predicted": 0.5685,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "824043",
+      "date": "2026-05-03",
+      "away_team": "NYM",
+      "home_team": "LAA",
+      "p_nrfi_predicted": 0.5553,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 1,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823145",
+      "date": "2026-05-03",
+      "away_team": "KC",
+      "home_team": "SEA",
+      "p_nrfi_predicted": 0.5999,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823307",
+      "date": "2026-05-03",
+      "away_team": "CWS",
+      "home_team": "SD",
+      "p_nrfi_predicted": 0.4435,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 290,
-    "accuracy": 0.5552,
-    "brier_score": 0.24878,
-    "brier_skill_score": 0.0001,
-    "log_loss": 0.69093,
-    "actual_nrfi_rate": 0.4655,
-    "mean_predicted": 0.5168,
+    "n_games": 294,
+    "accuracy": 0.5544,
+    "brier_score": 0.24867,
+    "brier_skill_score": 0.0016,
+    "log_loss": 0.69071,
+    "actual_nrfi_rate": 0.4694,
+    "mean_predicted": 0.5172,
     "last_updated": "2026-05-03"
   },
   "daily": [
@@ -3641,10 +3689,10 @@
     },
     {
       "date": "2026-05-03",
-      "n_games": 10,
-      "correct": 3,
-      "accuracy": 0.3,
-      "nrfi_count": 5
+      "n_games": 14,
+      "correct": 5,
+      "accuracy": 0.3571,
+      "nrfi_count": 8
     }
   ]
 }
