@@ -3467,16 +3467,28 @@
       "home_runs_1st": 0,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824364",
+      "date": "2026-05-03",
+      "away_team": "ATL",
+      "home_team": "COL",
+      "p_nrfi_predicted": 0.3678,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 1,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 289,
-    "accuracy": 0.5536,
-    "brier_score": 0.24917,
-    "brier_skill_score": -0.001,
-    "log_loss": 0.69174,
-    "actual_nrfi_rate": 0.4671,
-    "mean_predicted": 0.5173,
+    "n_games": 290,
+    "accuracy": 0.5552,
+    "brier_score": 0.24878,
+    "brier_skill_score": 0.0001,
+    "log_loss": 0.69093,
+    "actual_nrfi_rate": 0.4655,
+    "mean_predicted": 0.5168,
     "last_updated": "2026-05-03"
   },
   "daily": [
@@ -3629,9 +3641,9 @@
     },
     {
       "date": "2026-05-03",
-      "n_games": 9,
-      "correct": 2,
-      "accuracy": 0.2222,
+      "n_games": 10,
+      "correct": 3,
+      "accuracy": 0.3,
       "nrfi_count": 5
     }
   ]
