@@ -3551,16 +3551,76 @@
       "home_runs_1st": 0,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824283",
+      "date": "2026-05-04",
+      "away_team": "BOS",
+      "home_team": "DET",
+      "p_nrfi_predicted": 0.5981,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "822984",
+      "date": "2026-05-04",
+      "away_team": "TOR",
+      "home_team": "TB",
+      "p_nrfi_predicted": 0.5901,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 3,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823874",
+      "date": "2026-05-04",
+      "away_team": "PHI",
+      "home_team": "MIA",
+      "p_nrfi_predicted": 0.5323,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823552",
+      "date": "2026-05-04",
+      "away_team": "BAL",
+      "home_team": "NYY",
+      "p_nrfi_predicted": 0.5197,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 2,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "824120",
+      "date": "2026-05-04",
+      "away_team": "CLE",
+      "home_team": "KC",
+      "p_nrfi_predicted": 0.5673,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 296,
-    "accuracy": 0.5541,
-    "brier_score": 0.24867,
-    "brier_skill_score": 0.0024,
-    "log_loss": 0.6907,
-    "actual_nrfi_rate": 0.473,
-    "mean_predicted": 0.5171,
+    "n_games": 301,
+    "accuracy": 0.5548,
+    "brier_score": 0.24847,
+    "brier_skill_score": 0.0036,
+    "log_loss": 0.69031,
+    "actual_nrfi_rate": 0.4751,
+    "mean_predicted": 0.5178,
     "last_updated": "2026-05-04"
   },
   "daily": [
@@ -3720,10 +3780,10 @@
     },
     {
       "date": "2026-05-04",
-      "n_games": 1,
-      "correct": 0,
-      "accuracy": 0.0,
-      "nrfi_count": 1
+      "n_games": 6,
+      "correct": 3,
+      "accuracy": 0.5,
+      "nrfi_count": 4
     }
   ]
 }
