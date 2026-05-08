@@ -4127,16 +4127,28 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823306",
+      "date": "2026-05-07",
+      "away_team": "STL",
+      "home_team": "SD",
+      "p_nrfi_predicted": 0.6,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 1,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 344,
-    "accuracy": 0.561,
-    "brier_score": 0.25079,
-    "brier_skill_score": -0.0081,
-    "log_loss": 0.69621,
-    "actual_nrfi_rate": 0.4651,
-    "mean_predicted": 0.5172,
+    "n_games": 345,
+    "accuracy": 0.5594,
+    "brier_score": 0.25111,
+    "brier_skill_score": -0.0097,
+    "log_loss": 0.69685,
+    "actual_nrfi_rate": 0.4638,
+    "mean_predicted": 0.5174,
     "last_updated": "2026-05-08"
   },
   "daily": [
@@ -4317,9 +4329,9 @@
     },
     {
       "date": "2026-05-07",
-      "n_games": 9,
+      "n_games": 10,
       "correct": 6,
-      "accuracy": 0.6667,
+      "accuracy": 0.6,
       "nrfi_count": 4
     }
   ]
