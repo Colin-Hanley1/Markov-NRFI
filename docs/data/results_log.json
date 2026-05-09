@@ -4295,16 +4295,28 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823957",
+      "date": "2026-05-08",
+      "away_team": "ATL",
+      "home_team": "LAD",
+      "p_nrfi_predicted": 0.5056,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 358,
-    "accuracy": 0.5615,
-    "brier_score": 0.25088,
-    "brier_skill_score": -0.0073,
-    "log_loss": 0.69639,
-    "actual_nrfi_rate": 0.4693,
-    "mean_predicted": 0.5184,
+    "n_games": 359,
+    "accuracy": 0.5627,
+    "brier_score": 0.25086,
+    "brier_skill_score": -0.0069,
+    "log_loss": 0.69635,
+    "actual_nrfi_rate": 0.4708,
+    "mean_predicted": 0.5183,
     "last_updated": "2026-05-09"
   },
   "daily": [
@@ -4492,10 +4504,10 @@
     },
     {
       "date": "2026-05-08",
-      "n_games": 13,
-      "correct": 8,
-      "accuracy": 0.6154,
-      "nrfi_count": 8
+      "n_games": 14,
+      "correct": 9,
+      "accuracy": 0.6429,
+      "nrfi_count": 9
     }
   ]
 }
