@@ -4931,16 +4931,40 @@
       "home_runs_1st": 2,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824519",
+      "date": "2026-05-13",
+      "away_team": "WSH",
+      "home_team": "CIN",
+      "p_nrfi_predicted": 0.4834,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 5,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "824763",
+      "date": "2026-05-13",
+      "away_team": "PHI",
+      "home_team": "BOS",
+      "p_nrfi_predicted": 0.5245,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 411,
-    "accuracy": 0.5669,
-    "brier_score": 0.25179,
-    "brier_skill_score": -0.0089,
-    "log_loss": 0.69818,
-    "actual_nrfi_rate": 0.4793,
-    "mean_predicted": 0.5201,
+    "n_games": 413,
+    "accuracy": 0.569,
+    "brier_score": 0.25169,
+    "brier_skill_score": -0.0085,
+    "log_loss": 0.69796,
+    "actual_nrfi_rate": 0.4794,
+    "mean_predicted": 0.52,
     "last_updated": "2026-05-13"
   },
   "daily": [
@@ -5163,10 +5187,10 @@
     },
     {
       "date": "2026-05-13",
-      "n_games": 2,
-      "correct": 1,
-      "accuracy": 0.5,
-      "nrfi_count": 1
+      "n_games": 4,
+      "correct": 3,
+      "accuracy": 0.75,
+      "nrfi_count": 2
     }
   ]
 }
