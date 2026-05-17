@@ -5579,16 +5579,28 @@
       "home_runs_1st": 0,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "822982",
+      "date": "2026-05-17",
+      "away_team": "MIA",
+      "home_team": "TB",
+      "p_nrfi_predicted": 0.5658,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 1,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 465,
-    "accuracy": 0.5613,
-    "brier_score": 0.25166,
-    "brier_skill_score": -0.0072,
-    "log_loss": 0.69779,
-    "actual_nrfi_rate": 0.4882,
-    "mean_predicted": 0.5214,
+    "n_games": 466,
+    "accuracy": 0.5601,
+    "brier_score": 0.25181,
+    "brier_skill_score": -0.0079,
+    "log_loss": 0.69808,
+    "actual_nrfi_rate": 0.4871,
+    "mean_predicted": 0.5215,
     "last_updated": "2026-05-17"
   },
   "daily": [
@@ -5836,6 +5848,13 @@
       "correct": 6,
       "accuracy": 0.4,
       "nrfi_count": 7
+    },
+    {
+      "date": "2026-05-17",
+      "n_games": 1,
+      "correct": 0,
+      "accuracy": 0.0,
+      "nrfi_count": 0
     }
   ]
 }
