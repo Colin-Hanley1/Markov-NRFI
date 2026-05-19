@@ -5927,16 +5927,28 @@
       "home_runs_1st": 1,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823865",
+      "date": "2026-05-19",
+      "away_team": "ATL",
+      "home_team": "MIA",
+      "p_nrfi_predicted": 0.6339,
+      "nrfi_actual": false,
+      "away_runs_1st": 2,
+      "home_runs_1st": 1,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 494,
-    "accuracy": 0.5445,
-    "brier_score": 0.25318,
-    "brier_skill_score": -0.0138,
-    "log_loss": 0.7008,
-    "actual_nrfi_rate": 0.4838,
-    "mean_predicted": 0.521,
+    "n_games": 495,
+    "accuracy": 0.5434,
+    "brier_score": 0.25348,
+    "brier_skill_score": -0.0151,
+    "log_loss": 0.70141,
+    "actual_nrfi_rate": 0.4828,
+    "mean_predicted": 0.5213,
     "last_updated": "2026-05-19"
   },
   "daily": [
@@ -6198,6 +6210,13 @@
       "correct": 3,
       "accuracy": 0.2143,
       "nrfi_count": 6
+    },
+    {
+      "date": "2026-05-19",
+      "n_games": 1,
+      "correct": 0,
+      "accuracy": 0.0,
+      "nrfi_count": 0
     }
   ]
 }
