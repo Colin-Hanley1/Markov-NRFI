@@ -6179,16 +6179,40 @@
       "home_runs_1st": 0,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823866",
+      "date": "2026-05-20",
+      "away_team": "ATL",
+      "home_team": "MIA",
+      "p_nrfi_predicted": 0.6536,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 1,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "822735",
+      "date": "2026-05-20",
+      "away_team": "NYM",
+      "home_team": "WSH",
+      "p_nrfi_predicted": 0.5187,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 3,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 515,
-    "accuracy": 0.5417,
-    "brier_score": 0.25362,
-    "brier_skill_score": -0.0162,
-    "log_loss": 0.70169,
-    "actual_nrfi_rate": 0.4796,
-    "mean_predicted": 0.5216,
+    "n_games": 517,
+    "accuracy": 0.5397,
+    "brier_score": 0.25399,
+    "brier_skill_score": -0.018,
+    "log_loss": 0.70244,
+    "actual_nrfi_rate": 0.4778,
+    "mean_predicted": 0.5219,
     "last_updated": "2026-05-20"
   },
   "daily": [
@@ -6460,9 +6484,9 @@
     },
     {
       "date": "2026-05-20",
-      "n_games": 6,
+      "n_games": 8,
       "correct": 3,
-      "accuracy": 0.5,
+      "accuracy": 0.375,
       "nrfi_count": 3
     }
   ]
