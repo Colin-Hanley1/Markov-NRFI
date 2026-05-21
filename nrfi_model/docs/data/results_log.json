@@ -6299,16 +6299,28 @@
       "home_runs_1st": 0,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "822733",
+      "date": "2026-05-21",
+      "away_team": "NYM",
+      "home_team": "WSH",
+      "p_nrfi_predicted": 0.5888,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 525,
-    "accuracy": 0.541,
-    "brier_score": 0.25357,
-    "brier_skill_score": -0.0162,
-    "log_loss": 0.70156,
-    "actual_nrfi_rate": 0.4781,
-    "mean_predicted": 0.5224,
+    "n_games": 526,
+    "accuracy": 0.5418,
+    "brier_score": 0.2534,
+    "brier_skill_score": -0.0154,
+    "log_loss": 0.70123,
+    "actual_nrfi_rate": 0.4791,
+    "mean_predicted": 0.5225,
     "last_updated": "2026-05-21"
   },
   "daily": [
@@ -6587,10 +6599,10 @@
     },
     {
       "date": "2026-05-21",
-      "n_games": 2,
-      "correct": 1,
-      "accuracy": 0.5,
-      "nrfi_count": 1
+      "n_games": 3,
+      "correct": 2,
+      "accuracy": 0.6667,
+      "nrfi_count": 2
     }
   ]
 }
