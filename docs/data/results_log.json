@@ -6719,16 +6719,64 @@
       "home_runs_1st": 0,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824759",
+      "date": "2026-05-24",
+      "away_team": "MIN",
+      "home_team": "BOS",
+      "p_nrfi_predicted": 0.5436,
+      "nrfi_actual": false,
+      "away_runs_1st": 1,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823459",
+      "date": "2026-05-24",
+      "away_team": "CLE",
+      "home_team": "PHI",
+      "p_nrfi_predicted": 0.6063,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823544",
+      "date": "2026-05-24",
+      "away_team": "TB",
+      "home_team": "NYY",
+      "p_nrfi_predicted": 0.4368,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823861",
+      "date": "2026-05-24",
+      "away_team": "NYM",
+      "home_team": "MIA",
+      "p_nrfi_predicted": 0.5792,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 560,
-    "accuracy": 0.5268,
-    "brier_score": 0.25519,
-    "brier_skill_score": -0.0223,
-    "log_loss": 0.70503,
-    "actual_nrfi_rate": 0.4804,
-    "mean_predicted": 0.5223,
+    "n_games": 564,
+    "accuracy": 0.5266,
+    "brier_score": 0.25506,
+    "brier_skill_score": -0.0215,
+    "log_loss": 0.70474,
+    "actual_nrfi_rate": 0.4823,
+    "mean_predicted": 0.5225,
     "last_updated": "2026-05-24"
   },
   "daily": [
@@ -7028,10 +7076,10 @@
     },
     {
       "date": "2026-05-24",
-      "n_games": 2,
-      "correct": 0,
-      "accuracy": 0.0,
-      "nrfi_count": 1
+      "n_games": 6,
+      "correct": 2,
+      "accuracy": 0.3333,
+      "nrfi_count": 4
     }
   ]
 }
