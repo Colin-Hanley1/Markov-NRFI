@@ -6851,16 +6851,28 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824840",
+      "date": "2026-05-24",
+      "away_team": "DET",
+      "home_team": "BAL",
+      "p_nrfi_predicted": 0.637,
+      "nrfi_actual": false,
+      "away_runs_1st": 2,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 571,
-    "accuracy": 0.5254,
-    "brier_score": 0.2556,
-    "brier_skill_score": -0.0238,
-    "log_loss": 0.70585,
-    "actual_nrfi_rate": 0.4816,
-    "mean_predicted": 0.5228,
+    "n_games": 572,
+    "accuracy": 0.5245,
+    "brier_score": 0.25586,
+    "brier_skill_score": -0.025,
+    "log_loss": 0.70639,
+    "actual_nrfi_rate": 0.4808,
+    "mean_predicted": 0.523,
     "last_updated": "2026-05-24"
   },
   "daily": [
@@ -7160,9 +7172,9 @@
     },
     {
       "date": "2026-05-24",
-      "n_games": 13,
+      "n_games": 14,
       "correct": 5,
-      "accuracy": 0.3846,
+      "accuracy": 0.3571,
       "nrfi_count": 7
     }
   ]
