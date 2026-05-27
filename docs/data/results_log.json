@@ -7247,16 +7247,40 @@
       "home_runs_1st": 0,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "825003",
+      "date": "2026-05-27",
+      "away_team": "SEA",
+      "home_team": "OAK",
+      "p_nrfi_predicted": 0.4873,
+      "nrfi_actual": false,
+      "away_runs_1st": 3,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823217",
+      "date": "2026-05-27",
+      "away_team": "ARI",
+      "home_team": "SF",
+      "p_nrfi_predicted": 0.6972,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 604,
-    "accuracy": 0.5215,
-    "brier_score": 0.2556,
-    "brier_skill_score": -0.0237,
-    "log_loss": 0.70577,
+    "n_games": 606,
+    "accuracy": 0.5231,
+    "brier_score": 0.2553,
+    "brier_skill_score": -0.0225,
+    "log_loss": 0.70514,
     "actual_nrfi_rate": 0.4818,
-    "mean_predicted": 0.5232,
+    "mean_predicted": 0.5235,
     "last_updated": "2026-05-27"
   },
   "daily": [
@@ -7577,10 +7601,10 @@
     },
     {
       "date": "2026-05-27",
-      "n_games": 3,
-      "correct": 1,
-      "accuracy": 0.3333,
-      "nrfi_count": 2
+      "n_games": 5,
+      "correct": 3,
+      "accuracy": 0.6,
+      "nrfi_count": 3
     }
   ]
 }
