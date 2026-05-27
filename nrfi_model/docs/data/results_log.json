@@ -7271,16 +7271,28 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823295",
+      "date": "2026-05-27",
+      "away_team": "PHI",
+      "home_team": "SD",
+      "p_nrfi_predicted": 0.5065,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 606,
-    "accuracy": 0.5231,
-    "brier_score": 0.2553,
-    "brier_skill_score": -0.0225,
-    "log_loss": 0.70514,
-    "actual_nrfi_rate": 0.4818,
-    "mean_predicted": 0.5235,
+    "n_games": 607,
+    "accuracy": 0.5239,
+    "brier_score": 0.25528,
+    "brier_skill_score": -0.0223,
+    "log_loss": 0.7051,
+    "actual_nrfi_rate": 0.4827,
+    "mean_predicted": 0.5234,
     "last_updated": "2026-05-27"
   },
   "daily": [
@@ -7601,10 +7613,10 @@
     },
     {
       "date": "2026-05-27",
-      "n_games": 5,
-      "correct": 3,
-      "accuracy": 0.6,
-      "nrfi_count": 3
+      "n_games": 6,
+      "correct": 4,
+      "accuracy": 0.6667,
+      "nrfi_count": 4
     }
   ]
 }
