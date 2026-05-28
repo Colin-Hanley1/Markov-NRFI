@@ -7415,16 +7415,28 @@
       "home_runs_1st": 1,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824757",
+      "date": "2026-05-28",
+      "away_team": "ATL",
+      "home_team": "BOS",
+      "p_nrfi_predicted": 0.5697,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 618,
-    "accuracy": 0.521,
-    "brier_score": 0.25555,
-    "brier_skill_score": -0.024,
-    "log_loss": 0.70563,
-    "actual_nrfi_rate": 0.479,
-    "mean_predicted": 0.5237,
+    "n_games": 619,
+    "accuracy": 0.5218,
+    "brier_score": 0.25544,
+    "brier_skill_score": -0.0234,
+    "log_loss": 0.7054,
+    "actual_nrfi_rate": 0.4798,
+    "mean_predicted": 0.5238,
     "last_updated": "2026-05-28"
   },
   "daily": [
@@ -7752,10 +7764,10 @@
     },
     {
       "date": "2026-05-28",
-      "n_games": 2,
-      "correct": 1,
-      "accuracy": 0.5,
-      "nrfi_count": 1
+      "n_games": 3,
+      "correct": 2,
+      "accuracy": 0.6667,
+      "nrfi_count": 2
     }
   ]
 }
