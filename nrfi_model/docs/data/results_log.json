@@ -7391,16 +7391,28 @@
       "home_runs_1st": 2,
       "correct": true,
       "lineup_source": "projected"
+    },
+    {
+      "game_id": "824272",
+      "date": "2026-05-28",
+      "away_team": "LAA",
+      "home_team": "DET",
+      "p_nrfi_predicted": 0.5672,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 616,
-    "accuracy": 0.5211,
-    "brier_score": 0.25562,
-    "brier_skill_score": -0.0243,
-    "log_loss": 0.70577,
-    "actual_nrfi_rate": 0.4789,
-    "mean_predicted": 0.5236,
+    "n_games": 617,
+    "accuracy": 0.5219,
+    "brier_score": 0.25551,
+    "brier_skill_score": -0.0237,
+    "log_loss": 0.70555,
+    "actual_nrfi_rate": 0.4797,
+    "mean_predicted": 0.5237,
     "last_updated": "2026-05-28"
   },
   "daily": [
@@ -7725,6 +7737,13 @@
       "correct": 7,
       "accuracy": 0.4667,
       "nrfi_count": 6
+    },
+    {
+      "date": "2026-05-28",
+      "n_games": 1,
+      "correct": 1,
+      "accuracy": 1.0,
+      "nrfi_count": 1
     }
   ]
 }
