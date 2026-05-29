@@ -7463,16 +7463,52 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824515",
+      "date": "2026-05-29",
+      "away_team": "ATL",
+      "home_team": "CIN",
+      "p_nrfi_predicted": 0.4567,
+      "nrfi_actual": false,
+      "away_runs_1st": 1,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "822732",
+      "date": "2026-05-29",
+      "away_team": "SD",
+      "home_team": "WSH",
+      "p_nrfi_predicted": 0.4831,
+      "nrfi_actual": false,
+      "away_runs_1st": 1,
+      "home_runs_1st": 2,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823377",
+      "date": "2026-05-29",
+      "away_team": "MIN",
+      "home_team": "PIT",
+      "p_nrfi_predicted": 0.5338,
+      "nrfi_actual": false,
+      "away_runs_1st": 1,
+      "home_runs_1st": 3,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 622,
-    "accuracy": 0.5225,
-    "brier_score": 0.25524,
-    "brier_skill_score": -0.0225,
-    "log_loss": 0.705,
-    "actual_nrfi_rate": 0.4807,
-    "mean_predicted": 0.5237,
+    "n_games": 625,
+    "accuracy": 0.5232,
+    "brier_score": 0.25518,
+    "brier_skill_score": -0.0226,
+    "log_loss": 0.70487,
+    "actual_nrfi_rate": 0.4784,
+    "mean_predicted": 0.5235,
     "last_updated": "2026-05-29"
   },
   "daily": [
@@ -7804,6 +7840,13 @@
       "correct": 4,
       "accuracy": 0.6667,
       "nrfi_count": 4
+    },
+    {
+      "date": "2026-05-29",
+      "n_games": 3,
+      "correct": 2,
+      "accuracy": 0.6667,
+      "nrfi_count": 0
     }
   ]
 }
