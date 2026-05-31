@@ -7943,16 +7943,64 @@
       "home_runs_1st": 4,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824354",
+      "date": "2026-05-31",
+      "away_team": "SF",
+      "home_team": "COL",
+      "p_nrfi_predicted": 0.424,
+      "nrfi_actual": false,
+      "away_runs_1st": 1,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "825001",
+      "date": "2026-05-31",
+      "away_team": "NYY",
+      "home_team": "OAK",
+      "p_nrfi_predicted": 0.4416,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 3,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823133",
+      "date": "2026-05-31",
+      "away_team": "ARI",
+      "home_team": "SEA",
+      "p_nrfi_predicted": 0.542,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823944",
+      "date": "2026-05-31",
+      "away_team": "PHI",
+      "home_team": "LAD",
+      "p_nrfi_predicted": 0.5436,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 662,
-    "accuracy": 0.5196,
-    "brier_score": 0.25575,
-    "brier_skill_score": -0.0257,
-    "log_loss": 0.70603,
-    "actual_nrfi_rate": 0.4743,
-    "mean_predicted": 0.5243,
+    "n_games": 666,
+    "accuracy": 0.5225,
+    "brier_score": 0.25541,
+    "brier_skill_score": -0.0243,
+    "log_loss": 0.70533,
+    "actual_nrfi_rate": 0.4745,
+    "mean_predicted": 0.5241,
     "last_updated": "2026-05-31"
   },
   "daily": [
@@ -8301,10 +8349,10 @@
     },
     {
       "date": "2026-05-31",
-      "n_games": 10,
-      "correct": 4,
-      "accuracy": 0.4,
-      "nrfi_count": 4
+      "n_games": 14,
+      "correct": 8,
+      "accuracy": 0.5714,
+      "nrfi_count": 6
     }
   ]
 }
