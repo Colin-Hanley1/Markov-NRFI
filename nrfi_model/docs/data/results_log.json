@@ -8759,16 +8759,64 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823697",
+      "date": "2026-06-06",
+      "away_team": "KC",
+      "home_team": "MIN",
+      "p_nrfi_predicted": 0.3754,
+      "nrfi_actual": false,
+      "away_runs_1st": 1,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823048",
+      "date": "2026-06-06",
+      "away_team": "CIN",
+      "home_team": "STL",
+      "p_nrfi_predicted": 0.4943,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "824669",
+      "date": "2026-06-06",
+      "away_team": "SF",
+      "home_team": "CHC",
+      "p_nrfi_predicted": 0.5573,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "822808",
+      "date": "2026-06-06",
+      "away_team": "BAL",
+      "home_team": "TOR",
+      "p_nrfi_predicted": 0.5741,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 730,
-    "accuracy": 0.5219,
-    "brier_score": 0.25512,
-    "brier_skill_score": -0.0239,
-    "log_loss": 0.70463,
-    "actual_nrfi_rate": 0.4712,
-    "mean_predicted": 0.5244,
+    "n_games": 734,
+    "accuracy": 0.5232,
+    "brier_score": 0.25478,
+    "brier_skill_score": -0.0222,
+    "log_loss": 0.70395,
+    "actual_nrfi_rate": 0.4728,
+    "mean_predicted": 0.5243,
     "last_updated": "2026-06-06"
   },
   "daily": [
@@ -9159,10 +9207,10 @@
     },
     {
       "date": "2026-06-06",
-      "n_games": 1,
-      "correct": 1,
-      "accuracy": 1.0,
-      "nrfi_count": 1
+      "n_games": 5,
+      "correct": 4,
+      "accuracy": 0.8,
+      "nrfi_count": 4
     }
   ]
 }
