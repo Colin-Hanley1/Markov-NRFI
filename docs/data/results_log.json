@@ -10727,15 +10727,27 @@
       "home_runs_1st": 5,
       "correct": true,
       "lineup_source": "projected"
+    },
+    {
+      "game_id": "824663",
+      "date": "2026-06-19",
+      "away_team": "TOR",
+      "home_team": "CHC",
+      "p_nrfi_predicted": 0.5214,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 7,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 894,
-    "accuracy": 0.5235,
-    "brier_score": 0.25312,
-    "brier_skill_score": -0.0174,
-    "log_loss": 0.70042,
-    "actual_nrfi_rate": 0.4653,
+    "n_games": 895,
+    "accuracy": 0.5229,
+    "brier_score": 0.25314,
+    "brier_skill_score": -0.0176,
+    "log_loss": 0.70046,
+    "actual_nrfi_rate": 0.4648,
     "mean_predicted": 0.5263,
     "last_updated": "2026-06-19"
   },
@@ -11215,6 +11227,13 @@
       "correct": 3,
       "accuracy": 0.375,
       "nrfi_count": 2
+    },
+    {
+      "date": "2026-06-19",
+      "n_games": 1,
+      "correct": 0,
+      "accuracy": 0.0,
+      "nrfi_count": 0
     }
   ]
 }
