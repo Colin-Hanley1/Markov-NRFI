@@ -10895,15 +10895,27 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824263",
+      "date": "2026-06-20",
+      "away_team": "CWS",
+      "home_team": "DET",
+      "p_nrfi_predicted": 0.5964,
+      "nrfi_actual": false,
+      "away_runs_1st": 1,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 908,
-    "accuracy": 0.5253,
-    "brier_score": 0.25306,
-    "brier_skill_score": -0.017,
-    "log_loss": 0.70029,
-    "actual_nrfi_rate": 0.4659,
+    "n_games": 909,
+    "accuracy": 0.5248,
+    "brier_score": 0.25317,
+    "brier_skill_score": -0.0176,
+    "log_loss": 0.70051,
+    "actual_nrfi_rate": 0.4653,
     "mean_predicted": 0.5266,
     "last_updated": "2026-06-20"
   },
@@ -11390,6 +11402,13 @@
       "correct": 9,
       "accuracy": 0.6429,
       "nrfi_count": 7
+    },
+    {
+      "date": "2026-06-20",
+      "n_games": 1,
+      "correct": 0,
+      "accuracy": 0.0,
+      "nrfi_count": 0
     }
   ]
 }
