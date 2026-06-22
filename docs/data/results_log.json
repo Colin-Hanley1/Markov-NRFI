@@ -11219,17 +11219,29 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823449",
+      "date": "2026-06-21",
+      "away_team": "NYM",
+      "home_team": "PHI",
+      "p_nrfi_predicted": 0.6043,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 2,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 935,
-    "accuracy": 0.523,
-    "brier_score": 0.25346,
-    "brier_skill_score": -0.0185,
-    "log_loss": 0.70111,
-    "actual_nrfi_rate": 0.4663,
+    "n_games": 936,
+    "accuracy": 0.5224,
+    "brier_score": 0.25358,
+    "brier_skill_score": -0.0191,
+    "log_loss": 0.70135,
+    "actual_nrfi_rate": 0.4658,
     "mean_predicted": 0.5272,
-    "last_updated": "2026-06-21"
+    "last_updated": "2026-06-22"
   },
   "daily": [
     {
@@ -11724,9 +11736,9 @@
     },
     {
       "date": "2026-06-21",
-      "n_games": 13,
+      "n_games": 14,
       "correct": 7,
-      "accuracy": 0.5385,
+      "accuracy": 0.5,
       "nrfi_count": 8
     }
   ]
