@@ -11495,16 +11495,76 @@
       "home_runs_1st": 0,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823690",
+      "date": "2026-06-23",
+      "away_team": "LAD",
+      "home_team": "MIN",
+      "p_nrfi_predicted": 0.506,
+      "nrfi_actual": false,
+      "away_runs_1st": 1,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "824340",
+      "date": "2026-06-23",
+      "away_team": "BOS",
+      "home_team": "COL",
+      "p_nrfi_predicted": 0.4619,
+      "nrfi_actual": false,
+      "away_runs_1st": 1,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "824017",
+      "date": "2026-06-23",
+      "away_team": "BAL",
+      "home_team": "LAA",
+      "p_nrfi_predicted": 0.4147,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 2,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823286",
+      "date": "2026-06-23",
+      "away_team": "ATL",
+      "home_team": "SD",
+      "p_nrfi_predicted": 0.5786,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823210",
+      "date": "2026-06-23",
+      "away_team": "OAK",
+      "home_team": "SF",
+      "p_nrfi_predicted": 0.5984,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 958,
-    "accuracy": 0.524,
-    "brier_score": 0.25287,
-    "brier_skill_score": -0.0147,
-    "log_loss": 0.69988,
-    "actual_nrfi_rate": 0.4718,
-    "mean_predicted": 0.5274,
+    "n_games": 963,
+    "accuracy": 0.5254,
+    "brier_score": 0.25257,
+    "brier_skill_score": -0.0136,
+    "log_loss": 0.69928,
+    "actual_nrfi_rate": 0.4714,
+    "mean_predicted": 0.5273,
     "last_updated": "2026-06-24"
   },
   "daily": [
@@ -12014,10 +12074,10 @@
     },
     {
       "date": "2026-06-23",
-      "n_games": 10,
-      "correct": 7,
-      "accuracy": 0.7,
-      "nrfi_count": 8
+      "n_games": 15,
+      "correct": 11,
+      "accuracy": 0.7333,
+      "nrfi_count": 10
     }
   ]
 }
