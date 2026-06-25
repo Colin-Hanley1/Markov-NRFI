@@ -11759,16 +11759,28 @@
       "home_runs_1st": 2,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823366",
+      "date": "2026-06-25",
+      "away_team": "SEA",
+      "home_team": "PIT",
+      "p_nrfi_predicted": 0.6294,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 1,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 980,
-    "accuracy": 0.5265,
-    "brier_score": 0.25249,
-    "brier_skill_score": -0.0128,
-    "log_loss": 0.6991,
-    "actual_nrfi_rate": 0.4735,
-    "mean_predicted": 0.5279,
+    "n_games": 981,
+    "accuracy": 0.526,
+    "brier_score": 0.25263,
+    "brier_skill_score": -0.0135,
+    "log_loss": 0.6994,
+    "actual_nrfi_rate": 0.473,
+    "mean_predicted": 0.528,
     "last_updated": "2026-06-25"
   },
   "daily": [
@@ -12292,7 +12304,7 @@
     },
     {
       "date": "2026-06-25",
-      "n_games": 1,
+      "n_games": 2,
       "correct": 0,
       "accuracy": 0.0,
       "nrfi_count": 0
