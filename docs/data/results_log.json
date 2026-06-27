@@ -12011,16 +12011,40 @@
       "home_runs_1st": 0,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824257",
+      "date": "2026-06-27",
+      "away_team": "HOU",
+      "home_team": "DET",
+      "p_nrfi_predicted": 0.5834,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "824745",
+      "date": "2026-06-27",
+      "away_team": "NYY",
+      "home_team": "BOS",
+      "p_nrfi_predicted": 0.5398,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 1,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1001,
-    "accuracy": 0.5235,
-    "brier_score": 0.25293,
-    "brier_skill_score": -0.0146,
-    "log_loss": 0.69997,
-    "actual_nrfi_rate": 0.4735,
-    "mean_predicted": 0.5285,
+    "n_games": 1003,
+    "accuracy": 0.5234,
+    "brier_score": 0.25289,
+    "brier_skill_score": -0.0144,
+    "log_loss": 0.69989,
+    "actual_nrfi_rate": 0.4736,
+    "mean_predicted": 0.5286,
     "last_updated": "2026-06-27"
   },
   "daily": [
@@ -12555,6 +12579,13 @@
       "correct": 5,
       "accuracy": 0.3571,
       "nrfi_count": 7
+    },
+    {
+      "date": "2026-06-27",
+      "n_games": 2,
+      "correct": 1,
+      "accuracy": 0.5,
+      "nrfi_count": 1
     }
   ]
 }
