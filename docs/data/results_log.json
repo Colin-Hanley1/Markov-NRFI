@@ -12899,16 +12899,28 @@
       "home_runs_1st": 1,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824416",
+      "date": "2026-07-02",
+      "away_team": "CWS",
+      "home_team": "CLE",
+      "p_nrfi_predicted": 0.5809,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1075,
-    "accuracy": 0.5247,
-    "brier_score": 0.25196,
-    "brier_skill_score": -0.0113,
-    "log_loss": 0.69788,
-    "actual_nrfi_rate": 0.4707,
-    "mean_predicted": 0.529,
+    "n_games": 1076,
+    "accuracy": 0.5251,
+    "brier_score": 0.25188,
+    "brier_skill_score": -0.0109,
+    "log_loss": 0.69774,
+    "actual_nrfi_rate": 0.4712,
+    "mean_predicted": 0.5291,
     "last_updated": "2026-07-02"
   },
   "daily": [
@@ -13481,10 +13493,10 @@
     },
     {
       "date": "2026-07-02",
-      "n_games": 3,
-      "correct": 2,
-      "accuracy": 0.6667,
-      "nrfi_count": 1
+      "n_games": 4,
+      "correct": 3,
+      "accuracy": 0.75,
+      "nrfi_count": 2
     }
   ]
 }
