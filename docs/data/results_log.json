@@ -12887,16 +12887,28 @@
       "home_runs_1st": 0,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824335",
+      "date": "2026-07-02",
+      "away_team": "MIA",
+      "home_team": "COL",
+      "p_nrfi_predicted": 0.3667,
+      "nrfi_actual": false,
+      "away_runs_1st": 2,
+      "home_runs_1st": 1,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1074,
-    "accuracy": 0.5242,
-    "brier_score": 0.25206,
-    "brier_skill_score": -0.0116,
-    "log_loss": 0.69811,
-    "actual_nrfi_rate": 0.4711,
-    "mean_predicted": 0.5292,
+    "n_games": 1075,
+    "accuracy": 0.5247,
+    "brier_score": 0.25196,
+    "brier_skill_score": -0.0113,
+    "log_loss": 0.69788,
+    "actual_nrfi_rate": 0.4707,
+    "mean_predicted": 0.529,
     "last_updated": "2026-07-02"
   },
   "daily": [
@@ -13469,9 +13481,9 @@
     },
     {
       "date": "2026-07-02",
-      "n_games": 2,
-      "correct": 1,
-      "accuracy": 0.5,
+      "n_games": 3,
+      "correct": 2,
+      "accuracy": 0.6667,
       "nrfi_count": 1
     }
   ]
