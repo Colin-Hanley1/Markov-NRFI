@@ -12971,15 +12971,27 @@
       "home_runs_1st": 0,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824659",
+      "date": "2026-07-03",
+      "away_team": "STL",
+      "home_team": "CHC",
+      "p_nrfi_predicted": 0.519,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1081,
-    "accuracy": 0.5254,
-    "brier_score": 0.25191,
-    "brier_skill_score": -0.0111,
-    "log_loss": 0.69779,
-    "actual_nrfi_rate": 0.4709,
+    "n_games": 1082,
+    "accuracy": 0.5259,
+    "brier_score": 0.25189,
+    "brier_skill_score": -0.0109,
+    "log_loss": 0.69775,
+    "actual_nrfi_rate": 0.4713,
     "mean_predicted": 0.5291,
     "last_updated": "2026-07-03"
   },
@@ -13557,6 +13569,13 @@
       "correct": 6,
       "accuracy": 0.6667,
       "nrfi_count": 4
+    },
+    {
+      "date": "2026-07-03",
+      "n_games": 1,
+      "correct": 1,
+      "accuracy": 1.0,
+      "nrfi_count": 1
     }
   ]
 }
