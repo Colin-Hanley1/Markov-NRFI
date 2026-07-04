@@ -13127,15 +13127,27 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "822716",
+      "date": "2026-07-04",
+      "away_team": "PIT",
+      "home_team": "WSH",
+      "p_nrfi_predicted": 0.5549,
+      "nrfi_actual": false,
+      "away_runs_1st": 1,
+      "home_runs_1st": 1,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1094,
-    "accuracy": 0.5247,
-    "brier_score": 0.25198,
-    "brier_skill_score": -0.0112,
-    "log_loss": 0.69792,
-    "actual_nrfi_rate": 0.4717,
+    "n_games": 1095,
+    "accuracy": 0.5242,
+    "brier_score": 0.25203,
+    "brier_skill_score": -0.0115,
+    "log_loss": 0.69802,
+    "actual_nrfi_rate": 0.4712,
     "mean_predicted": 0.5292,
     "last_updated": "2026-07-04"
   },
@@ -13720,6 +13732,13 @@
       "correct": 6,
       "accuracy": 0.4615,
       "nrfi_count": 7
+    },
+    {
+      "date": "2026-07-04",
+      "n_games": 1,
+      "correct": 0,
+      "accuracy": 0.0,
+      "nrfi_count": 0
     }
   ]
 }
