@@ -13487,15 +13487,27 @@
       "home_runs_1st": 2,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824089",
+      "date": "2026-07-06",
+      "away_team": "PHI",
+      "home_team": "KC",
+      "p_nrfi_predicted": 0.5763,
+      "nrfi_actual": false,
+      "away_runs_1st": 1,
+      "home_runs_1st": 6,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1124,
-    "accuracy": 0.5276,
-    "brier_score": 0.25155,
-    "brier_skill_score": -0.0101,
-    "log_loss": 0.69702,
-    "actual_nrfi_rate": 0.4689,
+    "n_games": 1125,
+    "accuracy": 0.5271,
+    "brier_score": 0.25162,
+    "brier_skill_score": -0.0105,
+    "log_loss": 0.69716,
+    "actual_nrfi_rate": 0.4684,
     "mean_predicted": 0.5287,
     "last_updated": "2026-07-06"
   },
@@ -14094,6 +14106,13 @@
       "correct": 9,
       "accuracy": 0.6,
       "nrfi_count": 6
+    },
+    {
+      "date": "2026-07-06",
+      "n_games": 1,
+      "correct": 0,
+      "accuracy": 0.0,
+      "nrfi_count": 0
     }
   ]
 }
