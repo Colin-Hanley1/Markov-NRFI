@@ -13583,15 +13583,27 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823062",
+      "date": "2026-07-07",
+      "away_team": "MIL",
+      "home_team": "STL",
+      "p_nrfi_predicted": 0.5755,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 2,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1132,
-    "accuracy": 0.5292,
-    "brier_score": 0.25162,
-    "brier_skill_score": -0.0103,
-    "log_loss": 0.69719,
-    "actual_nrfi_rate": 0.4691,
+    "n_games": 1133,
+    "accuracy": 0.5287,
+    "brier_score": 0.25169,
+    "brier_skill_score": -0.0107,
+    "log_loss": 0.69733,
+    "actual_nrfi_rate": 0.4687,
     "mean_predicted": 0.5288,
     "last_updated": "2026-07-07"
   },
@@ -14197,6 +14209,13 @@
       "correct": 6,
       "accuracy": 0.75,
       "nrfi_count": 4
+    },
+    {
+      "date": "2026-07-07",
+      "n_games": 1,
+      "correct": 0,
+      "accuracy": 0.0,
+      "nrfi_count": 0
     }
   ]
 }
