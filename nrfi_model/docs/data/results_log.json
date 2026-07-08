@@ -13691,17 +13691,65 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823035",
+      "date": "2026-07-07",
+      "away_team": "MIL",
+      "home_team": "STL",
+      "p_nrfi_predicted": 0.5489,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823687",
+      "date": "2026-07-07",
+      "away_team": "CLE",
+      "home_team": "MIN",
+      "p_nrfi_predicted": 0.5524,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "824579",
+      "date": "2026-07-07",
+      "away_team": "BOS",
+      "home_team": "CWS",
+      "p_nrfi_predicted": 0.496,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "822881",
+      "date": "2026-07-07",
+      "away_team": "LAA",
+      "home_team": "TEX",
+      "p_nrfi_predicted": 0.5838,
+      "nrfi_actual": false,
+      "away_runs_1st": 2,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1141,
-    "accuracy": 0.5285,
-    "brier_score": 0.2518,
-    "brier_skill_score": -0.0111,
-    "log_loss": 0.69754,
-    "actual_nrfi_rate": 0.4689,
+    "n_games": 1145,
+    "accuracy": 0.5284,
+    "brier_score": 0.25179,
+    "brier_skill_score": -0.0108,
+    "log_loss": 0.69752,
+    "actual_nrfi_rate": 0.4699,
     "mean_predicted": 0.5291,
-    "last_updated": "2026-07-07"
+    "last_updated": "2026-07-08"
   },
   "daily": [
     {
@@ -14308,10 +14356,10 @@
     },
     {
       "date": "2026-07-07",
-      "n_games": 9,
-      "correct": 4,
-      "accuracy": 0.4444,
-      "nrfi_count": 4
+      "n_games": 13,
+      "correct": 6,
+      "accuracy": 0.4615,
+      "nrfi_count": 7
     }
   ]
 }
