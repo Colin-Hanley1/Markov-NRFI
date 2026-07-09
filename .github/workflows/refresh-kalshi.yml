@@ -1,0 +1,31 @@
+name: Refresh Kalshi Odds
+on:
+  workflow_dispatch:
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: nrfi_model
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install numpy pandas scipy requests
+      - run: python refresh_kalshi_odds.py
+      - name: Sync docs to repo root
+        working-directory: .
+        run: |
+          cp nrfi_model/docs/data/latest.json docs/data/latest.json
+          cp nrfi_model/docs/data/games_*.json docs/data/ 2>/dev/null || true
+      - name: Commit and push
+        working-directory: .
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/data/ nrfi_model/docs/data/
+          git diff --staged --quiet || git commit -m "Refresh Kalshi odds $(date +%Y-%m-%d\ %H:%M\ UTC)"
+          git push

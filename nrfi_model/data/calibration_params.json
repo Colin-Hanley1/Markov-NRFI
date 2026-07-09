@@ -1,0 +1,13 @@
+{
+  "a": 0.5698532540299719,
+  "b": -0.1880237463866683,
+  "fit_date": "2026-07-09",
+  "n_games": 1163,
+  "insample_brier_before": 0.25345851536876357,
+  "insample_brier_after": 0.24790622940172233,
+  "holdout_brier_before": 0.24402125672199168,
+  "holdout_brier_after": 0.2461992149495674,
+  "full_brier_before": 0.2515029011521926,
+  "full_brier_after": 0.24730292934266102,
+  "manual_maintenance": "Re-run this script periodically, e.g. weekly; not wired into the hourly pipeline."
+}

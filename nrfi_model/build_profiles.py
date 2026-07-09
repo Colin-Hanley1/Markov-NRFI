@@ -19,6 +19,8 @@ import sys
 import json
 from typing import Dict, List, Optional, Tuple
 
+from model.shrinkage import shrink_rates
+
 MLB_API = "https://statsapi.mlb.com/api/v1"
 
 SEASONS = [2024, 2025, 2026]
@@ -285,8 +287,12 @@ def main():
     batters_list = {pid: p for pid, p in players.items() if not p["is_pitcher"]}
     print(f"  Found {len(pitchers_list)} pitchers, {len(batters_list)} position players")
 
+    # League average is needed before player rows so low-PA profiles can be shrunk.
+    print("\n[2/4] Computing league averages (2024-2026)...")
+    league_avg = build_league_averages()
+
     # 2. Build pitcher profiles
-    print(f"\n[2/4] Fetching pitcher stats (3 seasons × {len(pitchers_list)} pitchers)...")
+    print(f"\n[3/4] Fetching pitcher stats (3 seasons × {len(pitchers_list)} pitchers)...")
     pitcher_rows = []
     skipped_pitchers = 0
     for i, (pid, info) in enumerate(sorted(pitchers_list.items())):
@@ -304,6 +310,7 @@ def main():
             if rates is None:
                 skipped_pitchers += 1
                 continue
+            rates = shrink_rates(rates, float(rates["pa"]), league_avg)
 
             rates["pitcher_id"] = str(pid)
             rates["name"] = bio.get("fullName", info["name"])
@@ -318,7 +325,7 @@ def main():
     print(f"  Built {len(pitcher_rows)} pitcher profiles (skipped {skipped_pitchers})")
 
     # 3. Build batter profiles
-    print(f"\n[3/4] Fetching batter stats (3 seasons × {len(batters_list)} batters)...")
+    print(f"\n[4/4] Fetching batter stats (3 seasons × {len(batters_list)} batters)...")
     batter_rows = []
     skipped_batters = 0
     for i, (pid, info) in enumerate(sorted(batters_list.items())):
@@ -336,6 +343,7 @@ def main():
             if rates is None:
                 skipped_batters += 1
                 continue
+            rates = shrink_rates(rates, float(rates["pa"]), league_avg)
 
             rates["batter_id"] = str(pid)
             rates["name"] = bio.get("fullName", info["name"])
@@ -369,6 +377,7 @@ def main():
             rates = counting_to_batter_rates(totals)
             if rates is None:
                 continue
+            rates = shrink_rates(rates, float(rates["pa"]), league_avg)
             bio = get_player_bio(pid)
             rates["batter_id"] = str(pid)
             rates["name"] = bio.get("fullName", info["name"])
@@ -384,10 +393,6 @@ def main():
         time.sleep(0.08)
     if pitcher_batting_count:
         print(f"  Added {pitcher_batting_count} pitcher batting profiles")
-
-    # 4. League averages
-    print("\n[4/4] Computing league averages (2024-2026)...")
-    league_avg = build_league_averages()
 
     # Write CSVs
     print("\nWriting CSVs...")

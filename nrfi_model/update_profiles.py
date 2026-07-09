@@ -18,6 +18,8 @@ import pandas as pd
 import numpy as np
 from typing import Dict, List, Optional
 
+from model.shrinkage import shrink_rates
+
 MLB_API = "https://statsapi.mlb.com/api/v1"
 DATA_DIR = "data/"
 CURRENT_SEASON = int(sys.argv[1]) if len(sys.argv) > 1 else 2026
@@ -142,6 +144,18 @@ def raw_to_rates(raw, pa_key, include_sac_bunt=False):
     return rates
 
 
+def _row_rates(row, cols):
+    out = {}
+    for k in cols:
+        if k not in row:
+            continue
+        try:
+            out[k] = float(row.get(k, 0))
+        except (TypeError, ValueError):
+            continue
+    return out
+
+
 def main():
     print(f"Updating profiles with {CURRENT_SEASON} season stats...", flush=True)
 
@@ -149,9 +163,10 @@ def main():
     try:
         old_pitchers = pd.read_csv(f"{DATA_DIR}pitchers.csv", dtype={"pitcher_id": str}).set_index("pitcher_id")
         old_batters = pd.read_csv(f"{DATA_DIR}batters.csv", dtype={"batter_id": str}).set_index("batter_id")
+        league_avg = pd.read_csv(f"{DATA_DIR}league_averages.csv").iloc[0].to_dict()
         print(f"  Existing: {len(old_pitchers)} pitchers, {len(old_batters)} batters", flush=True)
-    except FileNotFoundError:
-        print("  No existing profiles found. Run build_profiles.py first for a full build.")
+    except FileNotFoundError as e:
+        print(f"  Missing required profile data ({e.filename}). Run build_profiles.py first for a full build.")
         return
 
     # Get active rosters
@@ -201,10 +216,18 @@ def main():
                     if psum > 0:
                         for k in primary:
                             old_pitchers.loc[pid_str, k] = float(old_pitchers.loc[pid_str, k]) / psum
+                    shrunk = shrink_rates(
+                        _row_rates(old_pitchers.loc[pid_str], LEAGUE_COLS),
+                        total_pa,
+                        league_avg,
+                    )
+                    for k, v in shrunk.items():
+                        if k in old_pitchers.columns:
+                            old_pitchers.loc[pid_str, k] = v
                 updated_p += 1
             else:
                 # New player
-                row = rates.copy()
+                row = shrink_rates(rates, float(rates["pa"]), league_avg)
                 row["name"] = bio.get("fullName", info["name"])
                 row["hand"] = bio.get("pitchHand", {}).get("code", "R")
                 row["team"] = info["team"]
@@ -255,9 +278,17 @@ def main():
                     if psum > 0:
                         for k in primary:
                             old_batters.loc[pid_str, k] = float(old_batters.loc[pid_str, k]) / psum
+                    shrunk = shrink_rates(
+                        _row_rates(old_batters.loc[pid_str], LEAGUE_COLS),
+                        total_pa,
+                        league_avg,
+                    )
+                    for k, v in shrunk.items():
+                        if k in old_batters.columns:
+                            old_batters.loc[pid_str, k] = v
                 updated_b += 1
             else:
-                row = rates.copy()
+                row = shrink_rates(rates, float(rates["pa"]), league_avg)
                 row["name"] = bio.get("fullName", info["name"])
                 bat_side = bio.get("batSide", {}).get("code", "R")
                 if bat_side == "S":

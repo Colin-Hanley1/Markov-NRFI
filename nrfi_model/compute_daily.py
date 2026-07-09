@@ -18,6 +18,7 @@ import requests
 import pandas as pd
 import numpy as np
 from datetime import date, timedelta
+from datetime import datetime, timezone
 from pathlib import Path
 
 from model.outcomes import PAOutcomeRates
@@ -29,9 +30,18 @@ from model.chain import (
 
 DATA_DIR = "data/"
 OUT_DIR = Path("docs/data")
+CALIBRATION_PATH = Path(DATA_DIR) / "calibration_params.json"
 
 MLB_API = "https://statsapi.mlb.com/api/v1"
 N_SIMS = 50_000
+KALSHI_API = "https://api.elections.kalshi.com/trade-api/v2"
+KALSHI_SERIES = "KXMLBRFI"
+
+# Kalshi's occurrence_datetime runs a consistent ~3h later than MLB's own
+# gameDate (verified live, e.g. 23:10Z vs 02:10Z next day for the same game).
+# Title matching (both team hints) is the primary safety check now, so this
+# window just needs to comfortably cover that offset, not pin exact time.
+KALSHI_MATCH_TOLERANCE_MIN = 240
 
 TEAM_ABBREVS = {
     108: "LAA", 109: "ARI", 110: "BAL", 111: "BOS", 112: "CHC",
@@ -54,12 +64,50 @@ TEAM_NAMES = {
     "NYY": "Yankees", "MIL": "Brewers",
 }
 
+# Substring each team's abbreviation maps to in Kalshi's market titles
+# (e.g. "Toronto vs San Diego First Inning Run?"). Kalshi disambiguates
+# same-city teams with a trailing initial ("Los Angeles D" = Dodgers,
+# "Chicago C" = Cubs), confirmed against live API samples where noted.
+KALSHI_CITY_HINTS = {
+    "LAA": "Los Angeles A", "ARI": "Arizona", "BAL": "Baltimore", "BOS": "Boston",  # BOS, ARI confirmed live
+    "CHC": "Chicago C", "CIN": "Cincinnati", "CLE": "Cleveland", "COL": "Colorado",  # CIN, COL confirmed live
+    "DET": "Detroit", "HOU": "Houston", "KC": "Kansas City", "LAD": "Los Angeles D",  # LAD confirmed live
+    "WSH": "Washington", "NYM": "New York M", "OAK": "A's", "PIT": "Pittsburgh",  # NYM, OAK confirmed live
+    "SD": "San Diego", "SEA": "Seattle", "SF": "San Francisco", "STL": "St. Louis",  # SD, SF confirmed live
+    "TB": "Tampa Bay", "TEX": "Texas", "TOR": "Toronto", "MIN": "Minnesota",  # TOR confirmed live
+    "PHI": "Philadelphia", "ATL": "Atlanta", "CWS": "Chicago W", "MIA": "Miami",
+    "NYY": "New York Y", "MIL": "Milwaukee",  # MIL confirmed live
+}
+
 RATE_COLUMNS = [
     'k_rate', 'bb_rate', 'hbp_rate', 'hr_rate',
     'single_rate', 'double_rate', 'triple_rate',
     'gbout_rate', 'fbout_rate', 'ldout_rate', 'fc_rate',
     'gidp_prob_given_gbout', 'sf_prob_given_fbout', 'sac_bunt_prob',
 ]
+
+
+def _logit(p: float) -> float:
+    p = float(np.clip(p, 1e-6, 1 - 1e-6))
+    return float(np.log(p / (1 - p)))
+
+
+def _sigmoid(x: float) -> float:
+    return float(1 / (1 + np.exp(-x)))
+
+
+def load_calibration_params() -> dict:
+    try:
+        with open(CALIBRATION_PATH) as f:
+            params = json.load(f)
+        return {"a": float(params.get("a", 1.0)), "b": float(params.get("b", 0.0))}
+    except Exception as e:
+        print(f"  Warning: using identity calibration ({e})", flush=True)
+        return {"a": 1.0, "b": 0.0}
+
+
+def calibrate_probability(p: float, calibration: dict) -> float:
+    return _sigmoid(float(calibration["a"]) * _logit(p) + float(calibration["b"]))
 
 
 def load_data():
@@ -82,6 +130,7 @@ def load_data():
         "pitchers": pitchers, "batters": batters,
         "parks": parks, "league": league,
         "pitcher_splits": pitcher_splits, "batter_splits": batter_splits,
+        "calibration": load_calibration_params(),
     }
 
 
@@ -198,6 +247,126 @@ def fetch_last_lineup(team_abbr):
         return []
     except Exception:
         return []
+
+
+def fetch_kalshi_rfi_markets() -> list[dict]:
+    """Fetch open Kalshi first-inning-run markets; return [] on any failure."""
+    markets = []
+    cursor = None
+    try:
+        for _ in range(5):
+            params = {"series_ticker": KALSHI_SERIES, "status": "open", "limit": 200}
+            if cursor:
+                params["cursor"] = cursor
+            resp = requests.get(f"{KALSHI_API}/markets", params=params, timeout=10)
+            resp.raise_for_status()
+            payload = resp.json()
+            markets.extend(payload.get("markets", []))
+            cursor = payload.get("cursor")
+            if not cursor:
+                break
+    except Exception as e:
+        print(f"  Warning: could not fetch Kalshi markets: {e}", flush=True)
+        return []
+    return markets
+
+
+def _parse_iso_utc(value: str | None) -> datetime | None:
+    if not value:
+        return None
+    try:
+        dt = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt.astimezone(timezone.utc)
+    except (ValueError, TypeError):
+        return None
+
+
+def fetch_game_start_utc(game_id: str) -> datetime | None:
+    """Look up a game's actual UTC start time from the MLB schedule API."""
+    try:
+        resp = requests.get(f"{MLB_API}/schedule", params={"gamePk": game_id}, timeout=10)
+        resp.raise_for_status()
+        dates = resp.json().get("dates", [])
+        if not dates or not dates[0].get("games"):
+            return None
+        return _parse_iso_utc(dates[0]["games"][0].get("gameDate"))
+    except Exception:
+        return None
+
+
+def match_kalshi_market(markets, game_date_iso_utc: str, away_abbr: str, home_abbr: str) -> dict | None:
+    """Match a Kalshi market to an MLB game by scheduled UTC start time.
+
+    Time proximity alone is unreliable: MLB games cluster tightly around
+    common start slots (7:05-7:40 PM ET most nights), so the closest-in-time
+    open market is often a *different* game. Require both teams' city hints
+    to appear in the market title before accepting a match; otherwise a
+    game can end up silently showing another game's live odds.
+    """
+    if not markets:
+        return None
+
+    game_dt = _parse_iso_utc(game_date_iso_utc)
+    if game_dt is None:
+        return None
+
+    away_hint = KALSHI_CITY_HINTS.get(away_abbr, "").lower()
+    home_hint = KALSHI_CITY_HINTS.get(home_abbr, "").lower()
+    if not away_hint or not home_hint:
+        return None
+
+    best_market = None
+    best_delta = None
+    for market in markets:
+        title = (market.get("title") or "").lower()
+        if away_hint not in title or home_hint not in title:
+            continue
+        market_dt = _parse_iso_utc(market.get("occurrence_datetime"))
+        if market_dt is None:
+            continue
+        delta_min = abs((market_dt - game_dt).total_seconds()) / 60
+        if best_delta is None or delta_min < best_delta:
+            best_delta = delta_min
+            best_market = market
+
+    if best_delta is None or best_delta > KALSHI_MATCH_TOLERANCE_MIN:
+        return None
+    return best_market
+
+
+def build_kalshi_entry(market: dict | None, p_nrfi_game: float | None) -> dict:
+    if market is None:
+        return {"available": False}
+
+    try:
+        yes_bid = float(market.get("yes_bid_dollars") or 0)
+        yes_ask = float(market.get("yes_ask_dollars") or 0)
+    except (ValueError, TypeError):
+        return {"available": False}
+
+    if yes_bid <= 0 and yes_ask <= 0:
+        return {"available": False}
+
+    yrfi_prob = (yes_bid + yes_ask) / 2 if (yes_bid and yes_ask) else (yes_bid or yes_ask)
+    nrfi_prob = 1 - yrfi_prob
+    spread = round(yes_ask - yes_bid, 4) if (yes_bid and yes_ask) else None
+    ticker = market.get("ticker")
+    if not ticker:
+        return {"available": False}
+
+    return {
+        "available": True,
+        "ticker": ticker,
+        "title": market.get("title", ""),
+        "yrfi_prob": round(yrfi_prob, 4),
+        "nrfi_prob": round(nrfi_prob, 4),
+        "spread": spread,
+        "low_liquidity": spread is not None and spread > 0.30,
+        "edge_pp": round((p_nrfi_game - nrfi_prob) * 100, 1) if p_nrfi_game is not None else None,
+        "market_url": f"https://kalshi.com/markets/kxmlbrfi/{ticker.lower()}",
+    }
 
 
 def run_game_model(away_lineup, home_lineup, away_sp_id, home_sp_id, home_team, data):
@@ -324,11 +493,15 @@ def run_game_model(away_lineup, home_lineup, away_sp_id, home_sp_id, home_team, 
             away_names=away_names, home_names=home_names,
         ))
 
+    p_nrfi_game = float(sim["p_nrfi_game"])
+    p_nrfi_game_calibrated = calibrate_probability(p_nrfi_game, data["calibration"])
+
     return {
         "results": {
             "p_nrfi_away": round(sim["p_nrfi_away"], 4),
             "p_nrfi_home": round(sim["p_nrfi_home"], 4),
-            "p_nrfi_game": round(sim["p_nrfi_game"], 4),
+            "p_nrfi_game": round(p_nrfi_game, 4),
+            "p_nrfi_game_calibrated": round(p_nrfi_game_calibrated, 4),
             "p_nrfi_away_analytic": round(p_away_a, 4),
             "p_nrfi_home_analytic": round(p_home_a, 4),
             "p_nrfi_game_analytic": round(p_away_a * p_home_a, 4),
@@ -391,10 +564,12 @@ def main():
     sched = requests.get(url, timeout=15).json()
     games_raw = sched.get("dates", [{}])[0].get("games", []) if sched.get("dates") else []
     print(f"  {len(games_raw)} games on schedule", flush=True)
+    kalshi_markets = fetch_kalshi_rfi_markets()
 
     output_games = []
 
     for g in games_raw:
+        game_start_utc = g.get("gameDate")
         away = g["teams"]["away"]
         home = g["teams"]["home"]
         away_abbr = TEAM_ABBREVS.get(away["team"]["id"], "???")
@@ -452,6 +627,19 @@ def main():
         else:
             reason = "no pitchers" if not has_pitchers else "no lineups"
             print(f"  {away_abbr}@{home_abbr}: skipped ({reason})", flush=True)
+
+        result_probs = game_entry.get("results", {})
+        p_nrfi = result_probs.get("p_nrfi_game_calibrated", result_probs.get("p_nrfi_game"))
+        matched = match_kalshi_market(kalshi_markets, game_start_utc, away_abbr, home_abbr) if game_start_utc else None
+        game_entry["kalshi"] = build_kalshi_entry(matched, p_nrfi)
+        if game_entry["kalshi"]["available"]:
+            edge = game_entry["kalshi"]["edge_pp"]
+            edge_str = f"{edge:+.1f}pp" if edge is not None else "n/a"
+            print(
+                f"  {away_abbr}@{home_abbr}: Kalshi match -> {game_entry['kalshi']['title']!r} "
+                f"(edge {edge_str})",
+                flush=True,
+            )
 
         output_games.append(game_entry)
 

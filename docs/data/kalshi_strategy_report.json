@@ -1,0 +1,195 @@
+{
+  "source": "/Users/colinhanley/Desktop/NRFI/nrfi_model/data/kalshi_backtest_joined.csv",
+  "n_games": 851,
+  "date_range": [
+    "2026-05-05",
+    "2026-07-08"
+  ],
+  "brier": {
+    "model": 0.24707,
+    "market": 0.24837
+  },
+  "thresholds_pp": [
+    0,
+    3,
+    5,
+    8,
+    12,
+    15,
+    20
+  ],
+  "results": [
+    {
+      "threshold_pp": 0,
+      "side": "NRFI",
+      "n_bets": 174,
+      "win_rate": 0.454,
+      "total_profit": -4.9,
+      "roi_pct": -2.82,
+      "mean_return_ci95": [
+        -0.1019,
+        0.0456
+      ]
+    },
+    {
+      "threshold_pp": 0,
+      "side": "YRFI",
+      "n_bets": 679,
+      "win_rate": 0.5228,
+      "total_profit": 20.34,
+      "roi_pct": 3.0,
+      "mean_return_ci95": [
+        -0.0076,
+        0.0675
+      ]
+    },
+    {
+      "threshold_pp": 3,
+      "side": "NRFI",
+      "n_bets": 62,
+      "win_rate": 0.4032,
+      "total_profit": -3.2,
+      "roi_pct": -5.16,
+      "mean_return_ci95": [
+        -0.1731,
+        0.0699
+      ]
+    },
+    {
+      "threshold_pp": 3,
+      "side": "YRFI",
+      "n_bets": 463,
+      "win_rate": 0.5378,
+      "total_profit": 24.88,
+      "roi_pct": 5.37,
+      "mean_return_ci95": [
+        0.0085,
+        0.099
+      ]
+    },
+    {
+      "threshold_pp": 5,
+      "side": "NRFI",
+      "n_bets": 25,
+      "win_rate": 0.28,
+      "total_profit": -3.92,
+      "roi_pct": -15.68,
+      "mean_return_ci95": [
+        -0.333,
+        0.0194
+      ]
+    },
+    {
+      "threshold_pp": 5,
+      "side": "YRFI",
+      "n_bets": 302,
+      "win_rate": 0.5795,
+      "total_profit": 30.63,
+      "roi_pct": 10.14,
+      "mean_return_ci95": [
+        0.0464,
+        0.1565
+      ]
+    },
+    {
+      "threshold_pp": 8,
+      "side": "NRFI",
+      "n_bets": 14,
+      "win_rate": 0.2857,
+      "total_profit": -2.0,
+      "roi_pct": -14.29,
+      "mean_return_ci95": [
+        -0.3813,
+        0.0955
+      ]
+    },
+    {
+      "threshold_pp": 8,
+      "side": "YRFI",
+      "n_bets": 120,
+      "win_rate": 0.5417,
+      "total_profit": 9.21,
+      "roi_pct": 7.68,
+      "mean_return_ci95": [
+        -0.0115,
+        0.165
+      ]
+    },
+    {
+      "threshold_pp": 12,
+      "side": "NRFI",
+      "n_bets": 3,
+      "win_rate": 0.3333,
+      "total_profit": -0.12,
+      "roi_pct": -4.0,
+      "mean_return_ci95": [
+        -0.7191,
+        0.6391
+      ]
+    },
+    {
+      "threshold_pp": 12,
+      "side": "YRFI",
+      "n_bets": 15,
+      "win_rate": 0.4,
+      "total_profit": -0.75,
+      "roi_pct": -5.0,
+      "mean_return_ci95": [
+        -0.3082,
+        0.2082
+      ]
+    },
+    {
+      "threshold_pp": 15,
+      "side": "NRFI",
+      "n_bets": 1,
+      "win_rate": 0.0,
+      "total_profit": -0.44,
+      "roi_pct": -44.0,
+      "mean_return_ci95": [
+        null,
+        null
+      ]
+    },
+    {
+      "threshold_pp": 15,
+      "side": "YRFI",
+      "n_bets": 1,
+      "win_rate": 0.0,
+      "total_profit": -0.55,
+      "roi_pct": -55.0,
+      "mean_return_ci95": [
+        null,
+        null
+      ]
+    },
+    {
+      "threshold_pp": 20,
+      "side": "NRFI",
+      "n_bets": 0,
+      "win_rate": null,
+      "total_profit": 0,
+      "roi_pct": null,
+      "mean_return_ci95": [
+        null,
+        null
+      ]
+    },
+    {
+      "threshold_pp": 20,
+      "side": "YRFI",
+      "n_bets": 0,
+      "win_rate": null,
+      "total_profit": 0,
+      "roi_pct": null,
+      "mean_return_ci95": [
+        null,
+        null
+      ]
+    }
+  ],
+  "caveats": [
+    "~850 games over ~9 weeks is a modest sample; high-threshold buckets will have few bets and noisy ROI. Treat single-threshold wins skeptically without more data or an out-of-sample holdout.",
+    "Uses realistic ask-side fill prices by crossing the spread, but does not model Kalshi's per-contract trading fee or slippage from thin liquidity. Real-world returns would run somewhat below the backtest."
+  ]
+}

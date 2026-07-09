@@ -723,6 +723,38 @@
       height: 14px;
       background: var(--rule);
     }
+    .card-market-odds {
+      margin-top: 6px;
+      padding-top: 6px;
+    }
+    .card-market-odds .fo-label {
+      color: var(--navy);
+    }
+    .edge-badge {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      margin-top: 8px;
+      padding: 3px 7px;
+      border: 1px solid currentColor;
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .edge-nrfi {
+      color: var(--moss);
+      background: rgba(107, 122, 61, 0.08);
+    }
+    .edge-yrfi {
+      color: var(--accent);
+      background: rgba(195, 57, 43, 0.08);
+    }
+    .low-liquidity {
+      opacity: 0.68;
+      font-style: italic;
+    }
 
     /* ═══ FAIR ODDS — DETAIL STRIP ═══ */
     .fair-odds-strip {
@@ -792,6 +824,24 @@
       padding-top: 10px;
       border-top: 1px dashed var(--rule);
       margin-top: 14px;
+    }
+    .market-odds-strip {
+      border-color: var(--navy);
+      margin-top: -14px;
+    }
+    .market-odds-strip .fos-label {
+      color: var(--navy);
+    }
+    .fos-note a {
+      color: var(--navy);
+      font-family: var(--mono);
+      font-style: normal;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-left: 8px;
+      white-space: nowrap;
     }
     @media (max-width: 600px) {
       .fair-odds-strip { grid-template-columns: 1fr 1px 1fr; }
@@ -1478,6 +1528,7 @@
   <button class="tab-btn active" onclick="switchTab(0)">The Slate</button>
   <button class="tab-btn" onclick="switchTab(1)">Results Tracker</button>
   <button class="tab-btn" onclick="switchTab(2)">The Method</button>
+  <button class="tab-btn" onclick="switchTab(3)">Betting Backtest</button>
 </nav>
 
 <div class="container">
@@ -1499,6 +1550,11 @@
   <!-- TAB 2: Methodology -->
   <div class="tab-content" id="tab2">
     <div class="method-section" id="methodContent"></div>
+  </div>
+
+  <!-- TAB 3: Betting Backtest -->
+  <div class="tab-content" id="tab-3">
+    <div id="backtestReport"><div class="empty"><div class="spinner"></div><p style="margin-top:14px">Loading backtest&hellip;</p></div></div>
   </div>
 
 </div>
@@ -1531,6 +1587,13 @@ const toAmerican = (p) => {
     : Math.round(100 * (1 - p) / p);
   return odds >= 0 ? `+${odds}` : `${odds}`;
 };
+const EDGE_THRESHOLD_PP = 3;
+function renderEdgeBadge(edgePp) {
+  if (edgePp == null || Math.abs(edgePp) < EDGE_THRESHOLD_PP) return '';
+  const side = edgePp > 0 ? 'NRFI' : 'YRFI';
+  const cls = edgePp > 0 ? 'edge-nrfi' : 'edge-yrfi';
+  return `<div class="edge-badge ${cls}">EDGE ${side} +${Math.abs(edgePp).toFixed(1)}pp</div>`;
+}
 const rnd = (n,d=1) => Number(n).toFixed(d);
 
 // Chart.js defaults for editorial aesthetic
@@ -1561,6 +1624,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('meta').textContent = `${d.summary?.n_games_modeled||0} games modeled \u00b7 ${(d.n_simulations||0).toLocaleString()} simulations`;
     renderSummary();
     loadResultsTracker();
+    renderBacktest();
     renderSlate();
     renderCards();
     renderMethodology();
@@ -1572,6 +1636,16 @@ document.addEventListener('DOMContentLoaded', () => {
 function switchTab(n) {
   document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===n));
   document.querySelectorAll('.tab-content').forEach((c,i) => c.classList.toggle('active', i===n));
+}
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  }[ch]));
 }
 
 // ── Summary ──
@@ -1641,6 +1715,7 @@ function renderCards() {
     </div>
   ` + games.map((g,idx)=>{
     const m=g.modeled, r=g.results;
+    const fairP = m ? (r.p_nrfi_game_calibrated ?? r.p_nrfi_game) : null;
     let badgeCls='badge-no', badgeText='No Data';
     if (m) {
       if (g.lineup_source==='projected') { badgeCls='badge-proj'; badgeText='Projected'; }
@@ -1664,10 +1739,19 @@ function renderCards() {
       </div>
       <div class="card-fair-odds">
         <span class="fo-label">Fair</span>
-        <span class="fo-side"><strong>NRFI</strong> ${toAmerican(r.p_nrfi_game)}</span>
+        <span class="fo-side"><strong>NRFI</strong> ${toAmerican(fairP)}</span>
         <span class="fo-divider"></span>
-        <span class="fo-side"><strong>YRFI</strong> ${toAmerican(1 - r.p_nrfi_game)}</span>
-      </div>`:''}
+        <span class="fo-side"><strong>YRFI</strong> ${toAmerican(1 - fairP)}</span>
+      </div>
+      ${g.kalshi?.available ? `
+      <div class="card-fair-odds card-market-odds ${g.kalshi.low_liquidity ? 'low-liquidity' : ''}">
+        <span class="fo-label">Kalshi</span>
+        <span class="fo-side"><strong>NRFI</strong> ${toAmerican(g.kalshi.nrfi_prob)}</span>
+        <span class="fo-divider"></span>
+        <span class="fo-side"><strong>YRFI</strong> ${toAmerican(g.kalshi.yrfi_prob)}</span>
+      </div>
+      ${renderEdgeBadge(g.kalshi.edge_pp)}
+      ` : ''}`:''}
     </div>`;
   }).join('');
 }
@@ -1676,6 +1760,7 @@ function renderCards() {
 function openDetail(idx) {
   const g=D.games[idx]; if(!g||!g.modeled) return;
   const r=g.results, p=g.pitchers, pk=g.park, md=g.model_detail||{};
+  const fairP = r.p_nrfi_game_calibrated ?? r.p_nrfi_game;
   document.getElementById('overlay').classList.add('open');
   const el=document.getElementById('detailContent');
 
@@ -1694,19 +1779,42 @@ function openDetail(idx) {
       <div class="fos-label">Fair Odds</div>
       <div class="fos-side">
         <div class="fos-name">NRFI</div>
-        <div class="fos-num tabular ${pC(r.p_nrfi_game)}">${toAmerican(r.p_nrfi_game)}</div>
-        <div class="fos-pct">${pS(r.p_nrfi_game)}% implied</div>
+        <div class="fos-num tabular ${pC(fairP)}">${toAmerican(fairP)}</div>
+        <div class="fos-pct">${pS(fairP)}% implied</div>
       </div>
       <div class="fos-divider"></div>
       <div class="fos-side">
         <div class="fos-name">YRFI</div>
-        <div class="fos-num tabular ${pC(1 - r.p_nrfi_game)}">${toAmerican(1 - r.p_nrfi_game)}</div>
-        <div class="fos-pct">${pS(1 - r.p_nrfi_game)}% implied</div>
+        <div class="fos-num tabular ${pC(1 - fairP)}">${toAmerican(1 - fairP)}</div>
+        <div class="fos-pct">${pS(1 - fairP)}% implied</div>
       </div>
       <div class="fos-note">
         American odds derived from the model's no-vig probability. Shop these against your sportsbook.
       </div>
     </div>
+
+    ${g.kalshi?.available ? `
+    <div class="fair-odds-strip market-odds-strip ${g.kalshi.low_liquidity ? 'low-liquidity' : ''}">
+      <div class="fos-label">Kalshi Live</div>
+      <div class="fos-side">
+        <div class="fos-name">NRFI</div>
+        <div class="fos-num tabular">${toAmerican(g.kalshi.nrfi_prob)}</div>
+        <div class="fos-pct">${Math.round(g.kalshi.nrfi_prob*100)}¢ on Kalshi</div>
+      </div>
+      <div class="fos-divider"></div>
+      <div class="fos-side">
+        <div class="fos-name">YRFI</div>
+        <div class="fos-num tabular">${toAmerican(g.kalshi.yrfi_prob)}</div>
+        <div class="fos-pct">${Math.round(g.kalshi.yrfi_prob*100)}¢ on Kalshi</div>
+      </div>
+      <div class="fos-note">
+        ${Math.abs(g.kalshi.edge_pp) >= EDGE_THRESHOLD_PP
+          ? `Model favors ${g.kalshi.edge_pp>0?'NRFI':'YRFI'} by ${Math.abs(g.kalshi.edge_pp).toFixed(1)}pp vs. the live Kalshi market.`
+          : `Model and Kalshi market are closely aligned (${Math.abs(g.kalshi.edge_pp).toFixed(1)}pp gap).`}
+        <a href="${g.kalshi.market_url}" target="_blank" rel="noopener">View on Kalshi &rarr;</a>
+      </div>
+    </div>
+    ` : ''}
 
     <div class="half-grid">
       <div class="half-panel">
@@ -2804,6 +2912,84 @@ function renderCalibrationChart() {
         }
       }
     }
+  });
+}
+
+function renderBacktest() {
+  const el = document.getElementById('backtestReport');
+  if (!el) return;
+
+  fetch('data/kalshi_strategy_report.json').then(r => {
+    if (!r.ok) throw new Error('missing report');
+    return r.json();
+  }).then(report => {
+    const rows = report.results || [];
+    const range = report.date_range || [];
+    const brier = report.brier || {};
+    const modelBrier = brier.model;
+    const marketBrier = brier.market;
+    const brierDelta = modelBrier != null && marketBrier != null ? modelBrier - marketBrier : null;
+    const caveats = report.caveats || [];
+
+    el.innerHTML = `
+      <div class="section-head">Betting Backtest</div>
+      <div class="section-sub">Kalshi KXMLBRFI strategy results from settled first-inning markets</div>
+
+      <div class="results-grid">
+        <div class="stat-cell feature">
+          <div class="stat-label">Sample Size</div>
+          <div class="stat-value tabular">${(report.n_games || 0).toLocaleString()}</div>
+          <div class="stat-sub">${range.length === 2 ? `${escapeHtml(range[0])} to ${escapeHtml(range[1])}` : 'date range unavailable'}</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">Calibrated Model Brier</div>
+          <div class="stat-value tabular">${modelBrier != null ? modelBrier.toFixed(4) : '—'}</div>
+          <div class="stat-sub">lower is better</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">Kalshi Market Brier</div>
+          <div class="stat-value tabular">${marketBrier != null ? marketBrier.toFixed(4) : '—'}</div>
+          <div class="stat-sub">ask-side NRFI price</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">Model minus Market</div>
+          <div class="stat-value tabular ${brierDelta != null && brierDelta <= 0 ? 'prob-high' : 'prob-low'}">${brierDelta != null ? brierDelta.toFixed(4) : '—'}</div>
+          <div class="stat-sub">Brier difference</div>
+        </div>
+      </div>
+
+      <div class="tracker-section">
+        <h3>Threshold Strategy ROI</h3>
+        <table class="daily-table">
+          <thead><tr><th>Threshold</th><th>Side</th><th>Bets</th><th>Win Rate</th><th>ROI</th><th>95% CI</th></tr></thead>
+          <tbody>
+          ${rows.map(row => {
+            const ci = row.mean_return_ci95 || [];
+            const ciText = ci[0] == null || ci[1] == null ? 'n/a' : `${(ci[0] * 100).toFixed(1)}% to ${(ci[1] * 100).toFixed(1)}%`;
+            return `
+              <tr>
+                <td class="tabular">${row.threshold_pp}pp</td>
+                <td>${escapeHtml(row.side)}</td>
+                <td class="tabular">${row.n_bets}</td>
+                <td class="pct-val">${row.win_rate == null ? 'n/a' : (row.win_rate * 100).toFixed(1) + '%'}</td>
+                <td class="pct-val ${row.roi_pct != null && row.roi_pct > 0 ? 'prob-high' : 'prob-low'}">${row.roi_pct == null ? 'n/a' : row.roi_pct.toFixed(2) + '%'}</td>
+                <td class="tabular">${ciText}</td>
+              </tr>`;
+          }).join('')}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tracker-section">
+        <h3>Caveats</h3>
+        <ul style="margin:0 0 16px 18px;color:var(--muted);font-size:13px;line-height:1.7">
+          ${caveats.map(c => `<li>${escapeHtml(c)}</li>`).join('')}
+        </ul>
+        <a href="https://github.com/Colin-Hanley1/Markov-NRFI/blob/main/nrfi_model/KALSHI_BACKTEST.md" target="_blank" rel="noopener" style="color:var(--accent);font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:.08em">Full backtest writeup</a>
+      </div>
+    `;
+  }).catch(() => {
+    el.innerHTML = '<div class="empty"><h2>No backtest report yet</h2><p>Run analyze_kalshi_strategy.py to generate Kalshi strategy results.</p></div>';
   });
 }
 
