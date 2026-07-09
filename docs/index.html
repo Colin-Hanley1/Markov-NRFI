@@ -1584,6 +1584,7 @@ let RL = {};
 let PT = null;
 let paperTradeChart = null;
 let visiblePaperStrategies = new Set();
+let paperSideFilter = 'ALL';
 
 const pC = p => p>=.55?'prob-high':p>=.48?'prob-mid':p>=.40?'prob-low':'prob-vlow';
 const pS = p => (p*100).toFixed(1);
@@ -3039,6 +3040,11 @@ function togglePaperStrategy(strategyId) {
   renderPaperTrading();
 }
 
+function setPaperSideFilter(side) {
+  paperSideFilter = side;
+  renderPaperTrading();
+}
+
 function paperHistorySeries(history, labels) {
   let last = history.length ? Number(history[0].bankroll) : 1;
   const byDate = new Map(history.map(point => [point.date, Number(point.bankroll)]));
@@ -3068,13 +3074,86 @@ function paperStrategyRows(strategies, bankroll, trades) {
   }).join('');
 }
 
+function paperTradesByDayHtml(trades, strategiesById, bankroll) {
+  if (!trades.length) {
+    return `
+      <div class="tracker-section">
+        <h3>Trades by Day</h3>
+        <p style="color:var(--muted);font-family:var(--sans);font-size:13px">No trades match the current filter.</p>
+      </div>`;
+  }
+
+  const byDate = new Map();
+  trades.forEach(trade => {
+    const date = trade.date || 'Unknown date';
+    if (!byDate.has(date)) byDate.set(date, []);
+    byDate.get(date).push(trade);
+  });
+
+  const days = Array.from(byDate.entries()).sort(([a], [b]) => String(b).localeCompare(String(a)));
+
+  return `
+    <div class="tracker-section">
+      <h3>Trades by Day</h3>
+      ${days.map(([date, dayTrades], dayIdx) => {
+        const byStrategy = new Map();
+        dayTrades.forEach(trade => {
+          const strategyId = trade.strategy_id || 'unknown';
+          if (!byStrategy.has(strategyId)) byStrategy.set(strategyId, []);
+          byStrategy.get(strategyId).push(trade);
+        });
+
+        return `
+          <details class="ledger-details" ${dayIdx === 0 ? 'open' : ''}>
+            <summary><h3 style="display:inline">${escapeHtml(date)} <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-family:var(--serif);font-style:italic;font-size:13px"> &mdash; ${dayTrades.length} trades</span></h3></summary>
+            ${Array.from(byStrategy.entries()).map(([strategyId, strategyTrades]) => {
+              const strategy = strategiesById[strategyId] || {};
+              const label = strategy.label || strategyId;
+              return `
+                <h4 style="font-family:var(--serif);font-size:15px;font-style:italic;font-weight:500;margin:18px 0 8px;color:var(--ink)">${escapeHtml(label)}</h4>
+                <table class="daily-table" style="margin-top:0">
+                  <thead><tr><th>Matchup</th><th>Side</th><th>Edge @ Entry</th><th>Entry Price</th><th>Stake</th><th>Result</th><th>P&amp;L</th></tr></thead>
+                  <tbody>
+                    ${strategyTrades.map(trade => {
+                      const side = trade.side === 'NRFI' ? 'NRFI' : 'YRFI';
+                      const edge = Number(trade.edge_pp_at_entry);
+                      const price = Number(trade.entry_price);
+                      const stake = Number(trade.stake || 0) * bankroll;
+                      const pnl = trade.pnl == null ? null : Number(trade.pnl) * bankroll;
+                      const result = trade.status === 'open'
+                        ? '<span style="color:var(--muted)">open</span>'
+                        : trade.won
+                          ? '<span class="correct-tag">won</span>'
+                          : '<span class="miss-tag">lost</span>';
+                      return `
+                        <tr>
+                          <td class="matchup">${escapeHtml(trade.matchup || '')}</td>
+                          <td><span class="${side === 'NRFI' ? 'nrfi-tag' : 'rfi-tag'}">${side}</span></td>
+                          <td class="tabular">${Number.isFinite(edge) ? edge.toFixed(1) + 'pp' : 'n/a'}</td>
+                          <td class="tabular">${Number.isFinite(price) ? price.toFixed(2) : 'n/a'}</td>
+                          <td class="tabular">${moneyFmt(stake)}</td>
+                          <td>${result}</td>
+                          <td class="tabular ${pnl == null ? '' : pnl >= 0 ? 'prob-high' : 'prob-low'}">${pnl == null ? '&mdash;' : moneyFmt(pnl)}</td>
+                        </tr>`;
+                    }).join('')}
+                  </tbody>
+                </table>`;
+            }).join('')}
+          </details>`;
+      }).join('')}
+    </div>`;
+}
+
 function updatePaperTradingValues() {
   if (!PT) return;
   const bankroll = paperBankrollDollars();
-  const strategies = Object.values(PT.strategies || {});
-  const trades = PT.trades || [];
+  const strategies = Object.values(PT.strategies || {}).filter(strategy => paperSideFilter === 'ALL' || strategy.side === paperSideFilter);
+  const trades = (PT.trades || []).filter(trade => paperSideFilter === 'ALL' || trade.side === paperSideFilter);
+  const strategiesById = PT.strategies || {};
   const rows = document.getElementById('paperStrategyRows');
   if (rows) rows.innerHTML = paperStrategyRows(strategies, bankroll, trades);
+  const byDay = document.getElementById('paperTradesByDay');
+  if (byDay) byDay.innerHTML = paperTradesByDayHtml(trades, strategiesById, bankroll);
   if (!paperTradeChart) return;
   const labels = paperTradeChart.data.labels || [];
   paperTradeChart.data.datasets.forEach((dataset, idx) => {
@@ -3090,26 +3169,32 @@ function renderPaperTrading() {
   const el = document.getElementById('paperTradingReport');
   if (!el || !PT) return;
 
-  const strategies = Object.values(PT.strategies || {});
-  if (!strategies.length) {
+  const allStrategies = Object.values(PT.strategies || {});
+  if (!allStrategies.length) {
     el.innerHTML = '<div class="empty"><h2>No paper trades yet</h2><p>The next hourly run will place the first ones.</p></div>';
     return;
   }
 
   const bankroll = paperBankrollDollars();
-  const trades = PT.trades || [];
+  const strategies = allStrategies.filter(strategy => paperSideFilter === 'ALL' || strategy.side === paperSideFilter);
+  const trades = (PT.trades || []).filter(trade => paperSideFilter === 'ALL' || trade.side === paperSideFilter);
+  const strategiesById = PT.strategies || {};
   const colors = [INK, ACCENT, MOSS, GOLD, NAVY, '#7c4d2a', '#5f4f8f', '#2f6f73', '#9a2a1e'];
-
-  el.innerHTML = `
-    <div class="section-head">Live Paper Trading</div>
-    <div class="section-sub">Forward YRFI-only paper ledger settled against real first-inning results</div>
-
-    <div class="tracker-section">
-      <div style="display:flex;gap:14px;align-items:end;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px">
-        <label style="display:grid;gap:6px;color:var(--muted);font-family:var(--sans);font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:700">
-          Starting bankroll
-          <input type="number" id="bankrollInput" value="${bankroll}" min="1" step="50" oninput="updatePaperTradingValues()" style="width:150px;border:1px solid var(--rule);background:var(--paper);padding:9px 10px;font-family:var(--mono);font-size:13px;color:var(--ink)">
-        </label>
+  const sideButtons = ['ALL', 'YRFI', 'NRFI'].map(side => `
+    <button class="trace-btn ${paperSideFilter === side ? 'active' : ''}" onclick="setPaperSideFilter('${side}')" style="margin:0">
+      ${side === 'ALL' ? 'All' : side}
+    </button>
+  `).join('');
+  const controlsHtml = `
+    <div style="display:flex;gap:14px;align-items:end;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px">
+      <label style="display:grid;gap:6px;color:var(--muted);font-family:var(--sans);font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:700">
+        Starting bankroll
+        <input type="number" id="bankrollInput" value="${bankroll}" min="1" step="50" oninput="updatePaperTradingValues()" style="width:150px;border:1px solid var(--rule);background:var(--paper);padding:9px 10px;font-family:var(--mono);font-size:13px;color:var(--ink)">
+      </label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:flex-end">
+        <div id="paperSideToggles" style="display:flex;gap:8px;flex-wrap:wrap">
+          ${sideButtons}
+        </div>
         <div id="paperStrategyToggles" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
           ${strategies.map(strategy => `
             <button class="trace-btn ${visiblePaperStrategies.has(strategy.id) ? 'active' : ''}" onclick="togglePaperStrategy('${escapeHtml(strategy.id)}')" style="margin:0">
@@ -3118,6 +3203,35 @@ function renderPaperTrading() {
           `).join('')}
         </div>
       </div>
+    </div>`;
+
+  if (!strategies.length) {
+    if (paperTradeChart) {
+      paperTradeChart.destroy();
+      paperTradeChart = null;
+    }
+    const emptyTitle = paperSideFilter === 'ALL' ? 'No paper trades yet' : `No ${escapeHtml(paperSideFilter)} trades yet`;
+    const emptyMessage = paperSideFilter === 'NRFI'
+      ? 'No NRFI trades yet &mdash; the ledger is currently YRFI-only.'
+      : 'No trades match the current filter.';
+    el.innerHTML = `
+      <div class="section-head">Live Paper Trading</div>
+      <div class="section-sub">Forward YRFI-only paper ledger settled against real first-inning results</div>
+
+      <div class="tracker-section">
+        ${controlsHtml}
+        <div class="empty"><h2>${emptyTitle}</h2><p>${emptyMessage}</p></div>
+      </div>
+    `;
+    return;
+  }
+
+  el.innerHTML = `
+    <div class="section-head">Live Paper Trading</div>
+    <div class="section-sub">Forward YRFI-only paper ledger settled against real first-inning results</div>
+
+    <div class="tracker-section">
+      ${controlsHtml}
       <div style="background:var(--paper);border:1px solid var(--rule);padding:16px 20px;margin-bottom:20px"><canvas id="paperTradeChart" height="220"></canvas></div>
       <table class="daily-table">
         <thead><tr><th>Strategy</th><th>Current Bankroll</th><th>Total P&amp;L</th><th>ROI</th><th>Trades</th><th>Win Rate</th></tr></thead>
@@ -3125,6 +3239,9 @@ function renderPaperTrading() {
         ${paperStrategyRows(strategies, bankroll, trades)}
         </tbody>
       </table>
+    </div>
+    <div id="paperTradesByDay">
+      ${paperTradesByDayHtml(trades, strategiesById, bankroll)}
     </div>
   `;
 
