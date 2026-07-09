@@ -37,6 +37,9 @@ jobs:
       - name: Check resolved game results
         run: python check_results.py
 
+      - name: Update paper trading ledger
+        run: python paper_trade.py
+
       - name: Sync docs to repo root
         working-directory: .
         run: |

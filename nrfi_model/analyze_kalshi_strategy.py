@@ -16,6 +16,8 @@ import json
 import math
 from pathlib import Path
 
+from compute_daily import kalshi_taker_fee
+
 
 BASE_DIR = Path(__file__).resolve().parent
 INPUT_PATH = BASE_DIR / "data/kalshi_backtest_joined.csv"
@@ -62,6 +64,7 @@ def _ci95(values: list[float]) -> tuple[float | None, float | None]:
 
 def _strategy_result(rows: list[dict], threshold: int, side: str) -> dict:
     returns = []
+    net_returns = []
     wins = 0
     for row in rows:
         edge = _to_float(row["edge_pp"])
@@ -78,11 +81,14 @@ def _strategy_result(rows: list[dict], threshold: int, side: str) -> dict:
             won = not actual_nrfi
 
         payoff = 1.0 if won else 0.0
-        returns.append(payoff - cost)
+        trade_return = payoff - cost
+        returns.append(trade_return)
+        net_returns.append(trade_return - kalshi_taker_fee(cost))
         wins += int(won)
 
     n_bets = len(returns)
     total_profit = sum(returns)
+    net_total_profit = sum(net_returns)
     ci_low, ci_high = _ci95(returns)
     return {
         "threshold_pp": threshold,
@@ -90,7 +96,9 @@ def _strategy_result(rows: list[dict], threshold: int, side: str) -> dict:
         "n_bets": n_bets,
         "win_rate": round(wins / n_bets, 4) if n_bets else None,
         "total_profit": round(total_profit, 4),
+        "net_total_profit": round(net_total_profit, 4),
         "roi_pct": round(_mean(returns) * 100, 2) if n_bets else None,
+        "net_roi_pct": round(_mean(net_returns) * 100, 2) if n_bets else None,
         "mean_return_ci95": [
             round(ci_low, 4) if ci_low is not None else None,
             round(ci_high, 4) if ci_high is not None else None,
@@ -106,6 +114,7 @@ def _print_table(results: list[dict]) -> None:
         "win_rate",
         "profit",
         "roi_pct",
+        "net_roi_pct",
         "mean_return_95ci",
     ]
     print(" | ".join(headers))
@@ -117,6 +126,7 @@ def _print_table(results: list[dict]) -> None:
         if result["win_rate"] is not None:
             win_rate = f"{result['win_rate']:.1%}"
         roi = "n/a" if result["roi_pct"] is None else f"{result['roi_pct']:.2f}"
+        net_roi = "n/a" if result["net_roi_pct"] is None else f"{result['net_roi_pct']:.2f}"
         print(
             " | ".join(
                 [
@@ -126,6 +136,7 @@ def _print_table(results: list[dict]) -> None:
                     win_rate,
                     f"{result['total_profit']:.4f}",
                     roi,
+                    net_roi,
                     ci,
                 ]
             )
@@ -148,9 +159,9 @@ def main() -> None:
         "without more data or an out-of-sample holdout."
     )
     print(
-        "- Uses realistic ask-side fill prices by crossing the spread, but does "
-        "not model Kalshi's per-contract trading fee or slippage from thin "
-        "liquidity. Real-world returns would run somewhat below the backtest."
+        "- Uses realistic ask-side fill prices by crossing the spread. It does "
+        "not model slippage from thin liquidity. Net ROI subtracts "
+        "Kalshi's standard taker fee per contract."
     )
 
     model_probs = [_to_float(row["model_p_nrfi"]) for row in rows]
@@ -172,9 +183,9 @@ def main() -> None:
             "~850 games over ~9 weeks is a modest sample; high-threshold buckets "
             "will have few bets and noisy ROI. Treat single-threshold wins "
             "skeptically without more data or an out-of-sample holdout.",
-            "Uses realistic ask-side fill prices by crossing the spread, but does "
-            "not model Kalshi's per-contract trading fee or slippage from thin "
-            "liquidity. Real-world returns would run somewhat below the backtest.",
+            "Uses realistic ask-side fill prices by crossing the spread. It does "
+            "not model slippage from thin liquidity. Net ROI subtracts Kalshi's "
+            "standard taker fee per contract.",
         ],
     }
     REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)

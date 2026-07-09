@@ -25,7 +25,9 @@
       "n_bets": 174,
       "win_rate": 0.454,
       "total_profit": -4.9,
+      "net_total_profit": -7.9153,
       "roi_pct": -2.82,
+      "net_roi_pct": -4.55,
       "mean_return_ci95": [
         -0.1019,
         0.0456
@@ -37,7 +39,9 @@
       "n_bets": 679,
       "win_rate": 0.5228,
       "total_profit": 20.34,
+      "net_total_profit": 8.5453,
       "roi_pct": 3.0,
+      "net_roi_pct": 1.26,
       "mean_return_ci95": [
         -0.0076,
         0.0675
@@ -49,7 +53,9 @@
       "n_bets": 62,
       "win_rate": 0.4032,
       "total_profit": -3.2,
+      "net_total_profit": -4.266,
       "roi_pct": -5.16,
+      "net_roi_pct": -6.88,
       "mean_return_ci95": [
         -0.1731,
         0.0699
@@ -61,7 +67,9 @@
       "n_bets": 463,
       "win_rate": 0.5378,
       "total_profit": 24.88,
+      "net_total_profit": 16.8271,
       "roi_pct": 5.37,
+      "net_roi_pct": 3.63,
       "mean_return_ci95": [
         0.0085,
         0.099
@@ -73,7 +81,9 @@
       "n_bets": 25,
       "win_rate": 0.28,
       "total_profit": -3.92,
+      "net_total_profit": -4.344,
       "roi_pct": -15.68,
+      "net_roi_pct": -17.38,
       "mean_return_ci95": [
         -0.333,
         0.0194
@@ -85,7 +95,9 @@
       "n_bets": 302,
       "win_rate": 0.5795,
       "total_profit": 30.63,
+      "net_total_profit": 25.3835,
       "roi_pct": 10.14,
+      "net_roi_pct": 8.41,
       "mean_return_ci95": [
         0.0464,
         0.1565
@@ -97,7 +109,9 @@
       "n_bets": 14,
       "win_rate": 0.2857,
       "total_profit": -2.0,
+      "net_total_profit": -2.2367,
       "roi_pct": -14.29,
+      "net_roi_pct": -15.98,
       "mean_return_ci95": [
         -0.3813,
         0.0955
@@ -109,7 +123,9 @@
       "n_bets": 120,
       "win_rate": 0.5417,
       "total_profit": 9.21,
+      "net_total_profit": 7.131,
       "roi_pct": 7.68,
+      "net_roi_pct": 5.94,
       "mean_return_ci95": [
         -0.0115,
         0.165
@@ -121,7 +137,9 @@
       "n_bets": 3,
       "win_rate": 0.3333,
       "total_profit": -0.12,
+      "net_total_profit": -0.1686,
       "roi_pct": -4.0,
+      "net_roi_pct": -5.62,
       "mean_return_ci95": [
         -0.7191,
         0.6391
@@ -133,7 +151,9 @@
       "n_bets": 15,
       "win_rate": 0.4,
       "total_profit": -0.75,
+      "net_total_profit": -1.0082,
       "roi_pct": -5.0,
+      "net_roi_pct": -6.72,
       "mean_return_ci95": [
         -0.3082,
         0.2082
@@ -145,7 +165,9 @@
       "n_bets": 1,
       "win_rate": 0.0,
       "total_profit": -0.44,
+      "net_total_profit": -0.4572,
       "roi_pct": -44.0,
+      "net_roi_pct": -45.72,
       "mean_return_ci95": [
         null,
         null
@@ -157,7 +179,9 @@
       "n_bets": 1,
       "win_rate": 0.0,
       "total_profit": -0.55,
+      "net_total_profit": -0.5673,
       "roi_pct": -55.0,
+      "net_roi_pct": -56.73,
       "mean_return_ci95": [
         null,
         null
@@ -169,7 +193,9 @@
       "n_bets": 0,
       "win_rate": null,
       "total_profit": 0,
+      "net_total_profit": 0,
       "roi_pct": null,
+      "net_roi_pct": null,
       "mean_return_ci95": [
         null,
         null
@@ -181,7 +207,9 @@
       "n_bets": 0,
       "win_rate": null,
       "total_profit": 0,
+      "net_total_profit": 0,
       "roi_pct": null,
+      "net_roi_pct": null,
       "mean_return_ci95": [
         null,
         null
@@ -190,6 +218,6 @@
   ],
   "caveats": [
     "~850 games over ~9 weeks is a modest sample; high-threshold buckets will have few bets and noisy ROI. Treat single-threshold wins skeptically without more data or an out-of-sample holdout.",
-    "Uses realistic ask-side fill prices by crossing the spread, but does not model Kalshi's per-contract trading fee or slippage from thin liquidity. Real-world returns would run somewhat below the backtest."
+    "Uses realistic ask-side fill prices by crossing the spread. It does not model slippage from thin liquidity. Net ROI subtracts Kalshi's standard taker fee per contract."
   ]
 }

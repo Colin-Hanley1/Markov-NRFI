@@ -36,12 +36,17 @@ MLB_API = "https://statsapi.mlb.com/api/v1"
 N_SIMS = 50_000
 KALSHI_API = "https://api.elections.kalshi.com/trade-api/v2"
 KALSHI_SERIES = "KXMLBRFI"
+KALSHI_TAKER_FEE_RATE = 0.07
 
 # Kalshi's occurrence_datetime runs a consistent ~3h later than MLB's own
 # gameDate (verified live, e.g. 23:10Z vs 02:10Z next day for the same game).
 # Title matching (both team hints) is the primary safety check now, so this
 # window just needs to comfortably cover that offset, not pin exact time.
 KALSHI_MATCH_TOLERANCE_MIN = 240
+
+
+def kalshi_taker_fee(price: float) -> float:
+    return KALSHI_TAKER_FEE_RATE * price * (1 - price)
 
 TEAM_ABBREVS = {
     108: "LAA", 109: "ARI", 110: "BAL", 111: "BOS", 112: "CHC",
@@ -351,6 +356,10 @@ def build_kalshi_entry(market: dict | None, p_nrfi_game: float | None) -> dict:
 
     yrfi_prob = (yes_bid + yes_ask) / 2 if (yes_bid and yes_ask) else (yes_bid or yes_ask)
     nrfi_prob = 1 - yrfi_prob
+    yrfi_ask = yes_ask
+    yrfi_bid = yes_bid
+    nrfi_ask = 1 - yes_bid
+    nrfi_bid = 1 - yes_ask
     spread = round(yes_ask - yes_bid, 4) if (yes_bid and yes_ask) else None
     ticker = market.get("ticker")
     if not ticker:
@@ -362,6 +371,10 @@ def build_kalshi_entry(market: dict | None, p_nrfi_game: float | None) -> dict:
         "title": market.get("title", ""),
         "yrfi_prob": round(yrfi_prob, 4),
         "nrfi_prob": round(nrfi_prob, 4),
+        "yrfi_ask": round(yrfi_ask, 4),
+        "yrfi_bid": round(yrfi_bid, 4),
+        "nrfi_ask": round(nrfi_ask, 4),
+        "nrfi_bid": round(nrfi_bid, 4),
         "spread": spread,
         "low_liquidity": spread is not None and spread > 0.30,
         "edge_pp": round((p_nrfi_game - nrfi_prob) * 100, 1) if p_nrfi_game is not None else None,

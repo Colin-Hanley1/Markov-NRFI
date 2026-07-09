@@ -1529,6 +1529,7 @@
   <button class="tab-btn" onclick="switchTab(1)">Results Tracker</button>
   <button class="tab-btn" onclick="switchTab(2)">The Method</button>
   <button class="tab-btn" onclick="switchTab(3)">Betting Backtest</button>
+  <button class="tab-btn" onclick="switchTab(4)">Live Paper Trading</button>
 </nav>
 
 <div class="container">
@@ -1557,6 +1558,11 @@
     <div id="backtestReport"><div class="empty"><div class="spinner"></div><p style="margin-top:14px">Loading backtest&hellip;</p></div></div>
   </div>
 
+  <!-- TAB 4: Live Paper Trading -->
+  <div class="tab-content" id="tab-4">
+    <div id="paperTradingReport"><div class="empty"><div class="spinner"></div><p style="margin-top:14px">Loading paper trades&hellip;</p></div></div>
+  </div>
+
 </div>
 
 </main>
@@ -1575,6 +1581,9 @@
 
 let D = {};
 let RL = {};
+let PT = null;
+let paperTradeChart = null;
+let visiblePaperStrategies = new Set();
 
 const pC = p => p>=.55?'prob-high':p>=.48?'prob-mid':p>=.40?'prob-low':'prob-vlow';
 const pS = p => (p*100).toFixed(1);
@@ -1625,6 +1634,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderSummary();
     loadResultsTracker();
     renderBacktest();
+    loadPaperTrading();
     renderSlate();
     renderCards();
     renderMethodology();
@@ -2961,7 +2971,7 @@ function renderBacktest() {
       <div class="tracker-section">
         <h3>Threshold Strategy ROI</h3>
         <table class="daily-table">
-          <thead><tr><th>Threshold</th><th>Side</th><th>Bets</th><th>Win Rate</th><th>ROI</th><th>95% CI</th></tr></thead>
+          <thead><tr><th>Threshold</th><th>Side</th><th>Bets</th><th>Win Rate</th><th>ROI</th><th>Net ROI (after fees)</th><th>95% CI</th></tr></thead>
           <tbody>
           ${rows.map(row => {
             const ci = row.mean_return_ci95 || [];
@@ -2973,6 +2983,7 @@ function renderBacktest() {
                 <td class="tabular">${row.n_bets}</td>
                 <td class="pct-val">${row.win_rate == null ? 'n/a' : (row.win_rate * 100).toFixed(1) + '%'}</td>
                 <td class="pct-val ${row.roi_pct != null && row.roi_pct > 0 ? 'prob-high' : 'prob-low'}">${row.roi_pct == null ? 'n/a' : row.roi_pct.toFixed(2) + '%'}</td>
+                <td class="pct-val ${row.net_roi_pct != null && row.net_roi_pct > 0 ? 'prob-high' : 'prob-low'}">${row.net_roi_pct == null ? 'n/a' : row.net_roi_pct.toFixed(2) + '%'}</td>
                 <td class="tabular">${ciText}</td>
               </tr>`;
           }).join('')}
@@ -2991,6 +3002,175 @@ function renderBacktest() {
   }).catch(() => {
     el.innerHTML = '<div class="empty"><h2>No backtest report yet</h2><p>Run analyze_kalshi_strategy.py to generate Kalshi strategy results.</p></div>';
   });
+}
+
+function loadPaperTrading() {
+  fetch('data/paper_trades.json').then(r => {
+    if (!r.ok) throw new Error('missing paper trades');
+    return r.json();
+  }).then(payload => {
+    PT = payload;
+    visiblePaperStrategies = new Set(Object.keys(PT.strategies || {}));
+    renderPaperTrading();
+  }).catch(() => {
+    const el = document.getElementById('paperTradingReport');
+    if (el) {
+      el.innerHTML = '<div class="empty"><h2>No paper trades yet</h2><p>The next hourly run will place the first ones.</p></div>';
+    }
+  });
+}
+
+function paperBankrollDollars() {
+  const input = document.getElementById('bankrollInput');
+  const value = Number(input?.value || 1000);
+  return Number.isFinite(value) && value > 0 ? value : 1000;
+}
+
+function moneyFmt(value) {
+  return value.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+}
+
+function togglePaperStrategy(strategyId) {
+  if (visiblePaperStrategies.has(strategyId)) {
+    visiblePaperStrategies.delete(strategyId);
+  } else {
+    visiblePaperStrategies.add(strategyId);
+  }
+  renderPaperTrading();
+}
+
+function paperHistorySeries(history, labels) {
+  let last = history.length ? Number(history[0].bankroll) : 1;
+  const byDate = new Map(history.map(point => [point.date, Number(point.bankroll)]));
+  return labels.map(date => {
+    if (byDate.has(date)) last = byDate.get(date);
+    return last;
+  });
+}
+
+function paperStrategyRows(strategies, bankroll, trades) {
+  return strategies.map(strategy => {
+    const strategyTrades = trades.filter(trade => trade.strategy_id === strategy.id);
+    const settled = strategyTrades.filter(trade => trade.status === 'settled');
+    const wins = settled.filter(trade => trade.won).length;
+    const current = Number(strategy.current_bankroll || 1) * bankroll;
+    const pnl = current - bankroll;
+    const roi = (Number(strategy.current_bankroll || 1) - 1) * 100;
+    return `
+      <tr>
+        <td>${escapeHtml(strategy.label)}</td>
+        <td class="tabular">${moneyFmt(current)}</td>
+        <td class="tabular ${pnl >= 0 ? 'prob-high' : 'prob-low'}">${moneyFmt(pnl)}</td>
+        <td class="pct-val ${roi >= 0 ? 'prob-high' : 'prob-low'}">${roi.toFixed(2)}%</td>
+        <td class="tabular">${strategyTrades.length}</td>
+        <td class="pct-val">${settled.length ? (wins / settled.length * 100).toFixed(1) + '%' : 'n/a'}</td>
+      </tr>`;
+  }).join('');
+}
+
+function updatePaperTradingValues() {
+  if (!PT) return;
+  const bankroll = paperBankrollDollars();
+  const strategies = Object.values(PT.strategies || {});
+  const trades = PT.trades || [];
+  const rows = document.getElementById('paperStrategyRows');
+  if (rows) rows.innerHTML = paperStrategyRows(strategies, bankroll, trades);
+  if (!paperTradeChart) return;
+  const labels = paperTradeChart.data.labels || [];
+  paperTradeChart.data.datasets.forEach((dataset, idx) => {
+    const strategy = strategies[idx];
+    if (!strategy) return;
+    const multiples = paperHistorySeries(strategy.balance_history || [{date: labels[0], bankroll: 1}], labels);
+    dataset.data = multiples.map(v => v * bankroll);
+  });
+  paperTradeChart.update('none');
+}
+
+function renderPaperTrading() {
+  const el = document.getElementById('paperTradingReport');
+  if (!el || !PT) return;
+
+  const strategies = Object.values(PT.strategies || {});
+  if (!strategies.length) {
+    el.innerHTML = '<div class="empty"><h2>No paper trades yet</h2><p>The next hourly run will place the first ones.</p></div>';
+    return;
+  }
+
+  const bankroll = paperBankrollDollars();
+  const trades = PT.trades || [];
+  const colors = [INK, ACCENT, MOSS, GOLD, NAVY, '#7c4d2a', '#5f4f8f', '#2f6f73', '#9a2a1e'];
+
+  el.innerHTML = `
+    <div class="section-head">Live Paper Trading</div>
+    <div class="section-sub">Forward YRFI-only paper ledger settled against real first-inning results</div>
+
+    <div class="tracker-section">
+      <div style="display:flex;gap:14px;align-items:end;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px">
+        <label style="display:grid;gap:6px;color:var(--muted);font-family:var(--sans);font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:700">
+          Starting bankroll
+          <input type="number" id="bankrollInput" value="${bankroll}" min="1" step="50" oninput="updatePaperTradingValues()" style="width:150px;border:1px solid var(--rule);background:var(--paper);padding:9px 10px;font-family:var(--mono);font-size:13px;color:var(--ink)">
+        </label>
+        <div id="paperStrategyToggles" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+          ${strategies.map(strategy => `
+            <button class="trace-btn ${visiblePaperStrategies.has(strategy.id) ? 'active' : ''}" onclick="togglePaperStrategy('${escapeHtml(strategy.id)}')" style="margin:0">
+              ${escapeHtml(strategy.label)}
+            </button>
+          `).join('')}
+        </div>
+      </div>
+      <div style="background:var(--paper);border:1px solid var(--rule);padding:16px 20px;margin-bottom:20px"><canvas id="paperTradeChart" height="220"></canvas></div>
+      <table class="daily-table">
+        <thead><tr><th>Strategy</th><th>Current Bankroll</th><th>Total P&amp;L</th><th>ROI</th><th>Trades</th><th>Win Rate</th></tr></thead>
+        <tbody id="paperStrategyRows">
+        ${paperStrategyRows(strategies, bankroll, trades)}
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  setTimeout(() => {
+    const ctx = document.getElementById('paperTradeChart');
+    if (!ctx || typeof Chart === 'undefined') return;
+    const labels = Array.from(new Set(strategies.flatMap(strategy => (strategy.balance_history || []).map(point => point.date)))).sort();
+    const chartLabels = labels.length ? labels : ['Start'];
+    if (paperTradeChart) paperTradeChart.destroy();
+    paperTradeChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: chartLabels,
+        datasets: strategies.map((strategy, idx) => {
+          const history = strategy.balance_history || [{date: chartLabels[0], bankroll: 1}];
+          const multiples = paperHistorySeries(history, chartLabels);
+          const color = colors[idx % colors.length];
+          return {
+            label: strategy.label,
+            data: multiples.map(v => v * bankroll),
+            borderColor: color,
+            backgroundColor: 'rgba(26,24,20,0.04)',
+            pointRadius: 3,
+            pointBackgroundColor: color,
+            pointBorderColor: '#f4ede1',
+            pointBorderWidth: 2,
+            borderWidth: 2,
+            tension: 0.25,
+            hidden: !visiblePaperStrategies.has(strategy.id),
+          };
+        })
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${moneyFmt(ctx.raw)}` } }
+        },
+        scales: {
+          y: { grid: { color: 'rgba(207,195,169,0.5)' }, ticks: { color: '#8a8476', font: { size: 10, family: 'JetBrains Mono' }, callback: v => moneyFmt(Number(v)) } },
+          x: { grid: { display: false }, ticks: { color: '#8a8476', font: { size: 10, family: 'JetBrains Mono' }, maxRotation: 45 } }
+        }
+      }
+    });
+  }, 50);
 }
 
 function renderResultsTracker() {
