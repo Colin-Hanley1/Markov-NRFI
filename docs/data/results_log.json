@@ -14399,16 +14399,64 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824813",
+      "date": "2026-07-11",
+      "away_team": "KC",
+      "home_team": "BAL",
+      "p_nrfi_predicted": 0.5535,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "822875",
+      "date": "2026-07-11",
+      "away_team": "HOU",
+      "home_team": "TEX",
+      "p_nrfi_predicted": 0.4874,
+      "nrfi_actual": false,
+      "away_runs_1st": 2,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "824492",
+      "date": "2026-07-11",
+      "away_team": "CHC",
+      "home_team": "CIN",
+      "p_nrfi_predicted": 0.5047,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823030",
+      "date": "2026-07-11",
+      "away_team": "ATL",
+      "home_team": "STL",
+      "p_nrfi_predicted": 0.534,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 3,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1200,
-    "accuracy": 0.5258,
-    "brier_score": 0.2515,
-    "brier_skill_score": -0.0083,
-    "log_loss": 0.69688,
-    "actual_nrfi_rate": 0.4758,
-    "mean_predicted": 0.5296,
+    "n_games": 1204,
+    "accuracy": 0.5266,
+    "brier_score": 0.25146,
+    "brier_skill_score": -0.0082,
+    "log_loss": 0.69681,
+    "actual_nrfi_rate": 0.4759,
+    "mean_predicted": 0.5295,
     "last_updated": "2026-07-11"
   },
   "daily": [
@@ -15044,10 +15092,10 @@
     },
     {
       "date": "2026-07-11",
-      "n_games": 10,
-      "correct": 6,
-      "accuracy": 0.6,
-      "nrfi_count": 8
+      "n_games": 14,
+      "correct": 9,
+      "accuracy": 0.6429,
+      "nrfi_count": 10
     }
   ]
 }
