@@ -8131,6 +8131,45 @@
       "fee": 0.00049601,
       "pnl": -0.01412254,
       "settled_at": "2026-07-12T19:00:54Z"
+    },
+    {
+      "trade_id": "yrfi_0pp_flat:823440",
+      "strategy_id": "yrfi_0pp_flat",
+      "game_id": "823440",
+      "date": "2026-07-16",
+      "matchup": "NYM@PHI",
+      "side": "YRFI",
+      "edge_pp_at_entry": -2.2,
+      "entry_price": 0.55,
+      "stake": 0.01,
+      "placed_at": "2026-07-16T01:45:03Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_0pp_pct_bankroll:823440",
+      "strategy_id": "yrfi_0pp_pct_bankroll",
+      "game_id": "823440",
+      "date": "2026-07-16",
+      "matchup": "NYM@PHI",
+      "side": "YRFI",
+      "edge_pp_at_entry": -2.2,
+      "entry_price": 0.55,
+      "stake": 0.01601355,
+      "placed_at": "2026-07-16T01:45:03Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_0pp_kelly:823440",
+      "strategy_id": "yrfi_0pp_kelly",
+      "game_id": "823440",
+      "date": "2026-07-16",
+      "matchup": "NYM@PHI",
+      "side": "YRFI",
+      "edge_pp_at_entry": -2.2,
+      "entry_price": 0.55,
+      "stake": 0.00708997,
+      "placed_at": "2026-07-16T01:45:03Z",
+      "status": "open"
     }
   ]
 }
