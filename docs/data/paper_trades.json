@@ -9048,6 +9048,97 @@
       "stake": 0.00016454,
       "placed_at": "2026-07-17T17:09:18Z",
       "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_flat:824414",
+      "strategy_id": "yrfi_3pp_flat",
+      "game_id": "824414",
+      "date": "2026-07-17",
+      "matchup": "PIT@CLE",
+      "side": "YRFI",
+      "edge_pp_at_entry": -7.4,
+      "entry_price": 0.44,
+      "stake": 0.01,
+      "placed_at": "2026-07-17T20:05:06Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_pct_bankroll:824414",
+      "strategy_id": "yrfi_3pp_pct_bankroll",
+      "game_id": "824414",
+      "date": "2026-07-17",
+      "matchup": "PIT@CLE",
+      "side": "YRFI",
+      "edge_pp_at_entry": -7.4,
+      "entry_price": 0.44,
+      "stake": 0.01521646,
+      "placed_at": "2026-07-17T20:05:06Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_kelly:824414",
+      "strategy_id": "yrfi_3pp_kelly",
+      "game_id": "824414",
+      "date": "2026-07-17",
+      "matchup": "PIT@CLE",
+      "side": "YRFI",
+      "edge_pp_at_entry": -7.4,
+      "entry_price": 0.44,
+      "stake": 0.01953594,
+      "placed_at": "2026-07-17T20:05:06Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_5pp_flat:824414",
+      "strategy_id": "yrfi_5pp_flat",
+      "game_id": "824414",
+      "date": "2026-07-17",
+      "matchup": "PIT@CLE",
+      "side": "YRFI",
+      "edge_pp_at_entry": -7.4,
+      "entry_price": 0.44,
+      "stake": 0.01,
+      "placed_at": "2026-07-17T20:05:06Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_5pp_pct_bankroll:824414",
+      "strategy_id": "yrfi_5pp_pct_bankroll",
+      "game_id": "824414",
+      "date": "2026-07-17",
+      "matchup": "PIT@CLE",
+      "side": "YRFI",
+      "edge_pp_at_entry": -7.4,
+      "entry_price": 0.44,
+      "stake": 0.01604069,
+      "placed_at": "2026-07-17T20:05:06Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_5pp_kelly:824414",
+      "strategy_id": "yrfi_5pp_kelly",
+      "game_id": "824414",
+      "date": "2026-07-17",
+      "matchup": "PIT@CLE",
+      "side": "YRFI",
+      "edge_pp_at_entry": -7.4,
+      "entry_price": 0.44,
+      "stake": 0.01834426,
+      "placed_at": "2026-07-17T20:05:06Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_0pp_kelly:824901",
+      "strategy_id": "yrfi_0pp_kelly",
+      "game_id": "824901",
+      "date": "2026-07-17",
+      "matchup": "TEX@ATL",
+      "side": "YRFI",
+      "edge_pp_at_entry": -0.5,
+      "entry_price": 0.48,
+      "stake": 0.00010875,
+      "placed_at": "2026-07-17T20:05:06Z",
+      "status": "open"
     }
   ]
 }
