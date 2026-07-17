@@ -14687,16 +14687,64 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824737",
+      "date": "2026-07-17",
+      "away_team": "TB",
+      "home_team": "BOS",
+      "p_nrfi_predicted": 0.5143,
+      "nrfi_actual": false,
+      "away_runs_1st": 2,
+      "home_runs_1st": 3,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823524",
+      "date": "2026-07-17",
+      "away_team": "LAD",
+      "home_team": "NYY",
+      "p_nrfi_predicted": 0.4409,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "824901",
+      "date": "2026-07-17",
+      "away_team": "TEX",
+      "home_team": "ATL",
+      "p_nrfi_predicted": 0.6147,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "822789",
+      "date": "2026-07-17",
+      "away_team": "CWS",
+      "home_team": "TOR",
+      "p_nrfi_predicted": 0.3803,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1224,
-    "accuracy": 0.527,
-    "brier_score": 0.25154,
-    "brier_skill_score": -0.0086,
-    "log_loss": 0.69698,
-    "actual_nrfi_rate": 0.4755,
-    "mean_predicted": 0.5297,
+    "n_games": 1228,
+    "accuracy": 0.5261,
+    "brier_score": 0.25162,
+    "brier_skill_score": -0.0087,
+    "log_loss": 0.69715,
+    "actual_nrfi_rate": 0.4764,
+    "mean_predicted": 0.5296,
     "last_updated": "2026-07-17"
   },
   "daily": [
@@ -15360,10 +15408,10 @@
     },
     {
       "date": "2026-07-17",
-      "n_games": 1,
-      "correct": 1,
-      "accuracy": 1.0,
-      "nrfi_count": 1
+      "n_games": 5,
+      "correct": 2,
+      "accuracy": 0.4,
+      "nrfi_count": 4
     }
   ]
 }
