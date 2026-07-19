@@ -15203,15 +15203,27 @@
       "home_runs_1st": 0,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823521",
+      "date": "2026-07-19",
+      "away_team": "LAD",
+      "home_team": "NYY",
+      "p_nrfi_predicted": 0.5387,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 1,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1267,
-    "accuracy": 0.5288,
-    "brier_score": 0.25084,
-    "brier_skill_score": -0.0054,
-    "log_loss": 0.69552,
-    "actual_nrfi_rate": 0.4775,
+    "n_games": 1268,
+    "accuracy": 0.5284,
+    "brier_score": 0.25087,
+    "brier_skill_score": -0.0056,
+    "log_loss": 0.69558,
+    "actual_nrfi_rate": 0.4771,
     "mean_predicted": 0.5298,
     "last_updated": "2026-07-19"
   },
@@ -15890,9 +15902,9 @@
     },
     {
       "date": "2026-07-19",
-      "n_games": 15,
+      "n_games": 16,
       "correct": 11,
-      "accuracy": 0.7333,
+      "accuracy": 0.6875,
       "nrfi_count": 8
     }
   ]
