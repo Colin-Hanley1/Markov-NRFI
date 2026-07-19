@@ -14975,17 +14975,41 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824412",
+      "date": "2026-07-18",
+      "away_team": "PIT",
+      "home_team": "CLE",
+      "p_nrfi_predicted": 0.4917,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823116",
+      "date": "2026-07-18",
+      "away_team": "SF",
+      "home_team": "SEA",
+      "p_nrfi_predicted": 0.6692,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1248,
+    "n_games": 1250,
     "accuracy": 0.5264,
-    "brier_score": 0.25126,
-    "brier_skill_score": -0.0072,
-    "log_loss": 0.69639,
-    "actual_nrfi_rate": 0.4768,
-    "mean_predicted": 0.5296,
-    "last_updated": "2026-07-18"
+    "brier_score": 0.25115,
+    "brier_skill_score": -0.0066,
+    "log_loss": 0.69616,
+    "actual_nrfi_rate": 0.4776,
+    "mean_predicted": 0.5297,
+    "last_updated": "2026-07-19"
   },
   "daily": [
     {
@@ -15655,10 +15679,10 @@
     },
     {
       "date": "2026-07-18",
-      "n_games": 11,
-      "correct": 6,
-      "accuracy": 0.5455,
-      "nrfi_count": 6
+      "n_games": 13,
+      "correct": 7,
+      "accuracy": 0.5385,
+      "nrfi_count": 8
     }
   ]
 }
