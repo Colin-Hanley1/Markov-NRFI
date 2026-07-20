@@ -14893,6 +14893,45 @@
       "stake": 0.01059734,
       "placed_at": "2026-07-20T06:04:44Z",
       "status": "open"
+    },
+    {
+      "trade_id": "yrfi_0pp_flat:824898",
+      "strategy_id": "yrfi_0pp_flat",
+      "game_id": "824898",
+      "date": "2026-07-20",
+      "matchup": "SD@ATL",
+      "side": "YRFI",
+      "edge_pp_at_entry": -0.9,
+      "entry_price": 0.53,
+      "stake": 0.01,
+      "placed_at": "2026-07-20T21:10:52Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_0pp_pct_bankroll:824898",
+      "strategy_id": "yrfi_0pp_pct_bankroll",
+      "game_id": "824898",
+      "date": "2026-07-20",
+      "matchup": "SD@ATL",
+      "side": "YRFI",
+      "edge_pp_at_entry": -0.9,
+      "entry_price": 0.53,
+      "stake": 0.01347534,
+      "placed_at": "2026-07-20T21:10:52Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_0pp_kelly:824898",
+      "strategy_id": "yrfi_0pp_kelly",
+      "game_id": "824898",
+      "date": "2026-07-20",
+      "matchup": "SD@ATL",
+      "side": "YRFI",
+      "edge_pp_at_entry": -0.9,
+      "entry_price": 0.53,
+      "stake": 0.0015692,
+      "placed_at": "2026-07-20T21:10:52Z",
+      "status": "open"
     }
   ]
 }
