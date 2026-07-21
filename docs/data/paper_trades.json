@@ -16449,6 +16449,19 @@
       "stake": 0.00057594,
       "placed_at": "2026-07-21T05:06:22Z",
       "status": "open"
+    },
+    {
+      "trade_id": "yrfi_0pp_kelly:822871",
+      "strategy_id": "yrfi_0pp_kelly",
+      "game_id": "822871",
+      "date": "2026-07-21",
+      "matchup": "CWS@TEX",
+      "side": "YRFI",
+      "edge_pp_at_entry": -1.2,
+      "entry_price": 0.51,
+      "stake": 0.00249183,
+      "placed_at": "2026-07-21T07:38:25Z",
+      "status": "open"
     }
   ]
 }
