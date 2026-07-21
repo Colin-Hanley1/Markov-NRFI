@@ -16501,6 +16501,84 @@
       "stake": 0.00020718,
       "placed_at": "2026-07-21T12:29:20Z",
       "status": "open"
+    },
+    {
+      "trade_id": "yrfi_5pp_flat:824735",
+      "strategy_id": "yrfi_5pp_flat",
+      "game_id": "824735",
+      "date": "2026-07-21",
+      "matchup": "BAL@BOS",
+      "side": "YRFI",
+      "edge_pp_at_entry": -5.6,
+      "entry_price": 0.47,
+      "stake": 0.01,
+      "placed_at": "2026-07-21T15:00:19Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_5pp_pct_bankroll:824735",
+      "strategy_id": "yrfi_5pp_pct_bankroll",
+      "game_id": "824735",
+      "date": "2026-07-21",
+      "matchup": "BAL@BOS",
+      "side": "YRFI",
+      "edge_pp_at_entry": -5.6,
+      "entry_price": 0.47,
+      "stake": 0.01416551,
+      "placed_at": "2026-07-21T15:00:19Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_5pp_kelly:824735",
+      "strategy_id": "yrfi_5pp_kelly",
+      "game_id": "824735",
+      "date": "2026-07-21",
+      "matchup": "BAL@BOS",
+      "side": "YRFI",
+      "edge_pp_at_entry": -5.6,
+      "entry_price": 0.47,
+      "stake": 0.01084723,
+      "placed_at": "2026-07-21T15:00:19Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_5pp_flat:824085",
+      "strategy_id": "yrfi_5pp_flat",
+      "game_id": "824085",
+      "date": "2026-07-21",
+      "matchup": "SF@KC",
+      "side": "YRFI",
+      "edge_pp_at_entry": -5.4,
+      "entry_price": 0.53,
+      "stake": 0.01,
+      "placed_at": "2026-07-21T15:00:19Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_5pp_pct_bankroll:824085",
+      "strategy_id": "yrfi_5pp_pct_bankroll",
+      "game_id": "824085",
+      "date": "2026-07-21",
+      "matchup": "SF@KC",
+      "side": "YRFI",
+      "edge_pp_at_entry": -5.4,
+      "entry_price": 0.53,
+      "stake": 0.01416551,
+      "placed_at": "2026-07-21T15:00:19Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_5pp_kelly:824085",
+      "strategy_id": "yrfi_5pp_kelly",
+      "game_id": "824085",
+      "date": "2026-07-21",
+      "matchup": "SF@KC",
+      "side": "YRFI",
+      "edge_pp_at_entry": -5.4,
+      "entry_price": 0.53,
+      "stake": 0.01182021,
+      "placed_at": "2026-07-21T15:00:19Z",
+      "status": "open"
     }
   ]
 }
