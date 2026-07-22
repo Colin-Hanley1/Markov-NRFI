@@ -15635,15 +15635,27 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824004",
+      "date": "2026-07-22",
+      "away_team": "STL",
+      "home_team": "LAA",
+      "p_nrfi_predicted": 0.5787,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1303,
-    "accuracy": 0.5257,
-    "brier_score": 0.25088,
-    "brier_skill_score": -0.0057,
-    "log_loss": 0.69557,
-    "actual_nrfi_rate": 0.4766,
+    "n_games": 1304,
+    "accuracy": 0.5261,
+    "brier_score": 0.25083,
+    "brier_skill_score": -0.0054,
+    "log_loss": 0.69545,
+    "actual_nrfi_rate": 0.477,
     "mean_predicted": 0.53,
     "last_updated": "2026-07-22"
   },
@@ -16343,10 +16355,10 @@
     },
     {
       "date": "2026-07-22",
-      "n_games": 7,
-      "correct": 4,
-      "accuracy": 0.5714,
-      "nrfi_count": 6
+      "n_games": 8,
+      "correct": 5,
+      "accuracy": 0.625,
+      "nrfi_count": 7
     }
   ]
 }
