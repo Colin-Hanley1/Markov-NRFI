@@ -15803,15 +15803,27 @@
       "home_runs_1st": 2,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824247",
+      "date": "2026-07-23",
+      "away_team": "KC",
+      "home_team": "DET",
+      "p_nrfi_predicted": 0.5373,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1317,
-    "accuracy": 0.5254,
-    "brier_score": 0.25085,
-    "brier_skill_score": -0.0057,
-    "log_loss": 0.69549,
-    "actual_nrfi_rate": 0.4761,
+    "n_games": 1318,
+    "accuracy": 0.5258,
+    "brier_score": 0.25082,
+    "brier_skill_score": -0.0055,
+    "log_loss": 0.69544,
+    "actual_nrfi_rate": 0.4765,
     "mean_predicted": 0.5301,
     "last_updated": "2026-07-23"
   },
@@ -16518,10 +16530,10 @@
     },
     {
       "date": "2026-07-23",
-      "n_games": 4,
-      "correct": 3,
-      "accuracy": 0.75,
-      "nrfi_count": 2
+      "n_games": 5,
+      "correct": 4,
+      "accuracy": 0.8,
+      "nrfi_count": 3
     }
   ]
 }
