@@ -15779,15 +15779,27 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "822785",
+      "date": "2026-07-23",
+      "away_team": "TB",
+      "home_team": "TOR",
+      "p_nrfi_predicted": 0.4528,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 1,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1315,
-    "accuracy": 0.5255,
-    "brier_score": 0.25085,
-    "brier_skill_score": -0.0056,
-    "log_loss": 0.69551,
-    "actual_nrfi_rate": 0.4768,
+    "n_games": 1316,
+    "accuracy": 0.5258,
+    "brier_score": 0.25082,
+    "brier_skill_score": -0.0055,
+    "log_loss": 0.69544,
+    "actual_nrfi_rate": 0.4764,
     "mean_predicted": 0.5301,
     "last_updated": "2026-07-23"
   },
@@ -16494,8 +16506,8 @@
     },
     {
       "date": "2026-07-23",
-      "n_games": 2,
-      "correct": 2,
+      "n_games": 3,
+      "correct": 3,
       "accuracy": 1.0,
       "nrfi_count": 2
     }
