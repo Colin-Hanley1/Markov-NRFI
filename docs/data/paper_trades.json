@@ -21097,6 +21097,84 @@
       "stake": 0.00112757,
       "placed_at": "2026-07-24T05:17:24Z",
       "status": "open"
+    },
+    {
+      "trade_id": "yrfi_0pp_flat:823843",
+      "strategy_id": "yrfi_0pp_flat",
+      "game_id": "823843",
+      "date": "2026-07-24",
+      "matchup": "SD@MIA",
+      "side": "YRFI",
+      "edge_pp_at_entry": -1.5,
+      "entry_price": 0.53,
+      "stake": 0.01,
+      "placed_at": "2026-07-24T18:20:58Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_0pp_pct_bankroll:823843",
+      "strategy_id": "yrfi_0pp_pct_bankroll",
+      "game_id": "823843",
+      "date": "2026-07-24",
+      "matchup": "SD@MIA",
+      "side": "YRFI",
+      "edge_pp_at_entry": -1.5,
+      "entry_price": 0.53,
+      "stake": 0.01486591,
+      "placed_at": "2026-07-24T18:20:58Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_0pp_kelly:823843",
+      "strategy_id": "yrfi_0pp_kelly",
+      "game_id": "823843",
+      "date": "2026-07-24",
+      "matchup": "SD@MIA",
+      "side": "YRFI",
+      "edge_pp_at_entry": -1.5,
+      "entry_price": 0.53,
+      "stake": 0.00334998,
+      "placed_at": "2026-07-24T18:20:58Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_flat:822872",
+      "strategy_id": "yrfi_3pp_flat",
+      "game_id": "822872",
+      "date": "2026-07-24",
+      "matchup": "SEA@TEX",
+      "side": "YRFI",
+      "edge_pp_at_entry": -3.2,
+      "entry_price": 0.46,
+      "stake": 0.01,
+      "placed_at": "2026-07-24T18:20:58Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_pct_bankroll:822872",
+      "strategy_id": "yrfi_3pp_pct_bankroll",
+      "game_id": "822872",
+      "date": "2026-07-24",
+      "matchup": "SEA@TEX",
+      "side": "YRFI",
+      "edge_pp_at_entry": -3.2,
+      "entry_price": 0.46,
+      "stake": 0.01306674,
+      "placed_at": "2026-07-24T18:20:58Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_kelly:822872",
+      "strategy_id": "yrfi_3pp_kelly",
+      "game_id": "822872",
+      "date": "2026-07-24",
+      "matchup": "SEA@TEX",
+      "side": "YRFI",
+      "edge_pp_at_entry": -3.2,
+      "entry_price": 0.46,
+      "stake": 0.00610317,
+      "placed_at": "2026-07-24T18:20:58Z",
+      "status": "open"
     }
   ]
 }
