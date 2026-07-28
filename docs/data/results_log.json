@@ -16487,15 +16487,27 @@
       "home_runs_1st": 0,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824490",
+      "date": "2026-07-28",
+      "away_team": "CLE",
+      "home_team": "CIN",
+      "p_nrfi_predicted": 0.4947,
+      "nrfi_actual": false,
+      "away_runs_1st": 4,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1374,
-    "accuracy": 0.5247,
+    "n_games": 1375,
+    "accuracy": 0.5251,
     "brier_score": 0.25092,
     "brier_skill_score": -0.0055,
-    "log_loss": 0.69563,
-    "actual_nrfi_rate": 0.4789,
+    "log_loss": 0.69562,
+    "actual_nrfi_rate": 0.4785,
     "mean_predicted": 0.5307,
     "last_updated": "2026-07-28"
   },
@@ -17234,6 +17246,13 @@
       "correct": 2,
       "accuracy": 0.1818,
       "nrfi_count": 3
+    },
+    {
+      "date": "2026-07-28",
+      "n_games": 1,
+      "correct": 1,
+      "accuracy": 1.0,
+      "nrfi_count": 0
     }
   ]
 }
