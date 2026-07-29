@@ -16751,15 +16751,27 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "822947",
+      "date": "2026-07-29",
+      "away_team": "TEX",
+      "home_team": "TB",
+      "p_nrfi_predicted": 0.4943,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 3,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1396,
-    "accuracy": 0.5272,
+    "n_games": 1397,
+    "accuracy": 0.5276,
     "brier_score": 0.25039,
     "brier_skill_score": -0.0031,
-    "log_loss": 0.69452,
-    "actual_nrfi_rate": 0.4807,
+    "log_loss": 0.69451,
+    "actual_nrfi_rate": 0.4803,
     "mean_predicted": 0.5314,
     "last_updated": "2026-07-29"
   },
@@ -17508,8 +17520,8 @@
     },
     {
       "date": "2026-07-29",
-      "n_games": 7,
-      "correct": 7,
+      "n_games": 8,
+      "correct": 8,
       "accuracy": 1.0,
       "nrfi_count": 7
     }
