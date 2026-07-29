@@ -16583,17 +16583,41 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "822703",
+      "date": "2026-07-28",
+      "away_team": "TOR",
+      "home_team": "WSH",
+      "p_nrfi_predicted": 0.5868,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 4,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823026",
+      "date": "2026-07-28",
+      "away_team": "CHC",
+      "home_team": "STL",
+      "p_nrfi_predicted": 0.5327,
+      "nrfi_actual": false,
+      "away_runs_1st": 2,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1382,
-    "accuracy": 0.5246,
-    "brier_score": 0.251,
-    "brier_skill_score": -0.0059,
-    "log_loss": 0.69577,
-    "actual_nrfi_rate": 0.4783,
+    "n_games": 1384,
+    "accuracy": 0.5238,
+    "brier_score": 0.25109,
+    "brier_skill_score": -0.0064,
+    "log_loss": 0.69596,
+    "actual_nrfi_rate": 0.4776,
     "mean_predicted": 0.5308,
-    "last_updated": "2026-07-28"
+    "last_updated": "2026-07-29"
   },
   "daily": [
     {
@@ -17333,9 +17357,9 @@
     },
     {
       "date": "2026-07-28",
-      "n_games": 8,
+      "n_games": 10,
       "correct": 4,
-      "accuracy": 0.5,
+      "accuracy": 0.4,
       "nrfi_count": 3
     }
   ]
