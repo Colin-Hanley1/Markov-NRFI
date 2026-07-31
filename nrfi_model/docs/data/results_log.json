@@ -16979,15 +16979,27 @@
       "home_runs_1st": 0,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824486",
+      "date": "2026-07-31",
+      "away_team": "PIT",
+      "home_team": "CIN",
+      "p_nrfi_predicted": 0.6147,
+      "nrfi_actual": false,
+      "away_runs_1st": 2,
+      "home_runs_1st": 2,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1415,
-    "accuracy": 0.5286,
-    "brier_score": 0.25015,
-    "brier_skill_score": -0.0016,
-    "log_loss": 0.69402,
-    "actual_nrfi_rate": 0.4841,
+    "n_games": 1416,
+    "accuracy": 0.5282,
+    "brier_score": 0.25024,
+    "brier_skill_score": -0.002,
+    "log_loss": 0.6942,
+    "actual_nrfi_rate": 0.4838,
     "mean_predicted": 0.5314,
     "last_updated": "2026-07-31"
   },
@@ -17750,7 +17762,7 @@
     },
     {
       "date": "2026-07-31",
-      "n_games": 1,
+      "n_games": 2,
       "correct": 0,
       "accuracy": 0.0,
       "nrfi_count": 1
