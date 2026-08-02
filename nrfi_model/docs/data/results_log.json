@@ -17315,15 +17315,27 @@
       "home_runs_1st": 1,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824972",
+      "date": "2026-08-01",
+      "away_team": "DET",
+      "home_team": "OAK",
+      "p_nrfi_predicted": 0.6425,
+      "nrfi_actual": false,
+      "away_runs_1st": 2,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1443,
-    "accuracy": 0.5274,
-    "brier_score": 0.25068,
-    "brier_skill_score": -0.004,
-    "log_loss": 0.69509,
-    "actual_nrfi_rate": 0.4823,
+    "n_games": 1444,
+    "accuracy": 0.527,
+    "brier_score": 0.25079,
+    "brier_skill_score": -0.0045,
+    "log_loss": 0.69532,
+    "actual_nrfi_rate": 0.482,
     "mean_predicted": 0.5315,
     "last_updated": "2026-08-02"
   },
@@ -18093,9 +18105,9 @@
     },
     {
       "date": "2026-08-01",
-      "n_games": 14,
+      "n_games": 15,
       "correct": 7,
-      "accuracy": 0.5,
+      "accuracy": 0.4667,
       "nrfi_count": 6
     }
   ]
