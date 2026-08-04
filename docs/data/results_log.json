@@ -17519,17 +17519,41 @@
       "home_runs_1st": 0,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823520",
+      "date": "2026-08-03",
+      "away_team": "STL",
+      "home_team": "NYY",
+      "p_nrfi_predicted": 0.5482,
+      "nrfi_actual": false,
+      "away_runs_1st": 2,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823757",
+      "date": "2026-08-03",
+      "away_team": "PIT",
+      "home_team": "MIL",
+      "p_nrfi_predicted": 0.5153,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1460,
+    "n_games": 1462,
     "accuracy": 0.5253,
-    "brier_score": 0.251,
-    "brier_skill_score": -0.0052,
-    "log_loss": 0.69575,
+    "brier_score": 0.25103,
+    "brier_skill_score": -0.0053,
+    "log_loss": 0.6958,
     "actual_nrfi_rate": 0.4829,
     "mean_predicted": 0.5317,
-    "last_updated": "2026-08-03"
+    "last_updated": "2026-08-04"
   },
   "daily": [
     {
@@ -18311,10 +18335,10 @@
     },
     {
       "date": "2026-08-03",
-      "n_games": 1,
-      "correct": 0,
-      "accuracy": 0.0,
-      "nrfi_count": 0
+      "n_games": 3,
+      "correct": 1,
+      "accuracy": 0.3333,
+      "nrfi_count": 1
     }
   ]
 }
