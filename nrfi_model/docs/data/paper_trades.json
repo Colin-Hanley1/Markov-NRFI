@@ -39280,6 +39280,84 @@
       "stake": 0.00356195,
       "placed_at": "2026-08-04T09:39:35Z",
       "status": "open"
+    },
+    {
+      "trade_id": "yrfi_5pp_flat:824484",
+      "strategy_id": "yrfi_5pp_flat",
+      "game_id": "824484",
+      "date": "2026-08-04",
+      "matchup": "OAK@CIN",
+      "side": "YRFI",
+      "edge_pp_at_entry": -6.3,
+      "entry_price": 0.51,
+      "stake": 0.01,
+      "placed_at": "2026-08-04T13:56:18Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_5pp_pct_bankroll:824484",
+      "strategy_id": "yrfi_5pp_pct_bankroll",
+      "game_id": "824484",
+      "date": "2026-08-04",
+      "matchup": "OAK@CIN",
+      "side": "YRFI",
+      "edge_pp_at_entry": -6.3,
+      "entry_price": 0.51,
+      "stake": 0.01137763,
+      "placed_at": "2026-08-04T13:56:18Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_5pp_kelly:824484",
+      "strategy_id": "yrfi_5pp_kelly",
+      "game_id": "824484",
+      "date": "2026-08-04",
+      "matchup": "OAK@CIN",
+      "side": "YRFI",
+      "edge_pp_at_entry": -6.3,
+      "entry_price": 0.51,
+      "stake": 0.00464773,
+      "placed_at": "2026-08-04T13:56:18Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_flat:824731",
+      "strategy_id": "yrfi_3pp_flat",
+      "game_id": "824731",
+      "date": "2026-08-04",
+      "matchup": "CWS@BOS",
+      "side": "YRFI",
+      "edge_pp_at_entry": -3.3,
+      "entry_price": 0.48,
+      "stake": 0.01,
+      "placed_at": "2026-08-04T13:56:18Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_pct_bankroll:824731",
+      "strategy_id": "yrfi_3pp_pct_bankroll",
+      "game_id": "824731",
+      "date": "2026-08-04",
+      "matchup": "CWS@BOS",
+      "side": "YRFI",
+      "edge_pp_at_entry": -3.3,
+      "entry_price": 0.48,
+      "stake": 0.00871329,
+      "placed_at": "2026-08-04T13:56:18Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_kelly:824731",
+      "strategy_id": "yrfi_3pp_kelly",
+      "game_id": "824731",
+      "date": "2026-08-04",
+      "matchup": "CWS@BOS",
+      "side": "YRFI",
+      "edge_pp_at_entry": -3.3,
+      "entry_price": 0.48,
+      "stake": 0.00233892,
+      "placed_at": "2026-08-04T13:56:18Z",
+      "status": "open"
     }
   ]
 }
