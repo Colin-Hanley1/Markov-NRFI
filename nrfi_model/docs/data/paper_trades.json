@@ -6,7 +6,7 @@
       "side": "YRFI",
       "threshold_pp": 0,
       "sizing": "flat",
-      "current_bankroll": 0.67369502,
+      "current_bankroll": 0.6301851,
       "balance_history": [
         {
           "date": "2026-07-09",
@@ -987,6 +987,38 @@
         {
           "date": "2026-08-03",
           "bankroll": 0.67369502
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.66331002
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.65298102
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.66151994
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.65114194
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.64078494
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.63045594
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.6405071
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.6301851
         }
       ]
     },
@@ -996,7 +1028,7 @@
       "side": "YRFI",
       "threshold_pp": 0,
       "sizing": "pct_bankroll",
-      "current_bankroll": 0.49247187,
+      "current_bankroll": 0.44868473,
       "balance_history": [
         {
           "date": "2026-07-09",
@@ -1977,6 +2009,38 @@
         {
           "date": "2026-08-03",
           "bankroll": 0.49247187
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.48181393
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.47121346
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.4799768
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.46932605
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.45912498
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.44895149
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.45885132
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.44868473
         }
       ]
     },
@@ -1986,7 +2050,7 @@
       "side": "YRFI",
       "threshold_pp": 0,
       "sizing": "kelly",
-      "current_bankroll": 0.40368769,
+      "current_bankroll": 0.36700181,
       "balance_history": [
         {
           "date": "2026-07-09",
@@ -2955,6 +3019,34 @@
         {
           "date": "2026-08-03",
           "bankroll": 0.40368769
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.40033635
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.39164547
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.3942478
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.38686706
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.36907734
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.36342164
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.36700181
         }
       ]
     },
@@ -2964,7 +3056,7 @@
       "side": "YRFI",
       "threshold_pp": 3,
       "sizing": "flat",
-      "current_bankroll": 0.60544288,
+      "current_bankroll": 0.57267313,
       "balance_history": [
         {
           "date": "2026-07-09",
@@ -3701,6 +3793,34 @@
         {
           "date": "2026-08-03",
           "bankroll": 0.60544288
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.59511388
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.6036528
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.5932748
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.5829178
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.5725888
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.58305813
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.57267313
         }
       ]
     },
@@ -3710,7 +3830,7 @@
       "side": "YRFI",
       "threshold_pp": 3,
       "sizing": "pct_bankroll",
-      "current_bankroll": 0.43566451,
+      "current_bankroll": 0.40666629,
       "balance_history": [
         {
           "date": "2026-07-09",
@@ -4447,6 +4567,34 @@
         {
           "date": "2026-08-03",
           "bankroll": 0.43566451
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.42628682
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.4340393
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.42461712
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.41559277
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.40659281
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.41571504
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.40666629
         }
       ]
     },
@@ -4456,7 +4604,7 @@
       "side": "YRFI",
       "threshold_pp": 3,
       "sizing": "kelly",
-      "current_bankroll": 0.17374848,
+      "current_bankroll": 0.15633558,
       "balance_history": [
         {
           "date": "2026-07-09",
@@ -5193,6 +5341,34 @@
         {
           "date": "2026-08-03",
           "bankroll": 0.17374848
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.17000548
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.17112626
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.16794751
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.16029076
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.15785653
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.16030522
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.15633558
         }
       ]
     },
@@ -5202,7 +5378,7 @@
       "side": "YRFI",
       "threshold_pp": 5,
       "sizing": "flat",
-      "current_bankroll": 0.73228598,
+      "current_bankroll": 0.70949583,
       "balance_history": [
         {
           "date": "2026-07-09",
@@ -5723,6 +5899,30 @@
         {
           "date": "2026-08-03",
           "bankroll": 0.73228598
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.72192898
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.71155798
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.70121498
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.69082998
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.6990265
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.70949583
         }
       ]
     },
@@ -5732,7 +5932,7 @@
       "side": "YRFI",
       "threshold_pp": 5,
       "sizing": "pct_bankroll",
-      "current_bankroll": 0.56888151,
+      "current_bankroll": 0.54295173,
       "balance_history": [
         {
           "date": "2026-07-09",
@@ -6253,6 +6453,30 @@
         {
           "date": "2026-08-03",
           "bankroll": 0.56888151
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.5570977
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.54529796
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.53353008
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.52171441
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.53104011
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.54295173
         }
       ]
     },
@@ -6262,7 +6486,7 @@
       "side": "YRFI",
       "threshold_pp": 5,
       "sizing": "kelly",
-      "current_bankroll": 0.15679097,
+      "current_bankroll": 0.14608673,
       "balance_history": [
         {
           "date": "2026-07-09",
@@ -6783,6 +7007,30 @@
         {
           "date": "2026-08-03",
           "bankroll": 0.15679097
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.1498815
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.14604641
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.14123926
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.13765706
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.14159629
+        },
+        {
+          "date": "2026-08-04",
+          "bankroll": 0.14608673
         }
       ]
     }
@@ -38434,7 +38682,13 @@
       "entry_price": 0.45,
       "stake": 0.01,
       "placed_at": "2026-08-04T00:12:19Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.02222222,
+      "payout": 0.0,
+      "fee": 0.000385,
+      "pnl": -0.010385,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_0pp_pct_bankroll:824403",
@@ -38447,7 +38701,13 @@
       "entry_price": 0.45,
       "stake": 0.01026282,
       "placed_at": "2026-08-04T00:12:19Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.02280627,
+      "payout": 0.0,
+      "fee": 0.00039512,
+      "pnl": -0.01065794,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_0pp_kelly:824403",
@@ -38460,7 +38720,13 @@
       "entry_price": 0.45,
       "stake": 0.0032271,
       "placed_at": "2026-08-04T00:12:19Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.00717133,
+      "payout": 0.0,
+      "fee": 0.00012424,
+      "pnl": -0.00335134,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_0pp_flat:824484",
@@ -38473,7 +38739,13 @@
       "entry_price": 0.53,
       "stake": 0.01,
       "placed_at": "2026-08-04T00:12:19Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.01886792,
+      "payout": 0.0,
+      "fee": 0.000329,
+      "pnl": -0.010329,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_0pp_pct_bankroll:824484",
@@ -38486,7 +38758,13 @@
       "entry_price": 0.53,
       "stake": 0.01026282,
       "placed_at": "2026-08-04T00:12:19Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.01936381,
+      "payout": 0.0,
+      "fee": 0.00033765,
+      "pnl": -0.01060047,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_0pp_kelly:824484",
@@ -38499,7 +38777,13 @@
       "entry_price": 0.53,
       "stake": 0.00841406,
       "placed_at": "2026-08-04T00:12:19Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.01587558,
+      "payout": 0.0,
+      "fee": 0.00027682,
+      "pnl": -0.00869088,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_3pp_flat:824484",
@@ -38512,7 +38796,13 @@
       "entry_price": 0.53,
       "stake": 0.01,
       "placed_at": "2026-08-04T00:12:19Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.01886792,
+      "payout": 0.0,
+      "fee": 0.000329,
+      "pnl": -0.010329,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_3pp_pct_bankroll:824484",
@@ -38525,7 +38815,13 @@
       "entry_price": 0.53,
       "stake": 0.00907899,
       "placed_at": "2026-08-04T00:12:19Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.01713017,
+      "payout": 0.0,
+      "fee": 0.0002987,
+      "pnl": -0.00937769,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_3pp_kelly:824484",
@@ -38538,7 +38834,13 @@
       "entry_price": 0.53,
       "stake": 0.00362378,
       "placed_at": "2026-08-04T00:12:19Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.00683732,
+      "payout": 0.0,
+      "fee": 0.00011922,
+      "pnl": -0.003743,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_0pp_flat:823432",
@@ -38551,7 +38853,13 @@
       "entry_price": 0.53,
       "stake": 0.01,
       "placed_at": "2026-08-04T00:12:19Z",
-      "status": "open"
+      "status": "settled",
+      "won": true,
+      "contracts": 0.01886792,
+      "payout": 0.01886792,
+      "fee": 0.000329,
+      "pnl": 0.00853892,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_0pp_pct_bankroll:823432",
@@ -38564,7 +38872,13 @@
       "entry_price": 0.53,
       "stake": 0.01026282,
       "placed_at": "2026-08-04T00:12:19Z",
-      "status": "open"
+      "status": "settled",
+      "won": true,
+      "contracts": 0.01936381,
+      "payout": 0.01936381,
+      "fee": 0.00033765,
+      "pnl": 0.00876334,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_0pp_kelly:823432",
@@ -38577,7 +38891,13 @@
       "entry_price": 0.53,
       "stake": 0.00304761,
       "placed_at": "2026-08-04T00:12:19Z",
-      "status": "open"
+      "status": "settled",
+      "won": true,
+      "contracts": 0.00575021,
+      "payout": 0.00575021,
+      "fee": 0.00010027,
+      "pnl": 0.00260233,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_3pp_flat:823432",
@@ -38590,7 +38910,13 @@
       "entry_price": 0.53,
       "stake": 0.01,
       "placed_at": "2026-08-04T00:12:19Z",
-      "status": "open"
+      "status": "settled",
+      "won": true,
+      "contracts": 0.01886792,
+      "payout": 0.01886792,
+      "fee": 0.000329,
+      "pnl": 0.00853892,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_3pp_pct_bankroll:823432",
@@ -38603,7 +38929,13 @@
       "entry_price": 0.53,
       "stake": 0.00907899,
       "placed_at": "2026-08-04T00:12:19Z",
-      "status": "open"
+      "status": "settled",
+      "won": true,
+      "contracts": 0.01713017,
+      "payout": 0.01713017,
+      "fee": 0.0002987,
+      "pnl": 0.00775248,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_3pp_kelly:823432",
@@ -38616,7 +38948,13 @@
       "entry_price": 0.53,
       "stake": 0.00131255,
       "placed_at": "2026-08-04T00:12:19Z",
-      "status": "open"
+      "status": "settled",
+      "won": true,
+      "contracts": 0.00247651,
+      "payout": 0.00247651,
+      "fee": 4.318e-05,
+      "pnl": 0.00112078,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_0pp_flat:824084",
@@ -38668,7 +39006,13 @@
       "entry_price": 0.46,
       "stake": 0.01,
       "placed_at": "2026-08-04T00:12:19Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.02173913,
+      "payout": 0.0,
+      "fee": 0.000378,
+      "pnl": -0.010378,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_0pp_pct_bankroll:823756",
@@ -38681,7 +39025,13 @@
       "entry_price": 0.46,
       "stake": 0.01026282,
       "placed_at": "2026-08-04T00:12:19Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.02231048,
+      "payout": 0.0,
+      "fee": 0.00038793,
+      "pnl": -0.01065075,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_0pp_kelly:823756",
@@ -38694,7 +39044,13 @@
       "entry_price": 0.46,
       "stake": 0.00711191,
       "placed_at": "2026-08-04T00:12:19Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.01546067,
+      "payout": 0.0,
+      "fee": 0.00026883,
+      "pnl": -0.00738074,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_3pp_flat:823756",
@@ -38707,7 +39063,13 @@
       "entry_price": 0.46,
       "stake": 0.01,
       "placed_at": "2026-08-04T00:12:19Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.02173913,
+      "payout": 0.0,
+      "fee": 0.000378,
+      "pnl": -0.010378,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_3pp_pct_bankroll:823756",
@@ -38720,7 +39082,13 @@
       "entry_price": 0.46,
       "stake": 0.00907899,
       "placed_at": "2026-08-04T00:12:19Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.01973693,
+      "payout": 0.0,
+      "fee": 0.00034319,
+      "pnl": -0.00942218,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_3pp_kelly:823756",
@@ -38733,7 +39101,13 @@
       "entry_price": 0.46,
       "stake": 0.00306297,
       "placed_at": "2026-08-04T00:12:19Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.00665863,
+      "payout": 0.0,
+      "fee": 0.00011578,
+      "pnl": -0.00317875,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_0pp_flat:824645",
@@ -39006,7 +39380,13 @@
       "entry_price": 0.49,
       "stake": 0.01,
       "placed_at": "2026-08-04T04:05:01Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.02040816,
+      "payout": 0.0,
+      "fee": 0.000357,
+      "pnl": -0.010357,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_0pp_pct_bankroll:823517",
@@ -39019,7 +39399,13 @@
       "entry_price": 0.49,
       "stake": 0.00984944,
       "placed_at": "2026-08-04T04:05:01Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.0201009,
+      "payout": 0.0,
+      "fee": 0.00035163,
+      "pnl": -0.01020107,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_0pp_kelly:823517",
@@ -39032,7 +39418,13 @@
       "entry_price": 0.49,
       "stake": 0.01717652,
       "placed_at": "2026-08-04T04:05:01Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.03505412,
+      "payout": 0.0,
+      "fee": 0.0006132,
+      "pnl": -0.01778972,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_3pp_flat:823517",
@@ -39045,7 +39437,13 @@
       "entry_price": 0.49,
       "stake": 0.01,
       "placed_at": "2026-08-04T04:05:01Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.02040816,
+      "payout": 0.0,
+      "fee": 0.000357,
+      "pnl": -0.010357,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_3pp_pct_bankroll:823517",
@@ -39058,7 +39456,13 @@
       "entry_price": 0.49,
       "stake": 0.00871329,
       "placed_at": "2026-08-04T04:05:01Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.01778222,
+      "payout": 0.0,
+      "fee": 0.00031106,
+      "pnl": -0.00902435,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_3pp_kelly:823517",
@@ -39071,7 +39475,13 @@
       "entry_price": 0.49,
       "stake": 0.00739283,
       "placed_at": "2026-08-04T04:05:01Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.01508741,
+      "payout": 0.0,
+      "fee": 0.00026392,
+      "pnl": -0.00765675,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_5pp_flat:823517",
@@ -39084,7 +39494,13 @@
       "entry_price": 0.49,
       "stake": 0.01,
       "placed_at": "2026-08-04T04:05:01Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.02040816,
+      "payout": 0.0,
+      "fee": 0.000357,
+      "pnl": -0.010357,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_5pp_pct_bankroll:823517",
@@ -39097,7 +39513,13 @@
       "entry_price": 0.49,
       "stake": 0.01137763,
       "placed_at": "2026-08-04T04:05:01Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.02321965,
+      "payout": 0.0,
+      "fee": 0.00040618,
+      "pnl": -0.01178381,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_5pp_kelly:823517",
@@ -39110,7 +39532,13 @@
       "entry_price": 0.49,
       "stake": 0.0066713,
       "placed_at": "2026-08-04T04:05:01Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.0136149,
+      "payout": 0.0,
+      "fee": 0.00023817,
+      "pnl": -0.00690947,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_0pp_flat:824888",
@@ -39123,7 +39551,13 @@
       "entry_price": 0.53,
       "stake": 0.01,
       "placed_at": "2026-08-04T04:05:01Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.01886792,
+      "payout": 0.0,
+      "fee": 0.000329,
+      "pnl": -0.010329,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_0pp_pct_bankroll:824888",
@@ -39136,7 +39570,13 @@
       "entry_price": 0.53,
       "stake": 0.00984944,
       "placed_at": "2026-08-04T04:05:01Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.01858385,
+      "payout": 0.0,
+      "fee": 0.00032405,
+      "pnl": -0.01017349,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_0pp_kelly:824888",
@@ -39149,7 +39589,13 @@
       "entry_price": 0.53,
       "stake": 0.00547555,
       "placed_at": "2026-08-04T04:05:01Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.01033123,
+      "payout": 0.0,
+      "fee": 0.00018015,
+      "pnl": -0.0056557,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_3pp_flat:824888",
@@ -39162,7 +39608,13 @@
       "entry_price": 0.53,
       "stake": 0.01,
       "placed_at": "2026-08-04T04:05:01Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.01886792,
+      "payout": 0.0,
+      "fee": 0.000329,
+      "pnl": -0.010329,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_3pp_pct_bankroll:824888",
@@ -39175,7 +39627,13 @@
       "entry_price": 0.53,
       "stake": 0.00871329,
       "placed_at": "2026-08-04T04:05:01Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.01644017,
+      "payout": 0.0,
+      "fee": 0.00028667,
+      "pnl": -0.00899996,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_3pp_kelly:824888",
@@ -39188,7 +39646,13 @@
       "entry_price": 0.53,
       "stake": 0.00235669,
       "placed_at": "2026-08-04T04:05:01Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.00444658,
+      "payout": 0.0,
+      "fee": 7.754e-05,
+      "pnl": -0.00243423,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_5pp_flat:823756",
@@ -39201,7 +39665,13 @@
       "entry_price": 0.47,
       "stake": 0.01,
       "placed_at": "2026-08-04T04:05:01Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.0212766,
+      "payout": 0.0,
+      "fee": 0.000371,
+      "pnl": -0.010371,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_5pp_pct_bankroll:823756",
@@ -39214,7 +39684,13 @@
       "entry_price": 0.47,
       "stake": 0.01137763,
       "placed_at": "2026-08-04T04:05:01Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.02420772,
+      "payout": 0.0,
+      "fee": 0.00042211,
+      "pnl": -0.01179974,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_5pp_kelly:823756",
@@ -39227,7 +39703,13 @@
       "entry_price": 0.47,
       "stake": 0.0036979,
       "placed_at": "2026-08-04T04:05:01Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.00786787,
+      "payout": 0.0,
+      "fee": 0.00013719,
+      "pnl": -0.00383509,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_0pp_kelly:824645",
@@ -39253,7 +39735,13 @@
       "entry_price": 0.49,
       "stake": 0.01,
       "placed_at": "2026-08-04T09:39:35Z",
-      "status": "open"
+      "status": "settled",
+      "won": true,
+      "contracts": 0.02040816,
+      "payout": 0.02040816,
+      "fee": 0.000357,
+      "pnl": 0.01005116,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_0pp_pct_bankroll:824731",
@@ -39266,7 +39754,13 @@
       "entry_price": 0.49,
       "stake": 0.00984944,
       "placed_at": "2026-08-04T09:39:35Z",
-      "status": "open"
+      "status": "settled",
+      "won": true,
+      "contracts": 0.0201009,
+      "payout": 0.0201009,
+      "fee": 0.00035163,
+      "pnl": 0.00989983,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_0pp_kelly:824731",
@@ -39279,7 +39773,13 @@
       "entry_price": 0.49,
       "stake": 0.00356195,
       "placed_at": "2026-08-04T09:39:35Z",
-      "status": "open"
+      "status": "settled",
+      "won": true,
+      "contracts": 0.00726929,
+      "payout": 0.00726929,
+      "fee": 0.00012716,
+      "pnl": 0.00358017,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_5pp_flat:824484",
@@ -39292,7 +39792,13 @@
       "entry_price": 0.51,
       "stake": 0.01,
       "placed_at": "2026-08-04T13:56:18Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.01960784,
+      "payout": 0.0,
+      "fee": 0.000343,
+      "pnl": -0.010343,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_5pp_pct_bankroll:824484",
@@ -39305,7 +39811,13 @@
       "entry_price": 0.51,
       "stake": 0.01137763,
       "placed_at": "2026-08-04T13:56:18Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.02230908,
+      "payout": 0.0,
+      "fee": 0.00039025,
+      "pnl": -0.01176788,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_5pp_kelly:824484",
@@ -39318,7 +39830,13 @@
       "entry_price": 0.51,
       "stake": 0.00464773,
       "placed_at": "2026-08-04T13:56:18Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.0091132,
+      "payout": 0.0,
+      "fee": 0.00015942,
+      "pnl": -0.00480715,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_3pp_flat:824731",
@@ -39331,7 +39849,13 @@
       "entry_price": 0.48,
       "stake": 0.01,
       "placed_at": "2026-08-04T13:56:18Z",
-      "status": "open"
+      "status": "settled",
+      "won": true,
+      "contracts": 0.02083333,
+      "payout": 0.02083333,
+      "fee": 0.000364,
+      "pnl": 0.01046933,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_3pp_pct_bankroll:824731",
@@ -39344,7 +39868,13 @@
       "entry_price": 0.48,
       "stake": 0.00871329,
       "placed_at": "2026-08-04T13:56:18Z",
-      "status": "open"
+      "status": "settled",
+      "won": true,
+      "contracts": 0.01815269,
+      "payout": 0.01815269,
+      "fee": 0.00031716,
+      "pnl": 0.00912223,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_3pp_kelly:824731",
@@ -39357,7 +39887,13 @@
       "entry_price": 0.48,
       "stake": 0.00233892,
       "placed_at": "2026-08-04T13:56:18Z",
-      "status": "open"
+      "status": "settled",
+      "won": true,
+      "contracts": 0.00487275,
+      "payout": 0.00487275,
+      "fee": 8.514e-05,
+      "pnl": 0.00244869,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_0pp_flat:823108",
@@ -39409,7 +39945,13 @@
       "entry_price": 0.54,
       "stake": 0.01,
       "placed_at": "2026-08-04T20:23:57Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.01851852,
+      "payout": 0.0,
+      "fee": 0.000322,
+      "pnl": -0.010322,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_0pp_pct_bankroll:824805",
@@ -39422,7 +39964,13 @@
       "entry_price": 0.54,
       "stake": 0.00984944,
       "placed_at": "2026-08-04T20:23:57Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.0182397,
+      "payout": 0.0,
+      "fee": 0.00031715,
+      "pnl": -0.01016659,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_3pp_flat:824403",
@@ -39435,7 +39983,13 @@
       "entry_price": 0.45,
       "stake": 0.01,
       "placed_at": "2026-08-04T20:23:57Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.02222222,
+      "payout": 0.0,
+      "fee": 0.000385,
+      "pnl": -0.010385,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_3pp_pct_bankroll:824403",
@@ -39448,7 +40002,13 @@
       "entry_price": 0.45,
       "stake": 0.00871329,
       "placed_at": "2026-08-04T20:23:57Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.01936287,
+      "payout": 0.0,
+      "fee": 0.00033546,
+      "pnl": -0.00904875,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_3pp_kelly:824403",
@@ -39461,7 +40021,13 @@
       "entry_price": 0.45,
       "stake": 0.00382247,
       "placed_at": "2026-08-04T20:23:57Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.00849438,
+      "payout": 0.0,
+      "fee": 0.00014717,
+      "pnl": -0.00396964,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_5pp_flat:824403",
@@ -39474,7 +40040,13 @@
       "entry_price": 0.45,
       "stake": 0.01,
       "placed_at": "2026-08-04T20:23:57Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.02222222,
+      "payout": 0.0,
+      "fee": 0.000385,
+      "pnl": -0.010385,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_5pp_pct_bankroll:824403",
@@ -39487,7 +40059,13 @@
       "entry_price": 0.45,
       "stake": 0.01137763,
       "placed_at": "2026-08-04T20:23:57Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.02528362,
+      "payout": 0.0,
+      "fee": 0.00043804,
+      "pnl": -0.01181567,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_5pp_kelly:824403",
@@ -39500,7 +40078,13 @@
       "entry_price": 0.45,
       "stake": 0.0034494,
       "placed_at": "2026-08-04T20:23:57Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.00766533,
+      "payout": 0.0,
+      "fee": 0.0001328,
+      "pnl": -0.0035822,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_5pp_flat:823432",
@@ -39513,7 +40097,13 @@
       "entry_price": 0.54,
       "stake": 0.01,
       "placed_at": "2026-08-04T20:23:57Z",
-      "status": "open"
+      "status": "settled",
+      "won": true,
+      "contracts": 0.01851852,
+      "payout": 0.01851852,
+      "fee": 0.000322,
+      "pnl": 0.00819652,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_5pp_pct_bankroll:823432",
@@ -39526,7 +40116,13 @@
       "entry_price": 0.54,
       "stake": 0.01137763,
       "placed_at": "2026-08-04T20:23:57Z",
-      "status": "open"
+      "status": "settled",
+      "won": true,
+      "contracts": 0.02106969,
+      "payout": 0.02106969,
+      "fee": 0.00036636,
+      "pnl": 0.0093257,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_5pp_kelly:823432",
@@ -39539,7 +40135,13 @@
       "entry_price": 0.54,
       "stake": 0.00480598,
       "placed_at": "2026-08-04T20:23:57Z",
-      "status": "open"
+      "status": "settled",
+      "won": true,
+      "contracts": 0.00889996,
+      "payout": 0.00889996,
+      "fee": 0.00015475,
+      "pnl": 0.00393923,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_5pp_flat:824731",
@@ -39552,7 +40154,13 @@
       "entry_price": 0.48,
       "stake": 0.01,
       "placed_at": "2026-08-04T20:23:57Z",
-      "status": "open"
+      "status": "settled",
+      "won": true,
+      "contracts": 0.02083333,
+      "payout": 0.02083333,
+      "fee": 0.000364,
+      "pnl": 0.01046933,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_5pp_pct_bankroll:824731",
@@ -39565,7 +40173,13 @@
       "entry_price": 0.48,
       "stake": 0.01137763,
       "placed_at": "2026-08-04T20:23:57Z",
-      "status": "open"
+      "status": "settled",
+      "won": true,
+      "contracts": 0.0237034,
+      "payout": 0.0237034,
+      "fee": 0.00041415,
+      "pnl": 0.01191162,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_5pp_kelly:824731",
@@ -39578,7 +40192,13 @@
       "entry_price": 0.48,
       "stake": 0.00428914,
       "placed_at": "2026-08-04T20:23:57Z",
-      "status": "open"
+      "status": "settled",
+      "won": true,
+      "contracts": 0.00893571,
+      "payout": 0.00893571,
+      "fee": 0.00015612,
+      "pnl": 0.00449044,
+      "settled_at": "2026-08-05T00:00:10Z"
     },
     {
       "trade_id": "yrfi_3pp_flat:823108",
@@ -39617,6 +40237,84 @@
       "entry_price": 0.48,
       "stake": 0.00259787,
       "placed_at": "2026-08-04T22:13:30Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_flat:824084",
+      "strategy_id": "yrfi_3pp_flat",
+      "game_id": "824084",
+      "date": "2026-08-04",
+      "matchup": "MIN@KC",
+      "side": "YRFI",
+      "edge_pp_at_entry": -16.3,
+      "entry_price": 0.37,
+      "stake": 0.01,
+      "placed_at": "2026-08-05T00:00:10Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_pct_bankroll:824084",
+      "strategy_id": "yrfi_3pp_pct_bankroll",
+      "game_id": "824084",
+      "date": "2026-08-04",
+      "matchup": "MIN@KC",
+      "side": "YRFI",
+      "edge_pp_at_entry": -16.3,
+      "entry_price": 0.37,
+      "stake": 0.00813333,
+      "placed_at": "2026-08-05T00:00:10Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_kelly:824084",
+      "strategy_id": "yrfi_3pp_kelly",
+      "game_id": "824084",
+      "date": "2026-08-04",
+      "matchup": "MIN@KC",
+      "side": "YRFI",
+      "edge_pp_at_entry": -16.3,
+      "entry_price": 0.37,
+      "stake": 0.0098082,
+      "placed_at": "2026-08-05T00:00:10Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_5pp_flat:824084",
+      "strategy_id": "yrfi_5pp_flat",
+      "game_id": "824084",
+      "date": "2026-08-04",
+      "matchup": "MIN@KC",
+      "side": "YRFI",
+      "edge_pp_at_entry": -16.3,
+      "entry_price": 0.37,
+      "stake": 0.01,
+      "placed_at": "2026-08-05T00:00:10Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_5pp_pct_bankroll:824084",
+      "strategy_id": "yrfi_5pp_pct_bankroll",
+      "game_id": "824084",
+      "date": "2026-08-04",
+      "matchup": "MIN@KC",
+      "side": "YRFI",
+      "edge_pp_at_entry": -16.3,
+      "entry_price": 0.37,
+      "stake": 0.01085903,
+      "placed_at": "2026-08-05T00:00:10Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_5pp_kelly:824084",
+      "strategy_id": "yrfi_5pp_kelly",
+      "game_id": "824084",
+      "date": "2026-08-04",
+      "matchup": "MIN@KC",
+      "side": "YRFI",
+      "edge_pp_at_entry": -16.3,
+      "entry_price": 0.37,
+      "stake": 0.0091652,
+      "placed_at": "2026-08-05T00:00:10Z",
       "status": "open"
     }
   ]
