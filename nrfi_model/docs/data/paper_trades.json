@@ -44868,6 +44868,19 @@
       "stake": 0.01124031,
       "placed_at": "2026-08-07T15:52:40Z",
       "status": "open"
+    },
+    {
+      "trade_id": "yrfi_0pp_kelly:823428",
+      "strategy_id": "yrfi_0pp_kelly",
+      "game_id": "823428",
+      "date": "2026-08-07",
+      "matchup": "TOR@PHI",
+      "side": "YRFI",
+      "edge_pp_at_entry": -1.3,
+      "entry_price": 0.47,
+      "stake": 0.00116078,
+      "placed_at": "2026-08-07T19:53:08Z",
+      "status": "open"
     }
   ]
 }
