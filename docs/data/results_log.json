@@ -18275,15 +18275,27 @@
       "home_runs_1st": 2,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823514",
+      "date": "2026-08-08",
+      "away_team": "ATL",
+      "home_team": "NYY",
+      "p_nrfi_predicted": 0.5233,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1523,
-    "accuracy": 0.5286,
-    "brier_score": 0.2507,
-    "brier_skill_score": -0.0036,
-    "log_loss": 0.6951,
-    "actual_nrfi_rate": 0.4859,
+    "n_games": 1524,
+    "accuracy": 0.5289,
+    "brier_score": 0.25068,
+    "brier_skill_score": -0.0035,
+    "log_loss": 0.69507,
+    "actual_nrfi_rate": 0.4862,
     "mean_predicted": 0.5313,
     "last_updated": "2026-08-08"
   },
@@ -19099,6 +19111,13 @@
       "correct": 8,
       "accuracy": 0.5333,
       "nrfi_count": 8
+    },
+    {
+      "date": "2026-08-08",
+      "n_games": 1,
+      "correct": 1,
+      "accuracy": 1.0,
+      "nrfi_count": 1
     }
   ]
 }
