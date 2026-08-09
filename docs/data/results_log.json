@@ -18455,15 +18455,27 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "822700",
+      "date": "2026-08-09",
+      "away_team": "CIN",
+      "home_team": "WSH",
+      "p_nrfi_predicted": 0.5354,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1538,
-    "accuracy": 0.5273,
-    "brier_score": 0.25081,
-    "brier_skill_score": -0.0041,
-    "log_loss": 0.69532,
-    "actual_nrfi_rate": 0.4857,
+    "n_games": 1539,
+    "accuracy": 0.5276,
+    "brier_score": 0.25078,
+    "brier_skill_score": -0.0039,
+    "log_loss": 0.69527,
+    "actual_nrfi_rate": 0.486,
     "mean_predicted": 0.5313,
     "last_updated": "2026-08-09"
   },
@@ -19286,6 +19298,13 @@
       "correct": 6,
       "accuracy": 0.4,
       "nrfi_count": 7
+    },
+    {
+      "date": "2026-08-09",
+      "n_games": 1,
+      "correct": 1,
+      "accuracy": 1.0,
+      "nrfi_count": 1
     }
   ]
 }
