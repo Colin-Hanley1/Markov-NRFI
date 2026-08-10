@@ -18635,15 +18635,27 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "822780",
+      "date": "2026-08-10",
+      "away_team": "BOS",
+      "home_team": "TOR",
+      "p_nrfi_predicted": 0.5655,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1553,
-    "accuracy": 0.5261,
-    "brier_score": 0.251,
-    "brier_skill_score": -0.005,
-    "log_loss": 0.6957,
-    "actual_nrfi_rate": 0.4842,
+    "n_games": 1554,
+    "accuracy": 0.5264,
+    "brier_score": 0.25096,
+    "brier_skill_score": -0.0048,
+    "log_loss": 0.69562,
+    "actual_nrfi_rate": 0.4846,
     "mean_predicted": 0.5316,
     "last_updated": "2026-08-10"
   },
@@ -19473,6 +19485,13 @@
       "correct": 6,
       "accuracy": 0.4,
       "nrfi_count": 5
+    },
+    {
+      "date": "2026-08-10",
+      "n_games": 1,
+      "correct": 1,
+      "accuracy": 1.0,
+      "nrfi_count": 1
     }
   ]
 }
