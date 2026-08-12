@@ -18947,15 +18947,27 @@
       "home_runs_1st": 1,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823017",
+      "date": "2026-08-12",
+      "away_team": "PHI",
+      "home_team": "STL",
+      "p_nrfi_predicted": 0.5935,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1579,
-    "accuracy": 0.5288,
-    "brier_score": 0.25064,
-    "brier_skill_score": -0.0035,
-    "log_loss": 0.69497,
-    "actual_nrfi_rate": 0.4845,
+    "n_games": 1580,
+    "accuracy": 0.5291,
+    "brier_score": 0.25059,
+    "brier_skill_score": -0.0033,
+    "log_loss": 0.69486,
+    "actual_nrfi_rate": 0.4848,
     "mean_predicted": 0.5316,
     "last_updated": "2026-08-12"
   },
@@ -19802,10 +19814,10 @@
     },
     {
       "date": "2026-08-12",
-      "n_games": 1,
-      "correct": 1,
+      "n_games": 2,
+      "correct": 2,
       "accuracy": 1.0,
-      "nrfi_count": 0
+      "nrfi_count": 1
     }
   ]
 }
