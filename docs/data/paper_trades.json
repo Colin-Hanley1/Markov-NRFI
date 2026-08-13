@@ -55921,6 +55921,45 @@
       "stake": 0.00261442,
       "placed_at": "2026-08-13T14:19:32Z",
       "status": "open"
+    },
+    {
+      "trade_id": "yrfi_5pp_flat:823995",
+      "strategy_id": "yrfi_5pp_flat",
+      "game_id": "823995",
+      "date": "2026-08-13",
+      "matchup": "TEX@LAA",
+      "side": "YRFI",
+      "edge_pp_at_entry": -5.3,
+      "entry_price": 0.46,
+      "stake": 0.01,
+      "placed_at": "2026-08-13T15:55:56Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_5pp_pct_bankroll:823995",
+      "strategy_id": "yrfi_5pp_pct_bankroll",
+      "game_id": "823995",
+      "date": "2026-08-13",
+      "matchup": "TEX@LAA",
+      "side": "YRFI",
+      "edge_pp_at_entry": -5.3,
+      "entry_price": 0.46,
+      "stake": 0.01044484,
+      "placed_at": "2026-08-13T15:55:56Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_5pp_kelly:823995",
+      "strategy_id": "yrfi_5pp_kelly",
+      "game_id": "823995",
+      "date": "2026-08-13",
+      "matchup": "TEX@LAA",
+      "side": "YRFI",
+      "edge_pp_at_entry": -5.3,
+      "entry_price": 0.46,
+      "stake": 0.00341559,
+      "placed_at": "2026-08-13T15:55:56Z",
+      "status": "open"
     }
   ]
 }
