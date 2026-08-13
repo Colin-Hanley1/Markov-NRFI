@@ -55869,6 +55869,19 @@
       "stake": 0.00831511,
       "placed_at": "2026-08-13T04:06:14Z",
       "status": "open"
+    },
+    {
+      "trade_id": "yrfi_0pp_kelly:824238",
+      "strategy_id": "yrfi_0pp_kelly",
+      "game_id": "824238",
+      "date": "2026-08-13",
+      "matchup": "CLE@DET",
+      "side": "YRFI",
+      "edge_pp_at_entry": -1.5,
+      "entry_price": 0.46,
+      "stake": 0.00128129,
+      "placed_at": "2026-08-13T10:57:53Z",
+      "status": "open"
     }
   ]
 }
