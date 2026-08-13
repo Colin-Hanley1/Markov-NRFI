@@ -19115,16 +19115,64 @@
       "home_runs_1st": 0,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824238",
+      "date": "2026-08-13",
+      "away_team": "CLE",
+      "home_team": "DET",
+      "p_nrfi_predicted": 0.6275,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "824561",
+      "date": "2026-08-13",
+      "away_team": "CIN",
+      "home_team": "CWS",
+      "p_nrfi_predicted": 0.5112,
+      "nrfi_actual": false,
+      "away_runs_1st": 3,
+      "home_runs_1st": 1,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823829",
+      "date": "2026-08-13",
+      "away_team": "PIT",
+      "home_team": "MIA",
+      "p_nrfi_predicted": 0.6768,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823508",
+      "date": "2026-08-13",
+      "away_team": "SEA",
+      "home_team": "NYY",
+      "p_nrfi_predicted": 0.5467,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1593,
-    "accuracy": 0.5304,
-    "brier_score": 0.2503,
-    "brier_skill_score": -0.0019,
-    "log_loss": 0.69427,
-    "actual_nrfi_rate": 0.4865,
-    "mean_predicted": 0.5317,
+    "n_games": 1597,
+    "accuracy": 0.531,
+    "brier_score": 0.25012,
+    "brier_skill_score": -0.0011,
+    "log_loss": 0.69389,
+    "actual_nrfi_rate": 0.4872,
+    "mean_predicted": 0.5319,
     "last_updated": "2026-08-13"
   },
   "daily": [
@@ -19974,6 +20022,13 @@
       "correct": 11,
       "accuracy": 0.7333,
       "nrfi_count": 10
+    },
+    {
+      "date": "2026-08-13",
+      "n_games": 4,
+      "correct": 3,
+      "accuracy": 0.75,
+      "nrfi_count": 3
     }
   ]
 }
