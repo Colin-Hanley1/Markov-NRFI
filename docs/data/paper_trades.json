@@ -57219,6 +57219,84 @@
       "stake": 0.0039409,
       "placed_at": "2026-08-14T04:03:06Z",
       "status": "open"
+    },
+    {
+      "trade_id": "yrfi_0pp_flat:824882",
+      "strategy_id": "yrfi_0pp_flat",
+      "game_id": "824882",
+      "date": "2026-08-14",
+      "matchup": "ARI@ATL",
+      "side": "YRFI",
+      "edge_pp_at_entry": -4.0,
+      "entry_price": 0.52,
+      "stake": 0.01,
+      "placed_at": "2026-08-14T16:46:11Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_0pp_pct_bankroll:824882",
+      "strategy_id": "yrfi_0pp_pct_bankroll",
+      "game_id": "824882",
+      "date": "2026-08-14",
+      "matchup": "ARI@ATL",
+      "side": "YRFI",
+      "edge_pp_at_entry": -4.0,
+      "entry_price": 0.52,
+      "stake": 0.00795184,
+      "placed_at": "2026-08-14T16:46:11Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_0pp_kelly:824882",
+      "strategy_id": "yrfi_0pp_kelly",
+      "game_id": "824882",
+      "date": "2026-08-14",
+      "matchup": "ARI@ATL",
+      "side": "YRFI",
+      "edge_pp_at_entry": -4.0,
+      "entry_price": 0.52,
+      "stake": 0.00517174,
+      "placed_at": "2026-08-14T16:46:11Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_flat:824882",
+      "strategy_id": "yrfi_3pp_flat",
+      "game_id": "824882",
+      "date": "2026-08-14",
+      "matchup": "ARI@ATL",
+      "side": "YRFI",
+      "edge_pp_at_entry": -4.0,
+      "entry_price": 0.52,
+      "stake": 0.01,
+      "placed_at": "2026-08-14T16:46:11Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_pct_bankroll:824882",
+      "strategy_id": "yrfi_3pp_pct_bankroll",
+      "game_id": "824882",
+      "date": "2026-08-14",
+      "matchup": "ARI@ATL",
+      "side": "YRFI",
+      "edge_pp_at_entry": -4.0,
+      "entry_price": 0.52,
+      "stake": 0.00717416,
+      "placed_at": "2026-08-14T16:46:11Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_kelly:824882",
+      "strategy_id": "yrfi_3pp_kelly",
+      "game_id": "824882",
+      "date": "2026-08-14",
+      "matchup": "ARI@ATL",
+      "side": "YRFI",
+      "edge_pp_at_entry": -4.0,
+      "entry_price": 0.52,
+      "stake": 0.00305649,
+      "placed_at": "2026-08-14T16:46:11Z",
+      "status": "open"
     }
   ]
 }
