@@ -6,7 +6,7 @@
       "side": "YRFI",
       "threshold_pp": 0,
       "sizing": "flat",
-      "current_bankroll": 0.57870755,
+      "current_bankroll": 0.56833655,
       "balance_history": [
         {
           "date": "2026-07-09",
@@ -1427,6 +1427,10 @@
         {
           "date": "2026-08-13",
           "bankroll": 0.57870755
+        },
+        {
+          "date": "2026-08-14",
+          "bankroll": 0.56833655
         }
       ]
     },
@@ -1436,7 +1440,7 @@
       "side": "YRFI",
       "threshold_pp": 0,
       "sizing": "pct_bankroll",
-      "current_bankroll": 0.39759203,
+      "current_bankroll": 0.38898064,
       "balance_history": [
         {
           "date": "2026-07-09",
@@ -2857,6 +2861,10 @@
         {
           "date": "2026-08-13",
           "bankroll": 0.39759203
+        },
+        {
+          "date": "2026-08-14",
+          "bankroll": 0.38898064
         }
       ]
     },
@@ -2866,7 +2874,7 @@
       "side": "YRFI",
       "threshold_pp": 0,
       "sizing": "kelly",
-      "current_bankroll": 0.28451959,
+      "current_bankroll": 0.28372617,
       "balance_history": [
         {
           "date": "2026-07-09",
@@ -4263,6 +4271,10 @@
         {
           "date": "2026-08-13",
           "bankroll": 0.28451959
+        },
+        {
+          "date": "2026-08-14",
+          "bankroll": 0.28372617
         }
       ]
     },
@@ -56581,7 +56593,13 @@
       "entry_price": 0.47,
       "stake": 0.01,
       "placed_at": "2026-08-14T01:08:25Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.0212766,
+      "payout": 0.0,
+      "fee": 0.000371,
+      "pnl": -0.010371,
+      "settled_at": "2026-08-14T18:49:12Z"
     },
     {
       "trade_id": "yrfi_0pp_pct_bankroll:824643",
@@ -56594,7 +56612,13 @@
       "entry_price": 0.47,
       "stake": 0.00830334,
       "placed_at": "2026-08-14T01:08:25Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.01766668,
+      "payout": 0.0,
+      "fee": 0.00030805,
+      "pnl": -0.00861139,
+      "settled_at": "2026-08-14T18:49:12Z"
     },
     {
       "trade_id": "yrfi_0pp_kelly:824643",
@@ -56607,7 +56631,13 @@
       "entry_price": 0.47,
       "stake": 0.00076504,
       "placed_at": "2026-08-14T01:08:25Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.00162774,
+      "payout": 0.0,
+      "fee": 2.838e-05,
+      "pnl": -0.00079342,
+      "settled_at": "2026-08-14T18:49:12Z"
     },
     {
       "trade_id": "yrfi_0pp_flat:824479",
