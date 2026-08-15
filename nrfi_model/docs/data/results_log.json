@@ -19343,15 +19343,27 @@
       "home_runs_1st": 1,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823993",
+      "date": "2026-08-14",
+      "away_team": "KC",
+      "home_team": "LAA",
+      "p_nrfi_predicted": 0.549,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1612,
-    "accuracy": 0.5341,
-    "brier_score": 0.24965,
-    "brier_skill_score": 0.0009,
-    "log_loss": 0.69293,
-    "actual_nrfi_rate": 0.4888,
+    "n_games": 1613,
+    "accuracy": 0.5344,
+    "brier_score": 0.24962,
+    "brier_skill_score": 0.001,
+    "log_loss": 0.69288,
+    "actual_nrfi_rate": 0.4892,
     "mean_predicted": 0.532,
     "last_updated": "2026-08-15"
   },
@@ -20212,10 +20224,10 @@
     },
     {
       "date": "2026-08-14",
-      "n_games": 10,
-      "correct": 9,
-      "accuracy": 0.9,
-      "nrfi_count": 7
+      "n_games": 11,
+      "correct": 10,
+      "accuracy": 0.9091,
+      "nrfi_count": 8
     }
   ]
 }
