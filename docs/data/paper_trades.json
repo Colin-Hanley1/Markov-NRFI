@@ -6,7 +6,7 @@
       "side": "YRFI",
       "threshold_pp": 0,
       "sizing": "flat",
-      "current_bankroll": 0.54762905,
+      "current_bankroll": 0.54816365,
       "balance_history": [
         {
           "date": "2026-07-09",
@@ -1463,6 +1463,14 @@
         {
           "date": "2026-08-14",
           "bankroll": 0.54762905
+        },
+        {
+          "date": "2026-08-14",
+          "bankroll": 0.55853465
+        },
+        {
+          "date": "2026-08-14",
+          "bankroll": 0.54816365
         }
       ]
     },
@@ -1472,7 +1480,7 @@
       "side": "YRFI",
       "threshold_pp": 0,
       "sizing": "pct_bankroll",
-      "current_bankroll": 0.37183741,
+      "current_bankroll": 0.37228131,
       "balance_history": [
         {
           "date": "2026-07-09",
@@ -2929,6 +2937,14 @@
         {
           "date": "2026-08-14",
           "bankroll": 0.37183741
+        },
+        {
+          "date": "2026-08-14",
+          "bankroll": 0.3808927
+        },
+        {
+          "date": "2026-08-14",
+          "bankroll": 0.37228131
         }
       ]
     },
@@ -2938,7 +2954,7 @@
       "side": "YRFI",
       "threshold_pp": 0,
       "sizing": "kelly",
-      "current_bankroll": 0.28871848,
+      "current_bankroll": 0.29094182,
       "balance_history": [
         {
           "date": "2026-07-09",
@@ -4371,6 +4387,14 @@
         {
           "date": "2026-08-14",
           "bankroll": 0.28871848
+        },
+        {
+          "date": "2026-08-14",
+          "bankroll": 0.29119166
+        },
+        {
+          "date": "2026-08-14",
+          "bankroll": 0.29094182
         }
       ]
     },
@@ -57631,7 +57655,13 @@
       "entry_price": 0.47,
       "stake": 0.01,
       "placed_at": "2026-08-14T01:08:25Z",
-      "status": "open"
+      "status": "settled",
+      "won": true,
+      "contracts": 0.0212766,
+      "payout": 0.0212766,
+      "fee": 0.000371,
+      "pnl": 0.0109056,
+      "settled_at": "2026-08-15T03:39:09Z"
     },
     {
       "trade_id": "yrfi_0pp_pct_bankroll:823913",
@@ -57644,7 +57674,13 @@
       "entry_price": 0.47,
       "stake": 0.00830334,
       "placed_at": "2026-08-14T01:08:25Z",
-      "status": "open"
+      "status": "settled",
+      "won": true,
+      "contracts": 0.01766668,
+      "payout": 0.01766668,
+      "fee": 0.00030805,
+      "pnl": 0.00905529,
+      "settled_at": "2026-08-15T03:39:09Z"
     },
     {
       "trade_id": "yrfi_0pp_kelly:823913",
@@ -57657,7 +57693,13 @@
       "entry_price": 0.47,
       "stake": 0.00226781,
       "placed_at": "2026-08-14T01:08:25Z",
-      "status": "open"
+      "status": "settled",
+      "won": true,
+      "contracts": 0.00482513,
+      "payout": 0.00482513,
+      "fee": 8.414e-05,
+      "pnl": 0.00247318,
+      "settled_at": "2026-08-15T03:39:09Z"
     },
     {
       "trade_id": "yrfi_0pp_flat:823185",
@@ -57670,7 +57712,13 @@
       "entry_price": 0.47,
       "stake": 0.01,
       "placed_at": "2026-08-14T01:08:25Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.0212766,
+      "payout": 0.0,
+      "fee": 0.000371,
+      "pnl": -0.010371,
+      "settled_at": "2026-08-15T03:39:09Z"
     },
     {
       "trade_id": "yrfi_0pp_pct_bankroll:823185",
@@ -57683,7 +57731,13 @@
       "entry_price": 0.47,
       "stake": 0.00830334,
       "placed_at": "2026-08-14T01:08:25Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.01766668,
+      "payout": 0.0,
+      "fee": 0.00030805,
+      "pnl": -0.00861139,
+      "settled_at": "2026-08-15T03:39:09Z"
     },
     {
       "trade_id": "yrfi_5pp_flat:824399",
@@ -57981,7 +58035,13 @@
       "entry_price": 0.47,
       "stake": 0.0002409,
       "placed_at": "2026-08-14T21:24:51Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.00051255,
+      "payout": 0.0,
+      "fee": 8.94e-06,
+      "pnl": -0.00024984,
+      "settled_at": "2026-08-15T03:39:09Z"
     },
     {
       "trade_id": "yrfi_3pp_flat:822942",
