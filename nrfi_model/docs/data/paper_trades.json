@@ -6,7 +6,7 @@
       "side": "YRFI",
       "threshold_pp": 0,
       "sizing": "flat",
-      "current_bankroll": 0.52391906,
+      "current_bankroll": 0.50324006,
       "balance_history": [
         {
           "date": "2026-07-09",
@@ -1519,6 +1519,14 @@
         {
           "date": "2026-08-15",
           "bankroll": 0.52391906
+        },
+        {
+          "date": "2026-08-15",
+          "bankroll": 0.51356206
+        },
+        {
+          "date": "2026-08-15",
+          "bankroll": 0.50324006
         }
       ]
     },
@@ -1528,7 +1536,7 @@
       "side": "YRFI",
       "threshold_pp": 0,
       "sizing": "pct_bankroll",
-      "current_bankroll": 0.3545451,
+      "current_bankroll": 0.3394794,
       "balance_history": [
         {
           "date": "2026-07-09",
@@ -3041,6 +3049,14 @@
         {
           "date": "2026-08-15",
           "bankroll": 0.3545451
+        },
+        {
+          "date": "2026-08-15",
+          "bankroll": 0.34684286
+        },
+        {
+          "date": "2026-08-15",
+          "bankroll": 0.3394794
         }
       ]
     },
@@ -3050,7 +3066,7 @@
       "side": "YRFI",
       "threshold_pp": 0,
       "sizing": "kelly",
-      "current_bankroll": 0.28695073,
+      "current_bankroll": 0.28612988,
       "balance_history": [
         {
           "date": "2026-07-09",
@@ -4539,6 +4555,10 @@
         {
           "date": "2026-08-15",
           "bankroll": 0.28695073
+        },
+        {
+          "date": "2026-08-15",
+          "bankroll": 0.28612988
         }
       ]
     },
@@ -4548,7 +4568,7 @@
       "side": "YRFI",
       "threshold_pp": 3,
       "sizing": "flat",
-      "current_bankroll": 0.48828069,
+      "current_bankroll": 0.47790969,
       "balance_history": [
         {
           "date": "2026-07-09",
@@ -5693,6 +5713,10 @@
         {
           "date": "2026-08-15",
           "bankroll": 0.48828069
+        },
+        {
+          "date": "2026-08-15",
+          "bankroll": 0.47790969
         }
       ]
     },
@@ -5702,7 +5726,7 @@
       "side": "YRFI",
       "threshold_pp": 3,
       "sizing": "pct_bankroll",
-      "current_bankroll": 0.33532162,
+      "current_bankroll": 0.32788061,
       "balance_history": [
         {
           "date": "2026-07-09",
@@ -6847,6 +6871,10 @@
         {
           "date": "2026-08-15",
           "bankroll": 0.33532162
+        },
+        {
+          "date": "2026-08-15",
+          "bankroll": 0.32788061
         }
       ]
     },
@@ -6856,7 +6884,7 @@
       "side": "YRFI",
       "threshold_pp": 3,
       "sizing": "kelly",
-      "current_bankroll": 0.16494419,
+      "current_bankroll": 0.16281458,
       "balance_history": [
         {
           "date": "2026-07-09",
@@ -8001,6 +8029,10 @@
         {
           "date": "2026-08-15",
           "bankroll": 0.16494419
+        },
+        {
+          "date": "2026-08-15",
+          "bankroll": 0.16281458
         }
       ]
     },
@@ -59611,7 +59643,13 @@
       "entry_price": 0.49,
       "stake": 0.01,
       "placed_at": "2026-08-15T00:47:23Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.02040816,
+      "payout": 0.0,
+      "fee": 0.000357,
+      "pnl": -0.010357,
+      "settled_at": "2026-08-16T02:22:31Z"
     },
     {
       "trade_id": "yrfi_0pp_pct_bankroll:823990",
@@ -59624,7 +59662,13 @@
       "entry_price": 0.49,
       "stake": 0.00743675,
       "placed_at": "2026-08-15T00:47:23Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.01517704,
+      "payout": 0.0,
+      "fee": 0.00026549,
+      "pnl": -0.00770224,
+      "settled_at": "2026-08-16T02:22:31Z"
     },
     {
       "trade_id": "yrfi_0pp_kelly:823990",
@@ -59637,7 +59681,13 @@
       "entry_price": 0.49,
       "stake": 0.00079256,
       "placed_at": "2026-08-15T00:47:23Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.00161747,
+      "payout": 0.0,
+      "fee": 2.829e-05,
+      "pnl": -0.00082085,
+      "settled_at": "2026-08-16T02:22:31Z"
     },
     {
       "trade_id": "yrfi_5pp_flat:824239",
@@ -59764,7 +59814,13 @@
       "entry_price": 0.47,
       "stake": 0.01,
       "placed_at": "2026-08-15T09:25:56Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.0212766,
+      "payout": 0.0,
+      "fee": 0.000371,
+      "pnl": -0.010371,
+      "settled_at": "2026-08-16T02:22:31Z"
     },
     {
       "trade_id": "yrfi_3pp_pct_bankroll:823990",
@@ -59777,7 +59833,13 @@
       "entry_price": 0.47,
       "stake": 0.00717482,
       "placed_at": "2026-08-15T09:25:56Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.01526557,
+      "payout": 0.0,
+      "fee": 0.00026619,
+      "pnl": -0.00744101,
+      "settled_at": "2026-08-16T02:22:31Z"
     },
     {
       "trade_id": "yrfi_3pp_kelly:823990",
@@ -59790,7 +59852,13 @@
       "entry_price": 0.47,
       "stake": 0.00205343,
       "placed_at": "2026-08-15T09:25:56Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.004369,
+      "payout": 0.0,
+      "fee": 7.618e-05,
+      "pnl": -0.00212961,
+      "settled_at": "2026-08-16T02:22:31Z"
     },
     {
       "trade_id": "yrfi_0pp_flat:822775",
@@ -60316,7 +60384,13 @@
       "entry_price": 0.54,
       "stake": 0.01,
       "placed_at": "2026-08-15T23:14:57Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.01851852,
+      "payout": 0.0,
+      "fee": 0.000322,
+      "pnl": -0.010322,
+      "settled_at": "2026-08-16T02:22:31Z"
     },
     {
       "trade_id": "yrfi_0pp_pct_bankroll:824966",
@@ -60329,7 +60403,13 @@
       "entry_price": 0.54,
       "stake": 0.00713375,
       "placed_at": "2026-08-15T23:14:57Z",
-      "status": "open"
+      "status": "settled",
+      "won": false,
+      "contracts": 0.01321065,
+      "payout": 0.0,
+      "fee": 0.00022971,
+      "pnl": -0.00736346,
+      "settled_at": "2026-08-16T02:22:31Z"
     },
     {
       "trade_id": "yrfi_0pp_flat:823344",
@@ -61109,6 +61189,123 @@
       "entry_price": 0.45,
       "stake": 0.00100433,
       "placed_at": "2026-08-16T00:46:38Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_flat:823670",
+      "strategy_id": "yrfi_3pp_flat",
+      "game_id": "823670",
+      "date": "2026-08-16",
+      "matchup": "PHI@MIN",
+      "side": "YRFI",
+      "edge_pp_at_entry": -4.1,
+      "entry_price": 0.54,
+      "stake": 0.01,
+      "placed_at": "2026-08-16T02:22:31Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_pct_bankroll:823670",
+      "strategy_id": "yrfi_3pp_pct_bankroll",
+      "game_id": "823670",
+      "date": "2026-08-16",
+      "matchup": "PHI@MIN",
+      "side": "YRFI",
+      "edge_pp_at_entry": -4.1,
+      "entry_price": 0.54,
+      "stake": 0.00655761,
+      "placed_at": "2026-08-16T02:22:31Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_kelly:823670",
+      "strategy_id": "yrfi_3pp_kelly",
+      "game_id": "823670",
+      "date": "2026-08-16",
+      "matchup": "PHI@MIN",
+      "side": "YRFI",
+      "edge_pp_at_entry": -4.1,
+      "entry_price": 0.54,
+      "stake": 0.00315896,
+      "placed_at": "2026-08-16T02:22:31Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_flat:823912",
+      "strategy_id": "yrfi_3pp_flat",
+      "game_id": "823912",
+      "date": "2026-08-16",
+      "matchup": "MIL@LAD",
+      "side": "YRFI",
+      "edge_pp_at_entry": -4.9,
+      "entry_price": 0.44,
+      "stake": 0.01,
+      "placed_at": "2026-08-16T02:22:31Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_pct_bankroll:823912",
+      "strategy_id": "yrfi_3pp_pct_bankroll",
+      "game_id": "823912",
+      "date": "2026-08-16",
+      "matchup": "MIL@LAD",
+      "side": "YRFI",
+      "edge_pp_at_entry": -4.9,
+      "entry_price": 0.44,
+      "stake": 0.00655761,
+      "placed_at": "2026-08-16T02:22:31Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_kelly:823912",
+      "strategy_id": "yrfi_3pp_kelly",
+      "game_id": "823912",
+      "date": "2026-08-16",
+      "matchup": "MIL@LAD",
+      "side": "YRFI",
+      "edge_pp_at_entry": -4.9,
+      "entry_price": 0.44,
+      "stake": 0.00319088,
+      "placed_at": "2026-08-16T02:22:31Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_flat:824156",
+      "strategy_id": "yrfi_3pp_flat",
+      "game_id": "824156",
+      "date": "2026-08-16",
+      "matchup": "SEA@HOU",
+      "side": "YRFI",
+      "edge_pp_at_entry": -3.0,
+      "entry_price": 0.46,
+      "stake": 0.01,
+      "placed_at": "2026-08-16T02:22:31Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_pct_bankroll:824156",
+      "strategy_id": "yrfi_3pp_pct_bankroll",
+      "game_id": "824156",
+      "date": "2026-08-16",
+      "matchup": "SEA@HOU",
+      "side": "YRFI",
+      "edge_pp_at_entry": -3.0,
+      "entry_price": 0.46,
+      "stake": 0.00655761,
+      "placed_at": "2026-08-16T02:22:31Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_kelly:824156",
+      "strategy_id": "yrfi_3pp_kelly",
+      "game_id": "824156",
+      "date": "2026-08-16",
+      "matchup": "SEA@HOU",
+      "side": "YRFI",
+      "edge_pp_at_entry": -3.0,
+      "entry_price": 0.46,
+      "stake": 0.00189197,
+      "placed_at": "2026-08-16T02:22:31Z",
       "status": "open"
     }
   ]
