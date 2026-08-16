@@ -19463,17 +19463,89 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824400",
+      "date": "2026-08-15",
+      "away_team": "SD",
+      "home_team": "CLE",
+      "p_nrfi_predicted": 0.5628,
+      "nrfi_actual": false,
+      "away_runs_1st": 1,
+      "home_runs_1st": 1,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "824157",
+      "date": "2026-08-15",
+      "away_team": "SEA",
+      "home_team": "HOU",
+      "p_nrfi_predicted": 0.4567,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 1,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823671",
+      "date": "2026-08-15",
+      "away_team": "PHI",
+      "home_team": "MIN",
+      "p_nrfi_predicted": 0.4988,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823347",
+      "date": "2026-08-15",
+      "away_team": "BOS",
+      "home_team": "PIT",
+      "p_nrfi_predicted": 0.5764,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "824884",
+      "date": "2026-08-15",
+      "away_team": "ARI",
+      "home_team": "ATL",
+      "p_nrfi_predicted": 0.5044,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 2,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823914",
+      "date": "2026-08-15",
+      "away_team": "MIL",
+      "home_team": "LAD",
+      "p_nrfi_predicted": 0.5482,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1622,
-    "accuracy": 0.5351,
-    "brier_score": 0.2496,
-    "brier_skill_score": 0.0012,
-    "log_loss": 0.69284,
-    "actual_nrfi_rate": 0.4895,
+    "n_games": 1628,
+    "accuracy": 0.535,
+    "brier_score": 0.24955,
+    "brier_skill_score": 0.0014,
+    "log_loss": 0.69273,
+    "actual_nrfi_rate": 0.4896,
     "mean_predicted": 0.5323,
-    "last_updated": "2026-08-15"
+    "last_updated": "2026-08-16"
   },
   "daily": [
     {
@@ -20339,10 +20411,10 @@
     },
     {
       "date": "2026-08-15",
-      "n_games": 7,
-      "correct": 5,
-      "accuracy": 0.7143,
-      "nrfi_count": 4
+      "n_games": 13,
+      "correct": 8,
+      "accuracy": 0.6154,
+      "nrfi_count": 7
     }
   ]
 }
