@@ -19751,15 +19751,27 @@
       "home_runs_1st": 0,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "822939",
+      "date": "2026-08-17",
+      "away_team": "BAL",
+      "home_team": "TB",
+      "p_nrfi_predicted": 0.5871,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1646,
-    "accuracy": 0.5358,
-    "brier_score": 0.24952,
-    "brier_skill_score": 0.0016,
-    "log_loss": 0.69268,
-    "actual_nrfi_rate": 0.4915,
+    "n_games": 1647,
+    "accuracy": 0.5361,
+    "brier_score": 0.24948,
+    "brier_skill_score": 0.0018,
+    "log_loss": 0.69259,
+    "actual_nrfi_rate": 0.4918,
     "mean_predicted": 0.5325,
     "last_updated": "2026-08-17"
   },
@@ -20641,10 +20653,10 @@
     },
     {
       "date": "2026-08-17",
-      "n_games": 1,
-      "correct": 0,
-      "accuracy": 0.0,
-      "nrfi_count": 0
+      "n_games": 2,
+      "correct": 1,
+      "accuracy": 0.5,
+      "nrfi_count": 1
     }
   ]
 }
