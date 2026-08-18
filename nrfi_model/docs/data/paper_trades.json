@@ -64957,6 +64957,84 @@
       "stake": 0.00199131,
       "placed_at": "2026-08-18T19:29:43Z",
       "status": "open"
+    },
+    {
+      "trade_id": "yrfi_0pp_flat:823341",
+      "strategy_id": "yrfi_0pp_flat",
+      "game_id": "823341",
+      "date": "2026-08-18",
+      "matchup": "DET@PIT",
+      "side": "YRFI",
+      "edge_pp_at_entry": -0.5,
+      "entry_price": 0.46,
+      "stake": 0.01,
+      "placed_at": "2026-08-18T21:23:57Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_0pp_pct_bankroll:823341",
+      "strategy_id": "yrfi_0pp_pct_bankroll",
+      "game_id": "823341",
+      "date": "2026-08-18",
+      "matchup": "DET@PIT",
+      "side": "YRFI",
+      "edge_pp_at_entry": -0.5,
+      "entry_price": 0.46,
+      "stake": 0.00628076,
+      "placed_at": "2026-08-18T21:23:57Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_0pp_kelly:823341",
+      "strategy_id": "yrfi_0pp_kelly",
+      "game_id": "823341",
+      "date": "2026-08-18",
+      "matchup": "DET@PIT",
+      "side": "YRFI",
+      "edge_pp_at_entry": -0.5,
+      "entry_price": 0.46,
+      "stake": 5.53e-05,
+      "placed_at": "2026-08-18T21:23:57Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_5pp_flat:823749",
+      "strategy_id": "yrfi_5pp_flat",
+      "game_id": "823749",
+      "date": "2026-08-18",
+      "matchup": "SEA@MIL",
+      "side": "YRFI",
+      "edge_pp_at_entry": -7.1,
+      "entry_price": 0.45,
+      "stake": 0.01,
+      "placed_at": "2026-08-18T21:23:57Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_5pp_pct_bankroll:823749",
+      "strategy_id": "yrfi_5pp_pct_bankroll",
+      "game_id": "823749",
+      "date": "2026-08-18",
+      "matchup": "SEA@MIL",
+      "side": "YRFI",
+      "edge_pp_at_entry": -7.1,
+      "entry_price": 0.45,
+      "stake": 0.00884381,
+      "placed_at": "2026-08-18T21:23:57Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_5pp_kelly:823749",
+      "strategy_id": "yrfi_5pp_kelly",
+      "game_id": "823749",
+      "date": "2026-08-18",
+      "matchup": "SEA@MIL",
+      "side": "YRFI",
+      "edge_pp_at_entry": -7.1,
+      "entry_price": 0.45,
+      "stake": 0.00436257,
+      "placed_at": "2026-08-18T21:23:57Z",
+      "status": "open"
     }
   ]
 }
