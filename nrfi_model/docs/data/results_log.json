@@ -20087,15 +20087,27 @@
       "home_runs_1st": 0,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824640",
+      "date": "2026-08-19",
+      "away_team": "CWS",
+      "home_team": "CHC",
+      "p_nrfi_predicted": 0.5639,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1674,
-    "accuracy": 0.5335,
-    "brier_score": 0.25017,
-    "brier_skill_score": -0.0012,
-    "log_loss": 0.69404,
-    "actual_nrfi_rate": 0.4892,
+    "n_games": 1675,
+    "accuracy": 0.5337,
+    "brier_score": 0.25014,
+    "brier_skill_score": -0.001,
+    "log_loss": 0.69396,
+    "actual_nrfi_rate": 0.4896,
     "mean_predicted": 0.5327,
     "last_updated": "2026-08-19"
   },
@@ -20991,10 +21003,10 @@
     },
     {
       "date": "2026-08-19",
-      "n_games": 3,
-      "correct": 1,
-      "accuracy": 0.3333,
-      "nrfi_count": 2
+      "n_games": 4,
+      "correct": 2,
+      "accuracy": 0.5,
+      "nrfi_count": 3
     }
   ]
 }
