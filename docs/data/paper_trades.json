@@ -69169,6 +69169,32 @@
       "stake": 0.00475905,
       "placed_at": "2026-08-20T00:43:39Z",
       "status": "open"
+    },
+    {
+      "trade_id": "yrfi_0pp_flat:822861",
+      "strategy_id": "yrfi_0pp_flat",
+      "game_id": "822861",
+      "date": "2026-08-20",
+      "matchup": "WSH@TEX",
+      "side": "YRFI",
+      "edge_pp_at_entry": -0.5,
+      "entry_price": 0.46,
+      "stake": 0.01,
+      "placed_at": "2026-08-20T03:43:57Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_0pp_pct_bankroll:822861",
+      "strategy_id": "yrfi_0pp_pct_bankroll",
+      "game_id": "822861",
+      "date": "2026-08-20",
+      "matchup": "WSH@TEX",
+      "side": "YRFI",
+      "edge_pp_at_entry": -0.5,
+      "entry_price": 0.46,
+      "stake": 0.00616825,
+      "placed_at": "2026-08-20T03:43:57Z",
+      "status": "open"
     }
   ]
 }
