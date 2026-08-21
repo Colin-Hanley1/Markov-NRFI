@@ -20315,17 +20315,41 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "822861",
+      "date": "2026-08-20",
+      "away_team": "WSH",
+      "home_team": "TEX",
+      "p_nrfi_predicted": 0.6831,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "824153",
+      "date": "2026-08-20",
+      "away_team": "LAA",
+      "home_team": "HOU",
+      "p_nrfi_predicted": 0.4714,
+      "nrfi_actual": false,
+      "away_runs_1st": 1,
+      "home_runs_1st": 2,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1693,
-    "accuracy": 0.534,
-    "brier_score": 0.25025,
-    "brier_skill_score": -0.0014,
-    "log_loss": 0.69418,
+    "n_games": 1695,
+    "accuracy": 0.5345,
+    "brier_score": 0.25014,
+    "brier_skill_score": -0.001,
+    "log_loss": 0.69396,
     "actual_nrfi_rate": 0.4897,
-    "mean_predicted": 0.5326,
-    "last_updated": "2026-08-20"
+    "mean_predicted": 0.5327,
+    "last_updated": "2026-08-21"
   },
   "daily": [
     {
@@ -21226,10 +21250,10 @@
     },
     {
       "date": "2026-08-20",
-      "n_games": 7,
-      "correct": 4,
-      "accuracy": 0.5714,
-      "nrfi_count": 3
+      "n_games": 9,
+      "correct": 6,
+      "accuracy": 0.6667,
+      "nrfi_count": 4
     }
   ]
 }
