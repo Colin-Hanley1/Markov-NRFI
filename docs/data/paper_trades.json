@@ -74398,6 +74398,84 @@
       "stake": 0.00352426,
       "placed_at": "2026-08-22T21:17:18Z",
       "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_flat:823422",
+      "strategy_id": "yrfi_3pp_flat",
+      "game_id": "823422",
+      "date": "2026-08-22",
+      "matchup": "STL@PHI",
+      "side": "YRFI",
+      "edge_pp_at_entry": -24.1,
+      "entry_price": 0.31,
+      "stake": 0.01,
+      "placed_at": "2026-08-22T22:19:26Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_pct_bankroll:823422",
+      "strategy_id": "yrfi_3pp_pct_bankroll",
+      "game_id": "823422",
+      "date": "2026-08-22",
+      "matchup": "STL@PHI",
+      "side": "YRFI",
+      "edge_pp_at_entry": -24.1,
+      "entry_price": 0.31,
+      "stake": 0.00633841,
+      "placed_at": "2026-08-22T22:19:26Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_kelly:823422",
+      "strategy_id": "yrfi_3pp_kelly",
+      "game_id": "823422",
+      "date": "2026-08-22",
+      "matchup": "STL@PHI",
+      "side": "YRFI",
+      "edge_pp_at_entry": -24.1,
+      "entry_price": 0.31,
+      "stake": 0.01483069,
+      "placed_at": "2026-08-22T22:19:26Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_5pp_flat:823422",
+      "strategy_id": "yrfi_5pp_flat",
+      "game_id": "823422",
+      "date": "2026-08-22",
+      "matchup": "STL@PHI",
+      "side": "YRFI",
+      "edge_pp_at_entry": -24.1,
+      "entry_price": 0.31,
+      "stake": 0.01,
+      "placed_at": "2026-08-22T22:19:26Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_5pp_pct_bankroll:823422",
+      "strategy_id": "yrfi_5pp_pct_bankroll",
+      "game_id": "823422",
+      "date": "2026-08-22",
+      "matchup": "STL@PHI",
+      "side": "YRFI",
+      "edge_pp_at_entry": -24.1,
+      "entry_price": 0.31,
+      "stake": 0.01002779,
+      "placed_at": "2026-08-22T22:19:26Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_5pp_kelly:823422",
+      "strategy_id": "yrfi_5pp_kelly",
+      "game_id": "823422",
+      "date": "2026-08-22",
+      "matchup": "STL@PHI",
+      "side": "YRFI",
+      "edge_pp_at_entry": -24.1,
+      "entry_price": 0.31,
+      "stake": 0.01429568,
+      "placed_at": "2026-08-22T22:19:26Z",
+      "status": "open"
     }
   ]
 }
