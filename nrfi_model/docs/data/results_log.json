@@ -20543,15 +20543,27 @@
       "home_runs_1st": 0,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823831",
+      "date": "2026-08-22",
+      "away_team": "WSH",
+      "home_team": "MIA",
+      "p_nrfi_predicted": 0.5415,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 2,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1712,
-    "accuracy": 0.535,
-    "brier_score": 0.25006,
-    "brier_skill_score": -0.0007,
-    "log_loss": 0.6938,
-    "actual_nrfi_rate": 0.4895,
+    "n_games": 1713,
+    "accuracy": 0.5347,
+    "brier_score": 0.25009,
+    "brier_skill_score": -0.0008,
+    "log_loss": 0.69385,
+    "actual_nrfi_rate": 0.4892,
     "mean_predicted": 0.5328,
     "last_updated": "2026-08-22"
   },
@@ -21468,9 +21480,9 @@
     },
     {
       "date": "2026-08-22",
-      "n_games": 2,
+      "n_games": 3,
       "correct": 1,
-      "accuracy": 0.5,
+      "accuracy": 0.3333,
       "nrfi_count": 0
     }
   ]
