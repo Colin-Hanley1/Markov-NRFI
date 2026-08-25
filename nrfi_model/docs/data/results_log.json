@@ -20915,17 +20915,29 @@
       "home_runs_1st": 0,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824557",
+      "date": "2026-08-24",
+      "away_team": "TEX",
+      "home_team": "CWS",
+      "p_nrfi_predicted": 0.3309,
+      "nrfi_actual": false,
+      "away_runs_1st": 2,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1743,
-    "accuracy": 0.5318,
-    "brier_score": 0.25045,
-    "brier_skill_score": -0.0024,
-    "log_loss": 0.69457,
-    "actual_nrfi_rate": 0.4882,
-    "mean_predicted": 0.5331,
-    "last_updated": "2026-08-24"
+    "n_games": 1744,
+    "accuracy": 0.5321,
+    "brier_score": 0.25037,
+    "brier_skill_score": -0.0021,
+    "log_loss": 0.6944,
+    "actual_nrfi_rate": 0.488,
+    "mean_predicted": 0.533,
+    "last_updated": "2026-08-25"
   },
   "daily": [
     {
@@ -21854,9 +21866,9 @@
     },
     {
       "date": "2026-08-24",
-      "n_games": 3,
-      "correct": 1,
-      "accuracy": 0.3333,
+      "n_games": 4,
+      "correct": 2,
+      "accuracy": 0.5,
       "nrfi_count": 2
     }
   ]
