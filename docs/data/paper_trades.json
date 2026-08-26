@@ -82301,6 +82301,84 @@
       "stake": 0.0050839,
       "placed_at": "2026-08-26T11:29:09Z",
       "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_flat:824234",
+      "strategy_id": "yrfi_3pp_flat",
+      "game_id": "824234",
+      "date": "2026-08-26",
+      "matchup": "TB@DET",
+      "side": "YRFI",
+      "edge_pp_at_entry": -5.4,
+      "entry_price": 0.45,
+      "stake": 0.01,
+      "placed_at": "2026-08-26T14:40:12Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_pct_bankroll:824234",
+      "strategy_id": "yrfi_3pp_pct_bankroll",
+      "game_id": "824234",
+      "date": "2026-08-26",
+      "matchup": "TB@DET",
+      "side": "YRFI",
+      "edge_pp_at_entry": -5.4,
+      "entry_price": 0.45,
+      "stake": 0.00669253,
+      "placed_at": "2026-08-26T14:40:12Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_3pp_kelly:824234",
+      "strategy_id": "yrfi_3pp_kelly",
+      "game_id": "824234",
+      "date": "2026-08-26",
+      "matchup": "TB@DET",
+      "side": "YRFI",
+      "edge_pp_at_entry": -5.4,
+      "entry_price": 0.45,
+      "stake": 0.00520569,
+      "placed_at": "2026-08-26T14:40:12Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_5pp_flat:824234",
+      "strategy_id": "yrfi_5pp_flat",
+      "game_id": "824234",
+      "date": "2026-08-26",
+      "matchup": "TB@DET",
+      "side": "YRFI",
+      "edge_pp_at_entry": -5.4,
+      "entry_price": 0.45,
+      "stake": 0.01,
+      "placed_at": "2026-08-26T14:40:12Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_5pp_pct_bankroll:824234",
+      "strategy_id": "yrfi_5pp_pct_bankroll",
+      "game_id": "824234",
+      "date": "2026-08-26",
+      "matchup": "TB@DET",
+      "side": "YRFI",
+      "edge_pp_at_entry": -5.4,
+      "entry_price": 0.45,
+      "stake": 0.01124013,
+      "placed_at": "2026-08-26T14:40:12Z",
+      "status": "open"
+    },
+    {
+      "trade_id": "yrfi_5pp_kelly:824234",
+      "strategy_id": "yrfi_5pp_kelly",
+      "game_id": "824234",
+      "date": "2026-08-26",
+      "matchup": "TB@DET",
+      "side": "YRFI",
+      "edge_pp_at_entry": -5.4,
+      "entry_price": 0.45,
+      "stake": 0.00503209,
+      "placed_at": "2026-08-26T14:40:12Z",
+      "status": "open"
     }
   ]
 }
