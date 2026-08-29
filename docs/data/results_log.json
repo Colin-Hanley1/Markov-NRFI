@@ -21755,15 +21755,39 @@
       "home_runs_1st": 0,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823501",
+      "date": "2026-08-29",
+      "away_team": "BOS",
+      "home_team": "NYY",
+      "p_nrfi_predicted": 0.5529,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823741",
+      "date": "2026-08-29",
+      "away_team": "TEX",
+      "home_team": "MIL",
+      "p_nrfi_predicted": 0.6142,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 2,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1813,
-    "accuracy": 0.5323,
-    "brier_score": 0.25007,
-    "brier_skill_score": -0.0007,
-    "log_loss": 0.69377,
-    "actual_nrfi_rate": 0.4903,
+    "n_games": 1815,
+    "accuracy": 0.5322,
+    "brier_score": 0.25011,
+    "brier_skill_score": -0.0008,
+    "log_loss": 0.69386,
+    "actual_nrfi_rate": 0.4904,
     "mean_predicted": 0.5337,
     "last_updated": "2026-08-29"
   },
@@ -22729,10 +22753,10 @@
     },
     {
       "date": "2026-08-29",
-      "n_games": 12,
-      "correct": 7,
-      "accuracy": 0.5833,
-      "nrfi_count": 6
+      "n_games": 14,
+      "correct": 8,
+      "accuracy": 0.5714,
+      "nrfi_count": 7
     }
   ]
 }
