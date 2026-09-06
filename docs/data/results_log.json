@@ -22955,16 +22955,40 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824469",
+      "date": "2026-09-06",
+      "away_team": "MIL",
+      "home_team": "CIN",
+      "p_nrfi_predicted": 0.4287,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 1,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823417",
+      "date": "2026-09-06",
+      "away_team": "ATL",
+      "home_team": "PHI",
+      "p_nrfi_predicted": 0.427,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 2,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1913,
-    "accuracy": 0.5295,
-    "brier_score": 0.2507,
-    "brier_skill_score": -0.0031,
-    "log_loss": 0.69504,
-    "actual_nrfi_rate": 0.4909,
-    "mean_predicted": 0.5344,
+    "n_games": 1915,
+    "accuracy": 0.53,
+    "brier_score": 0.25063,
+    "brier_skill_score": -0.0029,
+    "log_loss": 0.6949,
+    "actual_nrfi_rate": 0.4903,
+    "mean_predicted": 0.5343,
     "last_updated": "2026-09-06"
   },
   "daily": [
@@ -23982,6 +24006,13 @@
       "correct": 10,
       "accuracy": 0.6667,
       "nrfi_count": 7
+    },
+    {
+      "date": "2026-09-06",
+      "n_games": 2,
+      "correct": 2,
+      "accuracy": 1.0,
+      "nrfi_count": 0
     }
   ]
 }
