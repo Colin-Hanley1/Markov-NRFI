@@ -23699,15 +23699,27 @@
       "home_runs_1st": 0,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824227",
+      "date": "2026-09-11",
+      "away_team": "COL",
+      "home_team": "DET",
+      "p_nrfi_predicted": 0.5902,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 1975,
-    "accuracy": 0.5306,
-    "brier_score": 0.25071,
-    "brier_skill_score": -0.0031,
-    "log_loss": 0.69506,
-    "actual_nrfi_rate": 0.4916,
+    "n_games": 1976,
+    "accuracy": 0.5309,
+    "brier_score": 0.25067,
+    "brier_skill_score": -0.0029,
+    "log_loss": 0.69497,
+    "actual_nrfi_rate": 0.4919,
     "mean_predicted": 0.5349,
     "last_updated": "2026-09-11"
   },
@@ -24764,10 +24776,10 @@
     },
     {
       "date": "2026-09-11",
-      "n_games": 1,
-      "correct": 0,
-      "accuracy": 0.0,
-      "nrfi_count": 0
+      "n_games": 2,
+      "correct": 1,
+      "accuracy": 0.5,
+      "nrfi_count": 1
     }
   ]
 }
