@@ -25355,17 +25355,41 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "824787",
+      "date": "2026-09-21",
+      "away_team": "TOR",
+      "home_team": "BAL",
+      "p_nrfi_predicted": 0.603,
+      "nrfi_actual": false,
+      "away_runs_1st": 3,
+      "home_runs_1st": 1,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "824221",
+      "date": "2026-09-21",
+      "away_team": "WSH",
+      "home_team": "DET",
+      "p_nrfi_predicted": 0.678,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 2,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 2113,
-    "accuracy": 0.5225,
-    "brier_score": 0.25176,
-    "brier_skill_score": -0.0077,
-    "log_loss": 0.69717,
-    "actual_nrfi_rate": 0.487,
-    "mean_predicted": 0.5357,
-    "last_updated": "2026-09-21"
+    "n_games": 2115,
+    "accuracy": 0.522,
+    "brier_score": 0.25191,
+    "brier_skill_score": -0.0084,
+    "log_loss": 0.69748,
+    "actual_nrfi_rate": 0.4865,
+    "mean_predicted": 0.5358,
+    "last_updated": "2026-09-22"
   },
   "daily": [
     {
@@ -26487,6 +26511,13 @@
       "correct": 4,
       "accuracy": 0.2667,
       "nrfi_count": 7
+    },
+    {
+      "date": "2026-09-21",
+      "n_games": 2,
+      "correct": 0,
+      "accuracy": 0.0,
+      "nrfi_count": 0
     }
   ]
 }
