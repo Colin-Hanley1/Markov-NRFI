@@ -25391,15 +25391,27 @@
       "home_runs_1st": 2,
       "correct": false,
       "lineup_source": "projected"
+    },
+    {
+      "game_id": "823543",
+      "date": "2026-09-22",
+      "away_team": "TB",
+      "home_team": "NYY",
+      "p_nrfi_predicted": 0.5447,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 2116,
-    "accuracy": 0.5217,
-    "brier_score": 0.25196,
-    "brier_skill_score": -0.0086,
-    "log_loss": 0.69758,
-    "actual_nrfi_rate": 0.4863,
+    "n_games": 2117,
+    "accuracy": 0.522,
+    "brier_score": 0.25194,
+    "brier_skill_score": -0.0085,
+    "log_loss": 0.69754,
+    "actual_nrfi_rate": 0.4865,
     "mean_predicted": 0.5358,
     "last_updated": "2026-09-22"
   },
@@ -26530,6 +26542,13 @@
       "correct": 0,
       "accuracy": 0.0,
       "nrfi_count": 0
+    },
+    {
+      "date": "2026-09-22",
+      "n_games": 1,
+      "correct": 1,
+      "accuracy": 1.0,
+      "nrfi_count": 1
     }
   ]
 }
