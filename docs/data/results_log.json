@@ -25763,16 +25763,28 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "projected"
+    },
+    {
+      "game_id": "823326",
+      "date": "2026-09-24",
+      "away_team": "STL",
+      "home_team": "PIT",
+      "p_nrfi_predicted": 0.6365,
+      "nrfi_actual": false,
+      "away_runs_1st": 1,
+      "home_runs_1st": 1,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 2147,
-    "accuracy": 0.5245,
-    "brier_score": 0.25145,
-    "brier_skill_score": -0.0063,
-    "log_loss": 0.69653,
-    "actual_nrfi_rate": 0.4886,
-    "mean_predicted": 0.536,
+    "n_games": 2148,
+    "accuracy": 0.5242,
+    "brier_score": 0.25152,
+    "brier_skill_score": -0.0066,
+    "log_loss": 0.69667,
+    "actual_nrfi_rate": 0.4884,
+    "mean_predicted": 0.5361,
     "last_updated": "2026-09-24"
   },
   "daily": [
@@ -26916,6 +26928,13 @@
       "correct": 12,
       "accuracy": 0.75,
       "nrfi_count": 9
+    },
+    {
+      "date": "2026-09-24",
+      "n_games": 1,
+      "correct": 0,
+      "accuracy": 0.0,
+      "nrfi_count": 0
     }
   ]
 }
