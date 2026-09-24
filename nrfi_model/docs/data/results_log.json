@@ -25739,15 +25739,39 @@
       "home_runs_1st": 4,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "823894",
+      "date": "2026-09-23",
+      "away_team": "SD",
+      "home_team": "LAD",
+      "p_nrfi_predicted": 0.6239,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "823086",
+      "date": "2026-09-23",
+      "away_team": "HOU",
+      "home_team": "SEA",
+      "p_nrfi_predicted": 0.5886,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": true,
+      "lineup_source": "projected"
     }
   ],
   "cumulative": {
-    "n_games": 2145,
-    "accuracy": 0.524,
-    "brier_score": 0.25154,
-    "brier_skill_score": -0.0067,
-    "log_loss": 0.69671,
-    "actual_nrfi_rate": 0.4881,
+    "n_games": 2147,
+    "accuracy": 0.5245,
+    "brier_score": 0.25145,
+    "brier_skill_score": -0.0063,
+    "log_loss": 0.69653,
+    "actual_nrfi_rate": 0.4886,
     "mean_predicted": 0.536,
     "last_updated": "2026-09-24"
   },
@@ -26888,10 +26912,10 @@
     },
     {
       "date": "2026-09-23",
-      "n_games": 14,
-      "correct": 10,
-      "accuracy": 0.7143,
-      "nrfi_count": 7
+      "n_games": 16,
+      "correct": 12,
+      "accuracy": 0.75,
+      "nrfi_count": 9
     }
   ]
 }
