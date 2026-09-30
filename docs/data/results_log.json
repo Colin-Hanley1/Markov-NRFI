@@ -26423,17 +26423,41 @@
       "home_runs_1st": 0,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "849849",
+      "date": "2026-09-29",
+      "away_team": "CWS",
+      "home_team": "HOU",
+      "p_nrfi_predicted": 0.5621,
+      "nrfi_actual": false,
+      "away_runs_1st": 1,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
+    },
+    {
+      "game_id": "849851",
+      "date": "2026-09-29",
+      "away_team": "BOS",
+      "home_team": "NYY",
+      "p_nrfi_predicted": 0.4592,
+      "nrfi_actual": true,
+      "away_runs_1st": 0,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 2202,
-    "accuracy": 0.5236,
-    "brier_score": 0.25158,
-    "brier_skill_score": -0.0069,
-    "log_loss": 0.69679,
+    "n_games": 2204,
+    "accuracy": 0.5231,
+    "brier_score": 0.25163,
+    "brier_skill_score": -0.0071,
+    "log_loss": 0.69689,
     "actual_nrfi_rate": 0.4882,
     "mean_predicted": 0.5364,
-    "last_updated": "2026-09-29"
+    "last_updated": "2026-09-30"
   },
   "daily": [
     {
@@ -27607,10 +27631,10 @@
     },
     {
       "date": "2026-09-29",
-      "n_games": 1,
+      "n_games": 3,
       "correct": 0,
       "accuracy": 0.0,
-      "nrfi_count": 0
+      "nrfi_count": 1
     }
   ]
 }
