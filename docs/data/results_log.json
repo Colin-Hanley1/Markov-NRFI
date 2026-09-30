@@ -26447,16 +26447,28 @@
       "home_runs_1st": 0,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "849843",
+      "date": "2026-09-29",
+      "away_team": "CHC",
+      "home_team": "SD",
+      "p_nrfi_predicted": 0.6794,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 2,
+      "correct": false,
+      "lineup_source": "projected"
     }
   ],
   "cumulative": {
-    "n_games": 2204,
-    "accuracy": 0.5231,
-    "brier_score": 0.25163,
-    "brier_skill_score": -0.0071,
-    "log_loss": 0.69689,
-    "actual_nrfi_rate": 0.4882,
-    "mean_predicted": 0.5364,
+    "n_games": 2205,
+    "accuracy": 0.5229,
+    "brier_score": 0.25172,
+    "brier_skill_score": -0.0075,
+    "log_loss": 0.69709,
+    "actual_nrfi_rate": 0.488,
+    "mean_predicted": 0.5365,
     "last_updated": "2026-09-30"
   },
   "daily": [
@@ -27631,7 +27643,7 @@
     },
     {
       "date": "2026-09-29",
-      "n_games": 3,
+      "n_games": 4,
       "correct": 0,
       "accuracy": 0.0,
       "nrfi_count": 1
