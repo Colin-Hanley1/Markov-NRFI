@@ -26471,15 +26471,27 @@
       "home_runs_1st": 1,
       "correct": false,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "849846",
+      "date": "2026-09-30",
+      "away_team": "CWS",
+      "home_team": "HOU",
+      "p_nrfi_predicted": 0.5086,
+      "nrfi_actual": false,
+      "away_runs_1st": 4,
+      "home_runs_1st": 1,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 2206,
-    "accuracy": 0.5227,
-    "brier_score": 0.25172,
+    "n_games": 2207,
+    "accuracy": 0.5224,
+    "brier_score": 0.25173,
     "brier_skill_score": -0.0075,
-    "log_loss": 0.69709,
-    "actual_nrfi_rate": 0.4878,
+    "log_loss": 0.6971,
+    "actual_nrfi_rate": 0.4875,
     "mean_predicted": 0.5364,
     "last_updated": "2026-09-30"
   },
@@ -27662,7 +27674,7 @@
     },
     {
       "date": "2026-09-30",
-      "n_games": 1,
+      "n_games": 2,
       "correct": 0,
       "accuracy": 0.0,
       "nrfi_count": 0
