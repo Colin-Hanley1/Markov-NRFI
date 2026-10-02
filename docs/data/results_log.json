@@ -26507,15 +26507,27 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "849844",
+      "date": "2026-10-01",
+      "away_team": "PHI",
+      "home_team": "ATL",
+      "p_nrfi_predicted": 0.4932,
+      "nrfi_actual": false,
+      "away_runs_1st": 0,
+      "home_runs_1st": 3,
+      "correct": true,
+      "lineup_source": "projected"
     }
   ],
   "cumulative": {
-    "n_games": 2209,
-    "accuracy": 0.5229,
+    "n_games": 2210,
+    "accuracy": 0.5231,
     "brier_score": 0.25165,
     "brier_skill_score": -0.0072,
-    "log_loss": 0.69695,
-    "actual_nrfi_rate": 0.488,
+    "log_loss": 0.69694,
+    "actual_nrfi_rate": 0.4878,
     "mean_predicted": 0.5365,
     "last_updated": "2026-10-02"
   },
@@ -27702,6 +27714,13 @@
       "correct": 2,
       "accuracy": 0.5,
       "nrfi_count": 2
+    },
+    {
+      "date": "2026-10-01",
+      "n_games": 1,
+      "correct": 1,
+      "accuracy": 1.0,
+      "nrfi_count": 0
     }
   ]
 }
