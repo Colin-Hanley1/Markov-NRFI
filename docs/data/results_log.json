@@ -26747,17 +26747,29 @@
       "home_runs_1st": 0,
       "correct": true,
       "lineup_source": "official"
+    },
+    {
+      "game_id": "849811",
+      "date": "2026-10-14",
+      "away_team": "MIL",
+      "home_team": "LAD",
+      "p_nrfi_predicted": 0.6208,
+      "nrfi_actual": false,
+      "away_runs_1st": 1,
+      "home_runs_1st": 0,
+      "correct": false,
+      "lineup_source": "official"
     }
   ],
   "cumulative": {
-    "n_games": 2229,
-    "accuracy": 0.5245,
-    "brier_score": 0.25143,
-    "brier_skill_score": -0.0063,
-    "log_loss": 0.69649,
-    "actual_nrfi_rate": 0.4886,
+    "n_games": 2230,
+    "accuracy": 0.5242,
+    "brier_score": 0.25149,
+    "brier_skill_score": -0.0065,
+    "log_loss": 0.69661,
+    "actual_nrfi_rate": 0.4883,
     "mean_predicted": 0.5368,
-    "last_updated": "2026-10-14"
+    "last_updated": "2026-10-15"
   },
   "daily": [
     {
@@ -28019,6 +28031,13 @@
       "correct": 1,
       "accuracy": 1.0,
       "nrfi_count": 1
+    },
+    {
+      "date": "2026-10-14",
+      "n_games": 1,
+      "correct": 0,
+      "accuracy": 0.0,
+      "nrfi_count": 0
     }
   ]
 }
